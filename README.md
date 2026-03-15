@@ -78,6 +78,7 @@ Later layers are planned as separate architectural doors:
     DoorOneOrchestrator.js
     run_hud_demo.js
     TrajectoryInterpretationReport.js
+    AttentionMemoryReport.js
 
   hud/
     DoorOneHUD.js
@@ -91,6 +92,7 @@ Later layers are planned as separate architectural doors:
     test_door_one_hud.js
     test_door_one_contracts.js
     test_trajectory_interpretation_report.js
+    test_attention_memory_report.js
 
   fixtures/
     test_signal.js
@@ -101,18 +103,18 @@ Later layers are planned as separate architectural doors:
 ## Recommended Reading Order
 
 For a new reader:
-  
-    README.md
-  
-    README_MasterConstitution.md
-  
-    README_WorkflowContract.md
-  
-    README_ConstitutionAppendix.md
-  
-    README_RepoPlacementConstitution.md
-  
-    README_SubstrateLayer.md
+
+  README.md
+
+  README_MasterConstitution.md
+
+  README_WorkflowContract.md
+
+  README_ConstitutionAppendix.md
+
+  README_RepoPlacementConstitution.md
+
+  README_SubstrateLayer.md
 
 After that, move into the runtime and operator surfaces.
 
@@ -140,54 +142,54 @@ Describes the substrate memory layer, trajectory semantics, segment handling, ba
 ## Current Door One Components
 
 The current implementation includes components in the following functional categories:
-  
-    Signal intake and alignment
-  
-    IngestOp
-  
-    AnalogSamplerOp
-  
-    ClockAlignOp
-  
-    WindowOp
-  
-    State formation
-  
-    TransformOp
-  
-    CompressOp
-  
-    ReconstructOp
-  
-    Novelty and segmentation
-  
-    AnomalyOp
-  
-    SegmentTracker
-  
-    Memory substrate and neighborhood organization
-  
-    MemorySubstrate
-  
-    TrajectoryBuffer
-  
-    BasinOp
-  
-    Aggregation and observation
-  
-    MergeOp
-  
-    QueryOp
-  
-    TrajectoryInterpretationReport
-  
-    Runtime and inspection
-  
-    DoorOneOrchestrator
-  
-    DoorOneHUD
-  
-    run_pipeline_substrate.js
+
+  Signal intake and alignment
+
+  IngestOp
+
+  AnalogSamplerOp
+
+  ClockAlignOp
+
+  WindowOp
+
+  State formation
+
+  TransformOp
+
+  CompressOp
+
+  ReconstructOp
+
+  Novelty and segmentation
+
+  AnomalyOp
+
+  SegmentTracker
+
+  Memory substrate and neighborhood organization
+
+  MemorySubstrate
+
+  TrajectoryBuffer
+
+  BasinOp
+
+  Aggregation and observation
+
+  MergeOp
+
+  QueryOp
+
+  TrajectoryInterpretationReport
+
+  Runtime and inspection
+
+  DoorOneOrchestrator
+
+  DoorOneHUD
+
+  run_pipeline_substrate.js
 
 ## What This Repository Is Not
 
