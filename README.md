@@ -48,15 +48,52 @@ Later layers are planned as separate architectural doors:
 ## Repository Structure
 
 ```text
-.
-├── runtime/      # orchestrators and canonical runtime coordination
-├── operators/    # transformation, compression, anomaly, merge, query, basin, etc.
-├── hud/          # visualization / inspection surfaces
-├── scripts/      # offline runners, fixtures, and test-driving scripts
-├── fixtures/     # synthetic or controlled input sources
-├── README.md
-├── README_MasterConstitution.md
-├── README_WorkflowContract.md
-├── README_ConstitutionAppendix.md
-├── README_RepoPlacementConstitution.md
-└── README_SubstrateLayer.md****
+/
+  README_MasterConstitution.md
+  README_WorkflowContract.md
+  README_ConstitutionAppendix.md
+  README_SubstrateLayer.md
+  README_DevelopmentPressure.md
+  README_RepoPlacementConstitution.md
+  package.json
+
+  operators/
+    ingest/IngestOp.js
+    clock/ClockAlignOp.js
+    window/WindowOp.js
+    transform/TransformOp.js
+    compress/CompressOp.js
+    anomaly/AnomalyOp.js
+    merge/MergeOp.js
+    reconstruct/ReconstructOp.js
+    query/QueryOp.js
+    basin/BasinOp.js
+    consensus/ConsensusOp.js
+    sampler/AnalogSamplerOp.js
+    trajectory/SegmentTracker.js
+    trajectory/TrajectoryBuffer.js
+    substrate/MemorySubstrate.js
+
+  runtime/
+    DoorOneOrchestrator.js
+    run_hud_demo.js
+    TrajectoryInterpretationReport.js
+
+  hud/
+    DoorOneHUD.js
+
+  scripts/
+    run_pipeline_substrate.js
+
+  tests/
+    test_substrate_contracts.js
+    test_door_one_orchestrator.js
+    test_door_one_hud.js
+    test_door_one_contracts.js
+    test_trajectory_interpretation_report.js
+
+  fixtures/
+    test_signal.js
+
+  out/
+```
