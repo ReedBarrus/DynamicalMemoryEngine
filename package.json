@@ -10,5 +10,7 @@
         "test:substrate": "node tests/test_substrate_contracts.js",
         "test:orchestrator": "node tests/test_door_one_orchestrator.js",
         "test:hud": "node tests/test_door_one_hud.js"
+        "test:trajectory-interpretation": "node tests/test_trajectory_interpretation_report.js",
+        "test:attention-memory": "node tests/test_attention_memory_report.js"
     }
 }
