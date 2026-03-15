@@ -443,10 +443,6 @@ function buildResult({ a1, a2, h1s, m1s, a3, q, basinSets, anomalyReports,
             trajectory: trajSummary,
             segtracker: segTracker.summary(),
         },
-        interpretation: {
-            trajectory: trajectoryInterpretation,
-            attention_memory: attentionMemory,
-        },
         audit: {
             skipped_windows: skippedWindows,
             merge_failures: mergeFailures,
@@ -524,7 +520,11 @@ function buildResult({ a1, a2, h1s, m1s, a3, q, basinSets, anomalyReports,
             trajectory: trajSummary,
             segtracker: segTracker?.summary() ?? null,
         },
-
+        // - Interpretation
+        interpretation: {
+            trajectory: trajectoryInterpretation,
+            attention_memory: attentionMemory,
+        },
         // ── Audit: non-ok results and stub receipts ───────────────────────────
         audit: {
             skipped_windows: skippedWindows,
