@@ -1,0 +1,897 @@
+[
+  {
+    "artifact_type": "AnomalyReport",
+    "artifact_class": "An",
+    "stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+    "window_ref": "0.5:1.5",
+    "baseline_id": "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:0:1",
+    "baseline_scope": {
+      "baseline_stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+      "baseline_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0",
+      "current_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0"
+    },
+    "invariance_mode": "IDENTITY",
+    "divergence_score": 0.008898914926612352,
+    "detected_events": [
+      {
+        "type": "drift",
+        "freq_hz": 8,
+        "magnitude_delta": -0.00008331303379333077,
+        "phase_delta": 0.0006721368193933763,
+        "band_id": null
+      }
+    ],
+    "novelty_gate_triggered": false,
+    "segmentation_recommendation": "continue_segment",
+    "anomaly_receipt": {
+      "metric_used": "band_profile_l1",
+      "threshold": 0.15,
+      "divergence_value": 0.008898914926612352,
+      "bins_compared": 7,
+      "phase_sensitivity_mode": "strict",
+      "sustained_duration_sec": 1,
+      "novelty_gate_triggered": false
+    },
+    "policies": {
+      "anomaly_policy_id": "ANOM:pid=anomaly.synthetic.v1:mode=IDENTITY:metric=band_profile_l1:thresh=0.15:freqtol=1:phase=strict:mindur=0:seg=strict:dominant=0.2:new=0.15:vanish=0.15:eshift=0.15",
+      "clock_policy_id": "clock.synthetic.v1",
+      "grid_policy_id": "GRID:Fs=256:tref=0:grid=strict:drift=none:nonmono=reject:interp=linear:gap=interpolate:smallgap=3:maxgap=null:aa=false",
+      "window_policy_id": "WIN:mode=fixed:Fs=256:N=256:hop=128:fn=hann:overlap=0.5:stationarity=tolerant:salience=off:gap=interpolate:maxmiss=0.25:boundary=pad",
+      "transform_policy_id": "XFORM:type=fft:norm=forward_1_over_N:scale=real_input_half_spectrum:numeric=tolerant",
+      "compression_policy_id": "COMP:pid=compress.synthetic.v1:select=topK:budget=8:maxK=8:lens=IDENTITY:recon=0.25:energy=0.25:band=0.3:dc=true:novelty=true:numeric=tolerant"
+    },
+    "provenance": {
+      "input_refs": [
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:0.5:1.5",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:0:1"
+      ],
+      "operator_id": "AnomalyOp",
+      "operator_version": "0.1.0"
+    }
+  },
+  {
+    "artifact_type": "AnomalyReport",
+    "artifact_class": "An",
+    "stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+    "window_ref": "1:2",
+    "baseline_id": "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:0:1",
+    "baseline_scope": {
+      "baseline_stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+      "baseline_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0",
+      "current_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0"
+    },
+    "invariance_mode": "IDENTITY",
+    "divergence_score": 0.0015268525528429372,
+    "detected_events": [
+      {
+        "type": "drift",
+        "freq_hz": 8,
+        "magnitude_delta": -0.002368777420769075,
+        "phase_delta": -0.0038166438368092415,
+        "band_id": null
+      }
+    ],
+    "novelty_gate_triggered": false,
+    "segmentation_recommendation": "continue_segment",
+    "anomaly_receipt": {
+      "metric_used": "band_profile_l1",
+      "threshold": 0.15,
+      "divergence_value": 0.0015268525528429372,
+      "bins_compared": 7,
+      "phase_sensitivity_mode": "strict",
+      "sustained_duration_sec": 1,
+      "novelty_gate_triggered": false
+    },
+    "policies": {
+      "anomaly_policy_id": "ANOM:pid=anomaly.synthetic.v1:mode=IDENTITY:metric=band_profile_l1:thresh=0.15:freqtol=1:phase=strict:mindur=0:seg=strict:dominant=0.2:new=0.15:vanish=0.15:eshift=0.15",
+      "clock_policy_id": "clock.synthetic.v1",
+      "grid_policy_id": "GRID:Fs=256:tref=0:grid=strict:drift=none:nonmono=reject:interp=linear:gap=interpolate:smallgap=3:maxgap=null:aa=false",
+      "window_policy_id": "WIN:mode=fixed:Fs=256:N=256:hop=128:fn=hann:overlap=0.5:stationarity=tolerant:salience=off:gap=interpolate:maxmiss=0.25:boundary=pad",
+      "transform_policy_id": "XFORM:type=fft:norm=forward_1_over_N:scale=real_input_half_spectrum:numeric=tolerant",
+      "compression_policy_id": "COMP:pid=compress.synthetic.v1:select=topK:budget=8:maxK=8:lens=IDENTITY:recon=0.25:energy=0.25:band=0.3:dc=true:novelty=true:numeric=tolerant"
+    },
+    "provenance": {
+      "input_refs": [
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:1:2",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:0:1"
+      ],
+      "operator_id": "AnomalyOp",
+      "operator_version": "0.1.0"
+    }
+  },
+  {
+    "artifact_type": "AnomalyReport",
+    "artifact_class": "An",
+    "stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+    "window_ref": "1.5:2.5",
+    "baseline_id": "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:0:1",
+    "baseline_scope": {
+      "baseline_stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+      "baseline_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0",
+      "current_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0"
+    },
+    "invariance_mode": "IDENTITY",
+    "divergence_score": 0.0023653814292129765,
+    "detected_events": [
+      {
+        "type": "drift",
+        "freq_hz": 8,
+        "magnitude_delta": -0.0013001487868338213,
+        "phase_delta": -0.006846933738680061,
+        "band_id": null
+      }
+    ],
+    "novelty_gate_triggered": false,
+    "segmentation_recommendation": "continue_segment",
+    "anomaly_receipt": {
+      "metric_used": "band_profile_l1",
+      "threshold": 0.15,
+      "divergence_value": 0.0023653814292129765,
+      "bins_compared": 7,
+      "phase_sensitivity_mode": "strict",
+      "sustained_duration_sec": 1,
+      "novelty_gate_triggered": false
+    },
+    "policies": {
+      "anomaly_policy_id": "ANOM:pid=anomaly.synthetic.v1:mode=IDENTITY:metric=band_profile_l1:thresh=0.15:freqtol=1:phase=strict:mindur=0:seg=strict:dominant=0.2:new=0.15:vanish=0.15:eshift=0.15",
+      "clock_policy_id": "clock.synthetic.v1",
+      "grid_policy_id": "GRID:Fs=256:tref=0:grid=strict:drift=none:nonmono=reject:interp=linear:gap=interpolate:smallgap=3:maxgap=null:aa=false",
+      "window_policy_id": "WIN:mode=fixed:Fs=256:N=256:hop=128:fn=hann:overlap=0.5:stationarity=tolerant:salience=off:gap=interpolate:maxmiss=0.25:boundary=pad",
+      "transform_policy_id": "XFORM:type=fft:norm=forward_1_over_N:scale=real_input_half_spectrum:numeric=tolerant",
+      "compression_policy_id": "COMP:pid=compress.synthetic.v1:select=topK:budget=8:maxK=8:lens=IDENTITY:recon=0.25:energy=0.25:band=0.3:dc=true:novelty=true:numeric=tolerant"
+    },
+    "provenance": {
+      "input_refs": [
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:1.5:2.5",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:0:1"
+      ],
+      "operator_id": "AnomalyOp",
+      "operator_version": "0.1.0"
+    }
+  },
+  {
+    "artifact_type": "AnomalyReport",
+    "artifact_class": "An",
+    "stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+    "window_ref": "2:3",
+    "baseline_id": "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:0:1",
+    "baseline_scope": {
+      "baseline_stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+      "baseline_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0",
+      "current_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0"
+    },
+    "invariance_mode": "IDENTITY",
+    "divergence_score": 0.0039789261705362,
+    "detected_events": [
+      {
+        "type": "drift",
+        "freq_hz": 8,
+        "magnitude_delta": -0.00023349666423466697,
+        "phase_delta": -0.010559086972660836,
+        "band_id": null
+      }
+    ],
+    "novelty_gate_triggered": false,
+    "segmentation_recommendation": "continue_segment",
+    "anomaly_receipt": {
+      "metric_used": "band_profile_l1",
+      "threshold": 0.15,
+      "divergence_value": 0.0039789261705362,
+      "bins_compared": 7,
+      "phase_sensitivity_mode": "strict",
+      "sustained_duration_sec": 1,
+      "novelty_gate_triggered": false
+    },
+    "policies": {
+      "anomaly_policy_id": "ANOM:pid=anomaly.synthetic.v1:mode=IDENTITY:metric=band_profile_l1:thresh=0.15:freqtol=1:phase=strict:mindur=0:seg=strict:dominant=0.2:new=0.15:vanish=0.15:eshift=0.15",
+      "clock_policy_id": "clock.synthetic.v1",
+      "grid_policy_id": "GRID:Fs=256:tref=0:grid=strict:drift=none:nonmono=reject:interp=linear:gap=interpolate:smallgap=3:maxgap=null:aa=false",
+      "window_policy_id": "WIN:mode=fixed:Fs=256:N=256:hop=128:fn=hann:overlap=0.5:stationarity=tolerant:salience=off:gap=interpolate:maxmiss=0.25:boundary=pad",
+      "transform_policy_id": "XFORM:type=fft:norm=forward_1_over_N:scale=real_input_half_spectrum:numeric=tolerant",
+      "compression_policy_id": "COMP:pid=compress.synthetic.v1:select=topK:budget=8:maxK=8:lens=IDENTITY:recon=0.25:energy=0.25:band=0.3:dc=true:novelty=true:numeric=tolerant"
+    },
+    "provenance": {
+      "input_refs": [
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:2:3",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:0:1"
+      ],
+      "operator_id": "AnomalyOp",
+      "operator_version": "0.1.0"
+    }
+  },
+  {
+    "artifact_type": "AnomalyReport",
+    "artifact_class": "An",
+    "stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+    "window_ref": "2.5:3.5",
+    "baseline_id": "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:0:1",
+    "baseline_scope": {
+      "baseline_stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+      "baseline_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0",
+      "current_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0"
+    },
+    "invariance_mode": "IDENTITY",
+    "divergence_score": 0.24503904473861182,
+    "detected_events": [
+      {
+        "type": "drift",
+        "freq_hz": 8,
+        "magnitude_delta": -0.0011983538024779028,
+        "phase_delta": -0.002447162186723917,
+        "band_id": null
+      }
+    ],
+    "novelty_gate_triggered": true,
+    "segmentation_recommendation": "new_segment",
+    "anomaly_receipt": {
+      "metric_used": "band_profile_l1",
+      "threshold": 0.15,
+      "divergence_value": 0.24503904473861182,
+      "bins_compared": 5,
+      "phase_sensitivity_mode": "strict",
+      "sustained_duration_sec": 1,
+      "novelty_gate_triggered": true
+    },
+    "policies": {
+      "anomaly_policy_id": "ANOM:pid=anomaly.synthetic.v1:mode=IDENTITY:metric=band_profile_l1:thresh=0.15:freqtol=1:phase=strict:mindur=0:seg=strict:dominant=0.2:new=0.15:vanish=0.15:eshift=0.15",
+      "clock_policy_id": "clock.synthetic.v1",
+      "grid_policy_id": "GRID:Fs=256:tref=0:grid=strict:drift=none:nonmono=reject:interp=linear:gap=interpolate:smallgap=3:maxgap=null:aa=false",
+      "window_policy_id": "WIN:mode=fixed:Fs=256:N=256:hop=128:fn=hann:overlap=0.5:stationarity=tolerant:salience=off:gap=interpolate:maxmiss=0.25:boundary=pad",
+      "transform_policy_id": "XFORM:type=fft:norm=forward_1_over_N:scale=real_input_half_spectrum:numeric=tolerant",
+      "compression_policy_id": "COMP:pid=compress.synthetic.v1:select=topK:budget=8:maxK=8:lens=IDENTITY:recon=0.25:energy=0.25:band=0.3:dc=true:novelty=true:numeric=tolerant"
+    },
+    "provenance": {
+      "input_refs": [
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:2.5:3.5",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:0:1"
+      ],
+      "operator_id": "AnomalyOp",
+      "operator_version": "0.1.0"
+    }
+  },
+  {
+    "artifact_type": "AnomalyReport",
+    "artifact_class": "An",
+    "stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+    "window_ref": "3:4",
+    "baseline_id": "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1:3:4",
+    "baseline_scope": {
+      "baseline_stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+      "baseline_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1",
+      "current_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1"
+    },
+    "invariance_mode": "IDENTITY",
+    "divergence_score": 0,
+    "detected_events": [],
+    "novelty_gate_triggered": false,
+    "segmentation_recommendation": "continue_segment",
+    "anomaly_receipt": {
+      "metric_used": "band_profile_l1",
+      "threshold": 0.15,
+      "divergence_value": 0,
+      "bins_compared": 8,
+      "phase_sensitivity_mode": "strict",
+      "sustained_duration_sec": 1,
+      "novelty_gate_triggered": false
+    },
+    "policies": {
+      "anomaly_policy_id": "ANOM:pid=anomaly.synthetic.v1:mode=IDENTITY:metric=band_profile_l1:thresh=0.15:freqtol=1:phase=strict:mindur=0:seg=strict:dominant=0.2:new=0.15:vanish=0.15:eshift=0.15",
+      "clock_policy_id": "clock.synthetic.v1",
+      "grid_policy_id": "GRID:Fs=256:tref=0:grid=strict:drift=none:nonmono=reject:interp=linear:gap=interpolate:smallgap=3:maxgap=null:aa=false",
+      "window_policy_id": "WIN:mode=fixed:Fs=256:N=256:hop=128:fn=hann:overlap=0.5:stationarity=tolerant:salience=off:gap=interpolate:maxmiss=0.25:boundary=pad",
+      "transform_policy_id": "XFORM:type=fft:norm=forward_1_over_N:scale=real_input_half_spectrum:numeric=tolerant",
+      "compression_policy_id": "COMP:pid=compress.synthetic.v1:select=topK:budget=8:maxK=8:lens=IDENTITY:recon=0.25:energy=0.25:band=0.3:dc=true:novelty=true:numeric=tolerant"
+    },
+    "provenance": {
+      "input_refs": [
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1:3:4",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1:3:4"
+      ],
+      "operator_id": "AnomalyOp",
+      "operator_version": "0.1.0"
+    }
+  },
+  {
+    "artifact_type": "AnomalyReport",
+    "artifact_class": "An",
+    "stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+    "window_ref": "3.5:4.5",
+    "baseline_id": "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1:3:4",
+    "baseline_scope": {
+      "baseline_stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+      "baseline_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1",
+      "current_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1"
+    },
+    "invariance_mode": "IDENTITY",
+    "divergence_score": 0.005547358519775192,
+    "detected_events": [
+      {
+        "type": "drift",
+        "freq_hz": 8,
+        "magnitude_delta": 0.0007594842773872013,
+        "phase_delta": -0.004097673998709972,
+        "band_id": null
+      }
+    ],
+    "novelty_gate_triggered": false,
+    "segmentation_recommendation": "continue_segment",
+    "anomaly_receipt": {
+      "metric_used": "band_profile_l1",
+      "threshold": 0.15,
+      "divergence_value": 0.005547358519775192,
+      "bins_compared": 8,
+      "phase_sensitivity_mode": "strict",
+      "sustained_duration_sec": 1,
+      "novelty_gate_triggered": false
+    },
+    "policies": {
+      "anomaly_policy_id": "ANOM:pid=anomaly.synthetic.v1:mode=IDENTITY:metric=band_profile_l1:thresh=0.15:freqtol=1:phase=strict:mindur=0:seg=strict:dominant=0.2:new=0.15:vanish=0.15:eshift=0.15",
+      "clock_policy_id": "clock.synthetic.v1",
+      "grid_policy_id": "GRID:Fs=256:tref=0:grid=strict:drift=none:nonmono=reject:interp=linear:gap=interpolate:smallgap=3:maxgap=null:aa=false",
+      "window_policy_id": "WIN:mode=fixed:Fs=256:N=256:hop=128:fn=hann:overlap=0.5:stationarity=tolerant:salience=off:gap=interpolate:maxmiss=0.25:boundary=pad",
+      "transform_policy_id": "XFORM:type=fft:norm=forward_1_over_N:scale=real_input_half_spectrum:numeric=tolerant",
+      "compression_policy_id": "COMP:pid=compress.synthetic.v1:select=topK:budget=8:maxK=8:lens=IDENTITY:recon=0.25:energy=0.25:band=0.3:dc=true:novelty=true:numeric=tolerant"
+    },
+    "provenance": {
+      "input_refs": [
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1:3.5:4.5",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1:3:4"
+      ],
+      "operator_id": "AnomalyOp",
+      "operator_version": "0.1.0"
+    }
+  },
+  {
+    "artifact_type": "AnomalyReport",
+    "artifact_class": "An",
+    "stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+    "window_ref": "4:5",
+    "baseline_id": "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1:3:4",
+    "baseline_scope": {
+      "baseline_stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+      "baseline_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1",
+      "current_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1"
+    },
+    "invariance_mode": "IDENTITY",
+    "divergence_score": 0.006914463676396064,
+    "detected_events": [
+      {
+        "type": "drift",
+        "freq_hz": 8,
+        "magnitude_delta": 0.002227645235007042,
+        "phase_delta": 0.0015142536432359854,
+        "band_id": null
+      }
+    ],
+    "novelty_gate_triggered": false,
+    "segmentation_recommendation": "continue_segment",
+    "anomaly_receipt": {
+      "metric_used": "band_profile_l1",
+      "threshold": 0.15,
+      "divergence_value": 0.006914463676396064,
+      "bins_compared": 8,
+      "phase_sensitivity_mode": "strict",
+      "sustained_duration_sec": 1,
+      "novelty_gate_triggered": false
+    },
+    "policies": {
+      "anomaly_policy_id": "ANOM:pid=anomaly.synthetic.v1:mode=IDENTITY:metric=band_profile_l1:thresh=0.15:freqtol=1:phase=strict:mindur=0:seg=strict:dominant=0.2:new=0.15:vanish=0.15:eshift=0.15",
+      "clock_policy_id": "clock.synthetic.v1",
+      "grid_policy_id": "GRID:Fs=256:tref=0:grid=strict:drift=none:nonmono=reject:interp=linear:gap=interpolate:smallgap=3:maxgap=null:aa=false",
+      "window_policy_id": "WIN:mode=fixed:Fs=256:N=256:hop=128:fn=hann:overlap=0.5:stationarity=tolerant:salience=off:gap=interpolate:maxmiss=0.25:boundary=pad",
+      "transform_policy_id": "XFORM:type=fft:norm=forward_1_over_N:scale=real_input_half_spectrum:numeric=tolerant",
+      "compression_policy_id": "COMP:pid=compress.synthetic.v1:select=topK:budget=8:maxK=8:lens=IDENTITY:recon=0.25:energy=0.25:band=0.3:dc=true:novelty=true:numeric=tolerant"
+    },
+    "provenance": {
+      "input_refs": [
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1:4:5",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1:3:4"
+      ],
+      "operator_id": "AnomalyOp",
+      "operator_version": "0.1.0"
+    }
+  },
+  {
+    "artifact_type": "AnomalyReport",
+    "artifact_class": "An",
+    "stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+    "window_ref": "4.5:5.5",
+    "baseline_id": "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1:3:4",
+    "baseline_scope": {
+      "baseline_stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+      "baseline_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1",
+      "current_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1"
+    },
+    "invariance_mode": "IDENTITY",
+    "divergence_score": 0.38172311664515546,
+    "detected_events": [
+      {
+        "type": "drift",
+        "freq_hz": 8,
+        "magnitude_delta": 0.0006313175163049356,
+        "phase_delta": -0.01839803861674083,
+        "band_id": null
+      },
+      {
+        "type": "energy_shift",
+        "freq_hz": null,
+        "magnitude_delta": 0.1564112096713186,
+        "phase_delta": null,
+        "band_id": 3
+      }
+    ],
+    "novelty_gate_triggered": true,
+    "segmentation_recommendation": "new_segment",
+    "anomaly_receipt": {
+      "metric_used": "band_profile_l1",
+      "threshold": 0.15,
+      "divergence_value": 0.38172311664515546,
+      "bins_compared": 7,
+      "phase_sensitivity_mode": "strict",
+      "sustained_duration_sec": 1,
+      "novelty_gate_triggered": true
+    },
+    "policies": {
+      "anomaly_policy_id": "ANOM:pid=anomaly.synthetic.v1:mode=IDENTITY:metric=band_profile_l1:thresh=0.15:freqtol=1:phase=strict:mindur=0:seg=strict:dominant=0.2:new=0.15:vanish=0.15:eshift=0.15",
+      "clock_policy_id": "clock.synthetic.v1",
+      "grid_policy_id": "GRID:Fs=256:tref=0:grid=strict:drift=none:nonmono=reject:interp=linear:gap=interpolate:smallgap=3:maxgap=null:aa=false",
+      "window_policy_id": "WIN:mode=fixed:Fs=256:N=256:hop=128:fn=hann:overlap=0.5:stationarity=tolerant:salience=off:gap=interpolate:maxmiss=0.25:boundary=pad",
+      "transform_policy_id": "XFORM:type=fft:norm=forward_1_over_N:scale=real_input_half_spectrum:numeric=tolerant",
+      "compression_policy_id": "COMP:pid=compress.synthetic.v1:select=topK:budget=8:maxK=8:lens=IDENTITY:recon=0.25:energy=0.25:band=0.3:dc=true:novelty=true:numeric=tolerant"
+    },
+    "provenance": {
+      "input_refs": [
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1:4.5:5.5",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1:3:4"
+      ],
+      "operator_id": "AnomalyOp",
+      "operator_version": "0.1.0"
+    }
+  },
+  {
+    "artifact_type": "AnomalyReport",
+    "artifact_class": "An",
+    "stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+    "window_ref": "5:6",
+    "baseline_id": "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2:5:6",
+    "baseline_scope": {
+      "baseline_stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+      "baseline_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2",
+      "current_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2"
+    },
+    "invariance_mode": "IDENTITY",
+    "divergence_score": 0,
+    "detected_events": [],
+    "novelty_gate_triggered": false,
+    "segmentation_recommendation": "continue_segment",
+    "anomaly_receipt": {
+      "metric_used": "band_profile_l1",
+      "threshold": 0.15,
+      "divergence_value": 0,
+      "bins_compared": 8,
+      "phase_sensitivity_mode": "strict",
+      "sustained_duration_sec": 1,
+      "novelty_gate_triggered": false
+    },
+    "policies": {
+      "anomaly_policy_id": "ANOM:pid=anomaly.synthetic.v1:mode=IDENTITY:metric=band_profile_l1:thresh=0.15:freqtol=1:phase=strict:mindur=0:seg=strict:dominant=0.2:new=0.15:vanish=0.15:eshift=0.15",
+      "clock_policy_id": "clock.synthetic.v1",
+      "grid_policy_id": "GRID:Fs=256:tref=0:grid=strict:drift=none:nonmono=reject:interp=linear:gap=interpolate:smallgap=3:maxgap=null:aa=false",
+      "window_policy_id": "WIN:mode=fixed:Fs=256:N=256:hop=128:fn=hann:overlap=0.5:stationarity=tolerant:salience=off:gap=interpolate:maxmiss=0.25:boundary=pad",
+      "transform_policy_id": "XFORM:type=fft:norm=forward_1_over_N:scale=real_input_half_spectrum:numeric=tolerant",
+      "compression_policy_id": "COMP:pid=compress.synthetic.v1:select=topK:budget=8:maxK=8:lens=IDENTITY:recon=0.25:energy=0.25:band=0.3:dc=true:novelty=true:numeric=tolerant"
+    },
+    "provenance": {
+      "input_refs": [
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2:5:6",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2:5:6"
+      ],
+      "operator_id": "AnomalyOp",
+      "operator_version": "0.1.0"
+    }
+  },
+  {
+    "artifact_type": "AnomalyReport",
+    "artifact_class": "An",
+    "stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+    "window_ref": "5.5:6.5",
+    "baseline_id": "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2:5:6",
+    "baseline_scope": {
+      "baseline_stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+      "baseline_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2",
+      "current_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2"
+    },
+    "invariance_mode": "IDENTITY",
+    "divergence_score": 0.008438191592019716,
+    "detected_events": [
+      {
+        "type": "drift",
+        "freq_hz": 8,
+        "magnitude_delta": -0.0011770511762238256,
+        "phase_delta": 0.004044749802391223,
+        "band_id": null
+      }
+    ],
+    "novelty_gate_triggered": false,
+    "segmentation_recommendation": "continue_segment",
+    "anomaly_receipt": {
+      "metric_used": "band_profile_l1",
+      "threshold": 0.15,
+      "divergence_value": 0.008438191592019716,
+      "bins_compared": 7,
+      "phase_sensitivity_mode": "strict",
+      "sustained_duration_sec": 1,
+      "novelty_gate_triggered": false
+    },
+    "policies": {
+      "anomaly_policy_id": "ANOM:pid=anomaly.synthetic.v1:mode=IDENTITY:metric=band_profile_l1:thresh=0.15:freqtol=1:phase=strict:mindur=0:seg=strict:dominant=0.2:new=0.15:vanish=0.15:eshift=0.15",
+      "clock_policy_id": "clock.synthetic.v1",
+      "grid_policy_id": "GRID:Fs=256:tref=0:grid=strict:drift=none:nonmono=reject:interp=linear:gap=interpolate:smallgap=3:maxgap=null:aa=false",
+      "window_policy_id": "WIN:mode=fixed:Fs=256:N=256:hop=128:fn=hann:overlap=0.5:stationarity=tolerant:salience=off:gap=interpolate:maxmiss=0.25:boundary=pad",
+      "transform_policy_id": "XFORM:type=fft:norm=forward_1_over_N:scale=real_input_half_spectrum:numeric=tolerant",
+      "compression_policy_id": "COMP:pid=compress.synthetic.v1:select=topK:budget=8:maxK=8:lens=IDENTITY:recon=0.25:energy=0.25:band=0.3:dc=true:novelty=true:numeric=tolerant"
+    },
+    "provenance": {
+      "input_refs": [
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2:5.5:6.5",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2:5:6"
+      ],
+      "operator_id": "AnomalyOp",
+      "operator_version": "0.1.0"
+    }
+  },
+  {
+    "artifact_type": "AnomalyReport",
+    "artifact_class": "An",
+    "stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+    "window_ref": "6:7",
+    "baseline_id": "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2:5:6",
+    "baseline_scope": {
+      "baseline_stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+      "baseline_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2",
+      "current_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2"
+    },
+    "invariance_mode": "IDENTITY",
+    "divergence_score": 0.008615338575337203,
+    "detected_events": [
+      {
+        "type": "drift",
+        "freq_hz": 8,
+        "magnitude_delta": -0.0012159446324009893,
+        "phase_delta": -0.00008351172477927271,
+        "band_id": null
+      }
+    ],
+    "novelty_gate_triggered": false,
+    "segmentation_recommendation": "continue_segment",
+    "anomaly_receipt": {
+      "metric_used": "band_profile_l1",
+      "threshold": 0.15,
+      "divergence_value": 0.008615338575337203,
+      "bins_compared": 7,
+      "phase_sensitivity_mode": "strict",
+      "sustained_duration_sec": 1,
+      "novelty_gate_triggered": false
+    },
+    "policies": {
+      "anomaly_policy_id": "ANOM:pid=anomaly.synthetic.v1:mode=IDENTITY:metric=band_profile_l1:thresh=0.15:freqtol=1:phase=strict:mindur=0:seg=strict:dominant=0.2:new=0.15:vanish=0.15:eshift=0.15",
+      "clock_policy_id": "clock.synthetic.v1",
+      "grid_policy_id": "GRID:Fs=256:tref=0:grid=strict:drift=none:nonmono=reject:interp=linear:gap=interpolate:smallgap=3:maxgap=null:aa=false",
+      "window_policy_id": "WIN:mode=fixed:Fs=256:N=256:hop=128:fn=hann:overlap=0.5:stationarity=tolerant:salience=off:gap=interpolate:maxmiss=0.25:boundary=pad",
+      "transform_policy_id": "XFORM:type=fft:norm=forward_1_over_N:scale=real_input_half_spectrum:numeric=tolerant",
+      "compression_policy_id": "COMP:pid=compress.synthetic.v1:select=topK:budget=8:maxK=8:lens=IDENTITY:recon=0.25:energy=0.25:band=0.3:dc=true:novelty=true:numeric=tolerant"
+    },
+    "provenance": {
+      "input_refs": [
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2:6:7",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2:5:6"
+      ],
+      "operator_id": "AnomalyOp",
+      "operator_version": "0.1.0"
+    }
+  },
+  {
+    "artifact_type": "AnomalyReport",
+    "artifact_class": "An",
+    "stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+    "window_ref": "6.5:7.5",
+    "baseline_id": "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2:5:6",
+    "baseline_scope": {
+      "baseline_stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+      "baseline_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2",
+      "current_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2"
+    },
+    "invariance_mode": "IDENTITY",
+    "divergence_score": 0.8839681073933912,
+    "detected_events": [
+      {
+        "type": "drift",
+        "freq_hz": 8,
+        "magnitude_delta": -0.13111175114689144,
+        "phase_delta": -0.07225894333837513,
+        "band_id": null
+      },
+      {
+        "type": "energy_shift",
+        "freq_hz": null,
+        "magnitude_delta": 0.16625774572688054,
+        "phase_delta": null,
+        "band_id": 0
+      },
+      {
+        "type": "energy_shift",
+        "freq_hz": null,
+        "magnitude_delta": 0.16569867221989829,
+        "phase_delta": null,
+        "band_id": 1
+      },
+      {
+        "type": "energy_shift",
+        "freq_hz": null,
+        "magnitude_delta": -0.32542817022689513,
+        "phase_delta": null,
+        "band_id": 3
+      }
+    ],
+    "novelty_gate_triggered": true,
+    "segmentation_recommendation": "new_segment",
+    "anomaly_receipt": {
+      "metric_used": "band_profile_l1",
+      "threshold": 0.15,
+      "divergence_value": 0.8839681073933912,
+      "bins_compared": 6,
+      "phase_sensitivity_mode": "strict",
+      "sustained_duration_sec": 1,
+      "novelty_gate_triggered": true
+    },
+    "policies": {
+      "anomaly_policy_id": "ANOM:pid=anomaly.synthetic.v1:mode=IDENTITY:metric=band_profile_l1:thresh=0.15:freqtol=1:phase=strict:mindur=0:seg=strict:dominant=0.2:new=0.15:vanish=0.15:eshift=0.15",
+      "clock_policy_id": "clock.synthetic.v1",
+      "grid_policy_id": "GRID:Fs=256:tref=0:grid=strict:drift=none:nonmono=reject:interp=linear:gap=interpolate:smallgap=3:maxgap=null:aa=false",
+      "window_policy_id": "WIN:mode=fixed:Fs=256:N=256:hop=128:fn=hann:overlap=0.5:stationarity=tolerant:salience=off:gap=interpolate:maxmiss=0.25:boundary=pad",
+      "transform_policy_id": "XFORM:type=fft:norm=forward_1_over_N:scale=real_input_half_spectrum:numeric=tolerant",
+      "compression_policy_id": "COMP:pid=compress.synthetic.v1:select=topK:budget=8:maxK=8:lens=IDENTITY:recon=0.25:energy=0.25:band=0.3:dc=true:novelty=true:numeric=tolerant"
+    },
+    "provenance": {
+      "input_refs": [
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2:6.5:7.5",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2:5:6"
+      ],
+      "operator_id": "AnomalyOp",
+      "operator_version": "0.1.0"
+    }
+  },
+  {
+    "artifact_type": "AnomalyReport",
+    "artifact_class": "An",
+    "stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+    "window_ref": "7:8",
+    "baseline_id": "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:3:7:8",
+    "baseline_scope": {
+      "baseline_stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+      "baseline_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:3",
+      "current_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:3"
+    },
+    "invariance_mode": "IDENTITY",
+    "divergence_score": 0,
+    "detected_events": [],
+    "novelty_gate_triggered": false,
+    "segmentation_recommendation": "continue_segment",
+    "anomaly_receipt": {
+      "metric_used": "band_profile_l1",
+      "threshold": 0.15,
+      "divergence_value": 0,
+      "bins_compared": 8,
+      "phase_sensitivity_mode": "strict",
+      "sustained_duration_sec": 1,
+      "novelty_gate_triggered": false
+    },
+    "policies": {
+      "anomaly_policy_id": "ANOM:pid=anomaly.synthetic.v1:mode=IDENTITY:metric=band_profile_l1:thresh=0.15:freqtol=1:phase=strict:mindur=0:seg=strict:dominant=0.2:new=0.15:vanish=0.15:eshift=0.15",
+      "clock_policy_id": "clock.synthetic.v1",
+      "grid_policy_id": "GRID:Fs=256:tref=0:grid=strict:drift=none:nonmono=reject:interp=linear:gap=interpolate:smallgap=3:maxgap=null:aa=false",
+      "window_policy_id": "WIN:mode=fixed:Fs=256:N=256:hop=128:fn=hann:overlap=0.5:stationarity=tolerant:salience=off:gap=interpolate:maxmiss=0.25:boundary=pad",
+      "transform_policy_id": "XFORM:type=fft:norm=forward_1_over_N:scale=real_input_half_spectrum:numeric=tolerant",
+      "compression_policy_id": "COMP:pid=compress.synthetic.v1:select=topK:budget=8:maxK=8:lens=IDENTITY:recon=0.25:energy=0.25:band=0.3:dc=true:novelty=true:numeric=tolerant"
+    },
+    "provenance": {
+      "input_refs": [
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:3:7:8",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:3:7:8"
+      ],
+      "operator_id": "AnomalyOp",
+      "operator_version": "0.1.0"
+    }
+  },
+  {
+    "artifact_type": "AnomalyReport",
+    "artifact_class": "An",
+    "stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+    "window_ref": "7.5:8.5",
+    "baseline_id": "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:3:7:8",
+    "baseline_scope": {
+      "baseline_stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+      "baseline_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:3",
+      "current_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:3"
+    },
+    "invariance_mode": "IDENTITY",
+    "divergence_score": 0.3659619794743635,
+    "detected_events": [
+      {
+        "type": "drift",
+        "freq_hz": 8,
+        "magnitude_delta": 0.11708839394799521,
+        "phase_delta": -0.07624878892401865,
+        "band_id": null
+      },
+      {
+        "type": "energy_shift",
+        "freq_hz": null,
+        "magnitude_delta": -0.1797597139084936,
+        "phase_delta": null,
+        "band_id": 2
+      }
+    ],
+    "novelty_gate_triggered": true,
+    "segmentation_recommendation": "new_segment",
+    "anomaly_receipt": {
+      "metric_used": "band_profile_l1",
+      "threshold": 0.15,
+      "divergence_value": 0.3659619794743635,
+      "bins_compared": 7,
+      "phase_sensitivity_mode": "strict",
+      "sustained_duration_sec": 1,
+      "novelty_gate_triggered": true
+    },
+    "policies": {
+      "anomaly_policy_id": "ANOM:pid=anomaly.synthetic.v1:mode=IDENTITY:metric=band_profile_l1:thresh=0.15:freqtol=1:phase=strict:mindur=0:seg=strict:dominant=0.2:new=0.15:vanish=0.15:eshift=0.15",
+      "clock_policy_id": "clock.synthetic.v1",
+      "grid_policy_id": "GRID:Fs=256:tref=0:grid=strict:drift=none:nonmono=reject:interp=linear:gap=interpolate:smallgap=3:maxgap=null:aa=false",
+      "window_policy_id": "WIN:mode=fixed:Fs=256:N=256:hop=128:fn=hann:overlap=0.5:stationarity=tolerant:salience=off:gap=interpolate:maxmiss=0.25:boundary=pad",
+      "transform_policy_id": "XFORM:type=fft:norm=forward_1_over_N:scale=real_input_half_spectrum:numeric=tolerant",
+      "compression_policy_id": "COMP:pid=compress.synthetic.v1:select=topK:budget=8:maxK=8:lens=IDENTITY:recon=0.25:energy=0.25:band=0.3:dc=true:novelty=true:numeric=tolerant"
+    },
+    "provenance": {
+      "input_refs": [
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:3:7.5:8.5",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:3:7:8"
+      ],
+      "operator_id": "AnomalyOp",
+      "operator_version": "0.1.0"
+    }
+  },
+  {
+    "artifact_type": "AnomalyReport",
+    "artifact_class": "An",
+    "stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+    "window_ref": "8:9",
+    "baseline_id": "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:4:8:9",
+    "baseline_scope": {
+      "baseline_stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+      "baseline_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:4",
+      "current_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:4"
+    },
+    "invariance_mode": "IDENTITY",
+    "divergence_score": 0,
+    "detected_events": [],
+    "novelty_gate_triggered": false,
+    "segmentation_recommendation": "continue_segment",
+    "anomaly_receipt": {
+      "metric_used": "band_profile_l1",
+      "threshold": 0.15,
+      "divergence_value": 0,
+      "bins_compared": 8,
+      "phase_sensitivity_mode": "strict",
+      "sustained_duration_sec": 1,
+      "novelty_gate_triggered": false
+    },
+    "policies": {
+      "anomaly_policy_id": "ANOM:pid=anomaly.synthetic.v1:mode=IDENTITY:metric=band_profile_l1:thresh=0.15:freqtol=1:phase=strict:mindur=0:seg=strict:dominant=0.2:new=0.15:vanish=0.15:eshift=0.15",
+      "clock_policy_id": "clock.synthetic.v1",
+      "grid_policy_id": "GRID:Fs=256:tref=0:grid=strict:drift=none:nonmono=reject:interp=linear:gap=interpolate:smallgap=3:maxgap=null:aa=false",
+      "window_policy_id": "WIN:mode=fixed:Fs=256:N=256:hop=128:fn=hann:overlap=0.5:stationarity=tolerant:salience=off:gap=interpolate:maxmiss=0.25:boundary=pad",
+      "transform_policy_id": "XFORM:type=fft:norm=forward_1_over_N:scale=real_input_half_spectrum:numeric=tolerant",
+      "compression_policy_id": "COMP:pid=compress.synthetic.v1:select=topK:budget=8:maxK=8:lens=IDENTITY:recon=0.25:energy=0.25:band=0.3:dc=true:novelty=true:numeric=tolerant"
+    },
+    "provenance": {
+      "input_refs": [
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:4:8:9",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:4:8:9"
+      ],
+      "operator_id": "AnomalyOp",
+      "operator_version": "0.1.0"
+    }
+  },
+  {
+    "artifact_type": "AnomalyReport",
+    "artifact_class": "An",
+    "stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+    "window_ref": "8.5:9.5",
+    "baseline_id": "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:4:8:9",
+    "baseline_scope": {
+      "baseline_stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+      "baseline_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:4",
+      "current_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:4"
+    },
+    "invariance_mode": "IDENTITY",
+    "divergence_score": 0.1628434756482271,
+    "detected_events": [
+      {
+        "type": "drift",
+        "freq_hz": 8,
+        "magnitude_delta": 0.05613990109799816,
+        "phase_delta": -0.02699786377568847,
+        "band_id": null
+      }
+    ],
+    "novelty_gate_triggered": true,
+    "segmentation_recommendation": "new_segment",
+    "anomaly_receipt": {
+      "metric_used": "band_profile_l1",
+      "threshold": 0.15,
+      "divergence_value": 0.1628434756482271,
+      "bins_compared": 8,
+      "phase_sensitivity_mode": "strict",
+      "sustained_duration_sec": 1,
+      "novelty_gate_triggered": true
+    },
+    "policies": {
+      "anomaly_policy_id": "ANOM:pid=anomaly.synthetic.v1:mode=IDENTITY:metric=band_profile_l1:thresh=0.15:freqtol=1:phase=strict:mindur=0:seg=strict:dominant=0.2:new=0.15:vanish=0.15:eshift=0.15",
+      "clock_policy_id": "clock.synthetic.v1",
+      "grid_policy_id": "GRID:Fs=256:tref=0:grid=strict:drift=none:nonmono=reject:interp=linear:gap=interpolate:smallgap=3:maxgap=null:aa=false",
+      "window_policy_id": "WIN:mode=fixed:Fs=256:N=256:hop=128:fn=hann:overlap=0.5:stationarity=tolerant:salience=off:gap=interpolate:maxmiss=0.25:boundary=pad",
+      "transform_policy_id": "XFORM:type=fft:norm=forward_1_over_N:scale=real_input_half_spectrum:numeric=tolerant",
+      "compression_policy_id": "COMP:pid=compress.synthetic.v1:select=topK:budget=8:maxK=8:lens=IDENTITY:recon=0.25:energy=0.25:band=0.3:dc=true:novelty=true:numeric=tolerant"
+    },
+    "provenance": {
+      "input_refs": [
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:4:8.5:9.5",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:4:8:9"
+      ],
+      "operator_id": "AnomalyOp",
+      "operator_version": "0.1.0"
+    }
+  },
+  {
+    "artifact_type": "AnomalyReport",
+    "artifact_class": "An",
+    "stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+    "window_ref": "9:10",
+    "baseline_id": "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:5:9:10",
+    "baseline_scope": {
+      "baseline_stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+      "baseline_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:5",
+      "current_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:5"
+    },
+    "invariance_mode": "IDENTITY",
+    "divergence_score": 0,
+    "detected_events": [],
+    "novelty_gate_triggered": false,
+    "segmentation_recommendation": "continue_segment",
+    "anomaly_receipt": {
+      "metric_used": "band_profile_l1",
+      "threshold": 0.15,
+      "divergence_value": 0,
+      "bins_compared": 8,
+      "phase_sensitivity_mode": "strict",
+      "sustained_duration_sec": 1,
+      "novelty_gate_triggered": false
+    },
+    "policies": {
+      "anomaly_policy_id": "ANOM:pid=anomaly.synthetic.v1:mode=IDENTITY:metric=band_profile_l1:thresh=0.15:freqtol=1:phase=strict:mindur=0:seg=strict:dominant=0.2:new=0.15:vanish=0.15:eshift=0.15",
+      "clock_policy_id": "clock.synthetic.v1",
+      "grid_policy_id": "GRID:Fs=256:tref=0:grid=strict:drift=none:nonmono=reject:interp=linear:gap=interpolate:smallgap=3:maxgap=null:aa=false",
+      "window_policy_id": "WIN:mode=fixed:Fs=256:N=256:hop=128:fn=hann:overlap=0.5:stationarity=tolerant:salience=off:gap=interpolate:maxmiss=0.25:boundary=pad",
+      "transform_policy_id": "XFORM:type=fft:norm=forward_1_over_N:scale=real_input_half_spectrum:numeric=tolerant",
+      "compression_policy_id": "COMP:pid=compress.synthetic.v1:select=topK:budget=8:maxK=8:lens=IDENTITY:recon=0.25:energy=0.25:band=0.3:dc=true:novelty=true:numeric=tolerant"
+    },
+    "provenance": {
+      "input_refs": [
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:5:9:10",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:5:9:10"
+      ],
+      "operator_id": "AnomalyOp",
+      "operator_version": "0.1.0"
+    }
+  }
+]

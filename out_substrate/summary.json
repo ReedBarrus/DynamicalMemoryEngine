@@ -1,0 +1,85 @@
+{
+  "run_timestamp": "2026-03-15T06:33:44.935Z",
+  "stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+  "signal_duration_sec": 10,
+  "signal_fs": 256,
+  "sample_count": 2432,
+  "truth_segment_count": 5,
+  "aligned_sample_count": 2560,
+  "window_count": 19,
+  "h1_count": 19,
+  "m1_count": 9,
+  "anomaly_report_count": 18,
+  "skipped_window_count": 0,
+  "merge_failure_count": 0,
+  "segment_count": 6,
+  "segment_transitions": 5,
+  "segment_ids": [
+    "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0",
+    "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1",
+    "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2",
+    "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:3",
+    "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:4",
+    "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:5"
+  ],
+  "substrate_state_count": 28,
+  "substrate_basin_count": 6,
+  "substrate_trajectory_frames": 28,
+  "t_span": {
+    "t_start": 0,
+    "t_end": 10
+  },
+  "basin_sets": [
+    {
+      "segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0",
+      "basin_count": 1,
+      "states_considered": 9,
+      "unassigned": 0
+    },
+    {
+      "segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1",
+      "basin_count": 1,
+      "states_considered": 6,
+      "unassigned": 0
+    },
+    {
+      "segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2",
+      "basin_count": 1,
+      "states_considered": 6,
+      "unassigned": 2
+    },
+    {
+      "segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:3",
+      "basin_count": 1,
+      "states_considered": 3,
+      "unassigned": 0
+    },
+    {
+      "segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:4",
+      "basin_count": 1,
+      "states_considered": 3,
+      "unassigned": 0
+    },
+    {
+      "segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:5",
+      "basin_count": 1,
+      "states_considered": 1,
+      "unassigned": 0
+    }
+  ],
+  "trajectory_velocity_mean_l1": 0.23616870887285146,
+  "trajectory_converging": true,
+  "trajectory_convergence_slope": -0.017375231788878977,
+  "trajectory_sufficient_data": true,
+  "trajectory_basin_dwell": 1,
+  "consensus_candidates_evaluated": 5,
+  "consensus_legitimacy_pass_rate": 1,
+  "query_result_count": 5,
+  "top_query_refs": [
+    "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:0:1",
+    "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:0:1.5",
+    "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:1:2.5"
+  ],
+  "reconstruction_target_class": "M1",
+  "reconstruction_target_id": "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:0:1.5"
+}

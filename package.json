@@ -1,0 +1,14 @@
+{
+    "name": "dynamical-structural-memory-l0",
+    "version": "0.1.0",
+    "description": "Deterministic runtime harness for the structural memory substrate",
+    "type": "module",
+    "scripts": {
+        "demo": "node demo.js",
+        "pipeline": "node run_pipeline.js",
+        "pipeline:substrate": "node scripts/run_pipeline_substrate.js",
+        "test:substrate": "node tests/test_substrate_contracts.js",
+        "test:orchestrator": "node tests/test_door_one_orchestrator.js",
+        "test:hud": "node tests/test_door_one_hud.js"
+    }
+}

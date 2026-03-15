@@ -1,0 +1,82 @@
+{
+  "fs": 256,
+  "durationSec": 10,
+  "sampleCount": 2432,
+  "rawNominalCount": 2560,
+  "segments": [
+    {
+      "name": "baseline",
+      "start": 0,
+      "end": 3,
+      "expected_features": [
+        "8Hz strong",
+        "20Hz weaker"
+      ]
+    },
+    {
+      "name": "novelty_enter",
+      "start": 3,
+      "end": 5,
+      "expected_features": [
+        "8Hz strong",
+        "20Hz weaker",
+        "40Hz new tone"
+      ]
+    },
+    {
+      "name": "frequency_shift",
+      "start": 5,
+      "end": 7,
+      "expected_features": [
+        "8Hz strong",
+        "24Hz replaces 20Hz"
+      ]
+    },
+    {
+      "name": "dropout",
+      "start": 7,
+      "end": 8,
+      "expected_features": [
+        "timestamp gap",
+        "gap handling",
+        "partial return"
+      ]
+    },
+    {
+      "name": "burst_return",
+      "start": 8,
+      "end": 10,
+      "expected_features": [
+        "baseline return",
+        "transient pulse bursts"
+      ]
+    }
+  ],
+  "expectedEvents": [
+    {
+      "kind": "novelty",
+      "start": 3,
+      "end": 5,
+      "detail": "40Hz component appears"
+    },
+    {
+      "kind": "frequency_shift",
+      "start": 5,
+      "end": 7,
+      "detail": "20Hz component replaced by 24Hz"
+    },
+    {
+      "kind": "dropout",
+      "start": 7,
+      "end": 7.5,
+      "detail": "timestamp gap / dropped sample block"
+    },
+    {
+      "kind": "transient",
+      "start": 8,
+      "end": 10,
+      "detail": "pulse bursts on top of baseline"
+    }
+  ],
+  "annotationHint": "Use expectedEvents and segments to compare pipeline outputs against known truth."
+}

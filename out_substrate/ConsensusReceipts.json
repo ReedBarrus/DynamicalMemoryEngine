@@ -1,0 +1,47 @@
+[
+  {
+    "state_id": "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:0:1.5",
+    "ok": true,
+    "result": "deferred",
+    "legitimacy_passed": true,
+    "legitimacy_failures": [],
+    "candidate_confidence": 0.9956657480793792,
+    "result_reason": "Door One stub: consensus mechanism not yet implemented"
+  },
+  {
+    "state_id": "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:1:2.5",
+    "ok": true,
+    "result": "deferred",
+    "legitimacy_passed": true,
+    "legitimacy_failures": [],
+    "candidate_confidence": 0.9953600883889264,
+    "result_reason": "Door One stub: consensus mechanism not yet implemented"
+  },
+  {
+    "state_id": "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:2:3.5",
+    "ok": true,
+    "result": "deferred",
+    "legitimacy_passed": true,
+    "legitimacy_failures": [],
+    "candidate_confidence": 0.5500137938215166,
+    "result_reason": "Door One stub: confidence 0.550 < threshold 0.8"
+  },
+  {
+    "state_id": "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1:3:4.5",
+    "ok": true,
+    "result": "deferred",
+    "legitimacy_passed": true,
+    "legitimacy_failures": [],
+    "candidate_confidence": 0.8589051655650901,
+    "result_reason": "Door One stub: consensus mechanism not yet implemented"
+  },
+  {
+    "state_id": "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1:4:5.5",
+    "ok": true,
+    "result": "deferred",
+    "legitimacy_passed": true,
+    "legitimacy_failures": [],
+    "candidate_confidence": 0.5986004509100198,
+    "result_reason": "Door One stub: confidence 0.599 < threshold 0.8"
+  }
+]

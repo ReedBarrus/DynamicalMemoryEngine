@@ -1,0 +1,62 @@
+[
+  {
+    "from_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0",
+    "to_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1",
+    "t_transition": 2.5,
+    "trigger_window_ref": "2.5:3.5",
+    "divergence_score": 0.24503904473861182,
+    "detected_event_types": [
+      "drift"
+    ],
+    "epoch_counter": 1
+  },
+  {
+    "from_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1",
+    "to_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2",
+    "t_transition": 4.5,
+    "trigger_window_ref": "4.5:5.5",
+    "divergence_score": 0.38172311664515546,
+    "detected_event_types": [
+      "drift",
+      "energy_shift"
+    ],
+    "epoch_counter": 2
+  },
+  {
+    "from_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2",
+    "to_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:3",
+    "t_transition": 6.5,
+    "trigger_window_ref": "6.5:7.5",
+    "divergence_score": 0.8839681073933912,
+    "detected_event_types": [
+      "drift",
+      "energy_shift",
+      "energy_shift",
+      "energy_shift"
+    ],
+    "epoch_counter": 3
+  },
+  {
+    "from_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:3",
+    "to_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:4",
+    "t_transition": 7.5,
+    "trigger_window_ref": "7.5:8.5",
+    "divergence_score": 0.3659619794743635,
+    "detected_event_types": [
+      "drift",
+      "energy_shift"
+    ],
+    "epoch_counter": 4
+  },
+  {
+    "from_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:4",
+    "to_segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:5",
+    "t_transition": 8.5,
+    "trigger_window_ref": "8.5:9.5",
+    "divergence_score": 0.1628434756482271,
+    "detected_event_types": [
+      "drift"
+    ],
+    "epoch_counter": 5
+  }
+]

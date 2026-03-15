@@ -1,0 +1,213 @@
+{
+  "artifact_type": "MergedState",
+  "artifact_class": "M1",
+  "state_id": "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg_default:0:1.5",
+  "stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+  "segment_id": "seg_default",
+  "window_span": {
+    "t_start": 0,
+    "t_end": 1.5,
+    "duration_sec": 1.5,
+    "window_count": 2
+  },
+  "grid": {
+    "Fs_target": 256,
+    "N": 256,
+    "df": 1,
+    "bin_count_full": 9,
+    "bin_count_kept": 8
+  },
+  "kept_bins": [
+    {
+      "k": 0,
+      "freq_hz": 0,
+      "re": -0.00019329490274457874,
+      "im": 0,
+      "magnitude": 0.00019329490274457874,
+      "phase": 3.141592653589793
+    },
+    {
+      "k": 8,
+      "freq_hz": 8,
+      "re": 0.0011812712317144525,
+      "im": -0.2500509458083905,
+      "magnitude": 0.2500537360276657,
+      "phase": -1.5660722397077382
+    },
+    {
+      "k": 7,
+      "freq_hz": 7,
+      "re": 0.0006204290863443312,
+      "im": 0.12611493311498884,
+      "magnitude": 0.1261164592226141,
+      "phase": 1.5658768135708527
+    },
+    {
+      "k": 9,
+      "freq_hz": 9,
+      "re": -0.0022593286128721104,
+      "im": 0.12565671891124372,
+      "magnitude": 0.1256770288211822,
+      "phase": 1.5887745551747599
+    },
+    {
+      "k": 20,
+      "freq_hz": 20,
+      "re": -0.0003743747669587653,
+      "im": -0.11134449678446559,
+      "magnitude": 0.11134512616478552,
+      "phase": -1.5741586245913264
+    },
+    {
+      "k": 21,
+      "freq_hz": 21,
+      "re": -0.0005156787423462525,
+      "im": 0.05628592186834197,
+      "magnitude": 0.0562882840841183,
+      "phase": 1.579957841745696
+    },
+    {
+      "k": 19,
+      "freq_hz": 19,
+      "re": 0.0010030247727407986,
+      "im": 0.0560421884541452,
+      "magnitude": 0.056051163640237274,
+      "phase": 1.5529005642908953
+    },
+    {
+      "k": 62,
+      "freq_hz": 62,
+      "re": -0.001264515565922222,
+      "im": 0.0019300088383000698,
+      "magnitude": 0.0023073651059977445,
+      "phase": 2.150808895036444
+    }
+  ],
+  "invariants": {
+    "energy_raw": 0.11294479314152467,
+    "energy_norm": 1,
+    "band_profile_norm": {
+      "band_edges": [
+        0,
+        1,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "band_energy": [
+        3.3080692246006254e-7,
+        0,
+        0.14082421016893795,
+        0.693450174162287,
+        0.16563703797986806,
+        0.000047137487123508786,
+        0.000041109394860986114
+      ]
+    }
+  },
+  "uncertainty": {
+    "time": {
+      "dt_nominal": null,
+      "jitter_rms": null,
+      "gap_total_duration": 0,
+      "monotonicity_violations": 0,
+      "drift_ppm": null,
+      "fit_residual_rms": null,
+      "post_align_jitter": null
+    },
+    "phase_by_band": {
+      "band_edges": [
+        0,
+        1,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "sigma_phi": [
+        0,
+        0,
+        0,
+        3.167522604572541,
+        1.4824266030677506,
+        0,
+        0
+      ],
+      "source": "measured_from_merge"
+    },
+    "replay": {
+      "recon_mae": 0,
+      "recon_rmse": 0,
+      "parseval_error": null
+    },
+    "distortion": {
+      "energy_residual": 0.0013002755761862181,
+      "band_profile_divergence": 0.00008825937949000048,
+      "phase_align_residual": 0
+    }
+  },
+  "confidence": {
+    "by_invariant": {
+      "identity": 1,
+      "energy": 0.9956657480793792,
+      "band_profile": 0.9997058020683667
+    },
+    "overall": 0.9956657480793792,
+    "method": "thresholded_receipts_v1"
+  },
+  "gates": {
+    "eligible_for_canonical_merge": false,
+    "eligible_for_archive_tier": true,
+    "blocked_reason": "low_energy"
+  },
+  "receipts": {
+    "merge": {
+      "merge_mode": "authoritative",
+      "phase_alignment_mode": "rotate_to_first",
+      "weights_mode": "equal",
+      "merged_from": [
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg_default:0:1",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg_default:0.5:1.5"
+      ],
+      "phase_deltas": [
+        0,
+        0.5
+      ],
+      "energy_drift_after_merge": 0.0013002755761862181
+    }
+  },
+  "merge_record": {
+    "inputs": [
+      "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg_default:0:1",
+      "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg_default:0.5:1.5"
+    ],
+    "weights": [
+      1,
+      1
+    ],
+    "merge_policy_id": "MERGE:pid=merge.synthetic.v1:adj=time_touching:phase=rotate_to_first:weights=equal:novelty=allow_if_clean:mode=authoritative:gridtol=0",
+    "output_ref": "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg_default:0:1.5",
+    "merge_tree_position": "root.left"
+  },
+  "policies": {
+    "clock_policy_id": "clock.synthetic.v1",
+    "grid_policy_id": "GRID:Fs=256:tref=0:grid=strict:drift=none:nonmono=reject:interp=linear:gap=interpolate:smallgap=3:maxgap=null:aa=false",
+    "window_policy_id": "WIN:mode=fixed:Fs=256:N=256:hop=128:fn=hann:overlap=0.5:stationarity=tolerant:salience=off:gap=interpolate:maxmiss=0.25:boundary=pad",
+    "transform_policy_id": "XFORM:type=fft:norm=forward_1_over_N:scale=real_input_half_spectrum:numeric=tolerant",
+    "compression_policy_id": "MERGECOMP:pid=merge.compress.synthetic.v1:select=topK:budget=8:maxK=8:lens=IDENTITY:recon=0.3:energy=0.3:band=0.3:dc=true",
+    "merge_policy_id": "MERGE:pid=merge.synthetic.v1:adj=time_touching:phase=rotate_to_first:weights=equal:novelty=allow_if_clean:mode=authoritative:gridtol=0"
+  },
+  "provenance": {
+    "input_refs": [
+      "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg_default:0:1",
+      "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg_default:0.5:1.5"
+    ],
+    "operator_id": "MergeOp",
+    "operator_version": "0.1.0"
+  }
+}

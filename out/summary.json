@@ -1,0 +1,19 @@
+{
+  "stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+  "sample_count": 2432,
+  "aligned_count": 2560,
+  "window_count": 19,
+  "spectral_count": 19,
+  "harmonic_count": 19,
+  "anomaly_count": 18,
+  "merged": true,
+  "reconstruction_target": "M1",
+  "query_result_count": 5,
+  "top_query_refs": [
+    "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg_default:0:1",
+    "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg_default:0:1.5",
+    "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg_default:1:2"
+  ],
+  "skipped_window_count": 0,
+  "skipped_windows": []
+}

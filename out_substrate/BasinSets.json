@@ -1,0 +1,371 @@
+[
+  {
+    "artifact_type": "BasinSet",
+    "artifact_class": "BN",
+    "stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+    "segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0",
+    "basins": [
+      {
+        "basin_id": "BN:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:c0:f8ab4a80",
+        "stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+        "segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0",
+        "member_state_ids": [
+          "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:0.5:1.5",
+          "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:0:1",
+          "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:1.5:2.5",
+          "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:1:2",
+          "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:2.5:3.5",
+          "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:2:3",
+          "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:0:1.5",
+          "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:1:2.5",
+          "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:2:3.5"
+        ],
+        "member_count": 9,
+        "centroid_band_profile": [
+          0.00003083633774057083,
+          0,
+          0.1376375889005423,
+          0.6774748393721841,
+          0.1565420731535664,
+          0.028292300813909554,
+          0.000022361422057178887
+        ],
+        "centroid_energy_raw": 0.11630134267281156,
+        "radius": 0.18841222021988296,
+        "mean_distance": 0.08449289941206033,
+        "total_duration_sec": 10.5,
+        "span": {
+          "t_start": 0,
+          "t_end": 3.5
+        },
+        "receipts": {
+          "policy_id": "basin.synthetic.v1",
+          "linkage": "single_link",
+          "weight_mode": "duration",
+          "similarity_threshold": 0.35
+        }
+      }
+    ],
+    "unassigned_state_ids": [],
+    "receipts": {
+      "states_considered": 9,
+      "basins_formed": 1,
+      "states_unassigned": 0,
+      "policy_id": "basin.synthetic.v1"
+    },
+    "provenance": {
+      "operator_id": "BasinOp",
+      "operator_version": "0.1.0",
+      "input_refs": [
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:0:1",
+        "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:0:1.5",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:0.5:1.5",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:1:2",
+        "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:1:2.5",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:1.5:2.5",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:2:3",
+        "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:2:3.5",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:2.5:3.5"
+      ]
+    }
+  },
+  {
+    "artifact_type": "BasinSet",
+    "artifact_class": "BN",
+    "stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+    "segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1",
+    "basins": [
+      {
+        "basin_id": "BN:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1:c0:41cbcb30",
+        "stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+        "segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1",
+        "member_state_ids": [
+          "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1:3.5:4.5",
+          "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1:3:4",
+          "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1:4.5:5.5",
+          "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1:4:5",
+          "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1:3:4.5",
+          "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1:4:5.5"
+        ],
+        "member_count": 6,
+        "centroid_band_profile": [
+          0.000005134524799152909,
+          0,
+          0.11486260389522404,
+          0.5659413236218453,
+          0.0837083741832703,
+          0.23548256377486126,
+          0
+        ],
+        "centroid_energy_raw": 0.14346136874453513,
+        "radius": 0.30253947998072744,
+        "mean_distance": 0.12297372473665787,
+        "total_duration_sec": 7,
+        "span": {
+          "t_start": 3,
+          "t_end": 5.5
+        },
+        "receipts": {
+          "policy_id": "basin.synthetic.v1",
+          "linkage": "single_link",
+          "weight_mode": "duration",
+          "similarity_threshold": 0.35
+        }
+      }
+    ],
+    "unassigned_state_ids": [],
+    "receipts": {
+      "states_considered": 6,
+      "basins_formed": 1,
+      "states_unassigned": 0,
+      "policy_id": "basin.synthetic.v1"
+    },
+    "provenance": {
+      "operator_id": "BasinOp",
+      "operator_version": "0.1.0",
+      "input_refs": [
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1:3:4",
+        "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1:3:4.5",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1:3.5:4.5",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1:4:5",
+        "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1:4:5.5",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1:4.5:5.5"
+      ]
+    }
+  },
+  {
+    "artifact_type": "BasinSet",
+    "artifact_class": "BN",
+    "stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+    "segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2",
+    "basins": [
+      {
+        "basin_id": "BN:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2:c0:2096b000",
+        "stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+        "segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2",
+        "member_state_ids": [
+          "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2:5.5:6.5",
+          "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2:5:6",
+          "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2:6:7",
+          "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2:5:6.5"
+        ],
+        "member_count": 4,
+        "centroid_band_profile": [
+          0.000004913827020685988,
+          0,
+          0.13936726826487608,
+          0.6919259331092054,
+          0.16864230621237625,
+          0,
+          0.00005957858652158978
+        ],
+        "centroid_energy_raw": 0.11162031748710098,
+        "radius": 0.0051901416680575395,
+        "mean_distance": 0.0034313944670867377,
+        "total_duration_sec": 4.5,
+        "span": {
+          "t_start": 5,
+          "t_end": 7
+        },
+        "receipts": {
+          "policy_id": "basin.synthetic.v1",
+          "linkage": "single_link",
+          "weight_mode": "duration",
+          "similarity_threshold": 0.35
+        }
+      }
+    ],
+    "unassigned_state_ids": [
+      "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2:6.5:7.5",
+      "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2:6:7.5"
+    ],
+    "receipts": {
+      "states_considered": 6,
+      "basins_formed": 1,
+      "states_unassigned": 2,
+      "policy_id": "basin.synthetic.v1"
+    },
+    "provenance": {
+      "operator_id": "BasinOp",
+      "operator_version": "0.1.0",
+      "input_refs": [
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2:5:6",
+        "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2:5:6.5",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2:5.5:6.5",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2:6:7",
+        "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2:6:7.5",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2:6.5:7.5"
+      ]
+    }
+  },
+  {
+    "artifact_type": "BasinSet",
+    "artifact_class": "BN",
+    "stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+    "segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:3",
+    "basins": [
+      {
+        "basin_id": "BN:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:3:c0:665c4e94",
+        "stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+        "segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:3",
+        "member_state_ids": [
+          "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:3:7.5:8.5",
+          "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:3:7:8",
+          "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:3:7:8.5"
+        ],
+        "member_count": 3,
+        "centroid_band_profile": [
+          0.0015765312431820539,
+          0.0014315541963504355,
+          0.22541175698775742,
+          0.6208302674869185,
+          0.1507498900857916,
+          0,
+          0
+        ],
+        "centroid_energy_raw": 0.07980142976809501,
+        "radius": 0.21764154119962098,
+        "mean_distance": 0.1373920160303163,
+        "total_duration_sec": 3.5,
+        "span": {
+          "t_start": 7,
+          "t_end": 8.5
+        },
+        "receipts": {
+          "policy_id": "basin.synthetic.v1",
+          "linkage": "single_link",
+          "weight_mode": "duration",
+          "similarity_threshold": 0.35
+        }
+      }
+    ],
+    "unassigned_state_ids": [],
+    "receipts": {
+      "states_considered": 3,
+      "basins_formed": 1,
+      "states_unassigned": 0,
+      "policy_id": "basin.synthetic.v1"
+    },
+    "provenance": {
+      "operator_id": "BasinOp",
+      "operator_version": "0.1.0",
+      "input_refs": [
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:3:7:8",
+        "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:3:7:8.5",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:3:7.5:8.5"
+      ]
+    }
+  },
+  {
+    "artifact_type": "BasinSet",
+    "artifact_class": "BN",
+    "stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+    "segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:4",
+    "basins": [
+      {
+        "basin_id": "BN:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:4:c0:8e86cff0",
+        "stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+        "segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:4",
+        "member_state_ids": [
+          "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:4:8.5:9.5",
+          "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:4:8:9",
+          "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:4:8:9.5"
+        ],
+        "member_count": 3,
+        "centroid_band_profile": [
+          0.024971941716206314,
+          0.02133222324404855,
+          0.15197056149117666,
+          0.6424390753677562,
+          0.15928619818081222,
+          0,
+          0
+        ],
+        "centroid_energy_raw": 0.13064235213429795,
+        "radius": 0.08620151477768262,
+        "mean_distance": 0.05688454880283911,
+        "total_duration_sec": 3.5,
+        "span": {
+          "t_start": 8,
+          "t_end": 9.5
+        },
+        "receipts": {
+          "policy_id": "basin.synthetic.v1",
+          "linkage": "single_link",
+          "weight_mode": "duration",
+          "similarity_threshold": 0.35
+        }
+      }
+    ],
+    "unassigned_state_ids": [],
+    "receipts": {
+      "states_considered": 3,
+      "basins_formed": 1,
+      "states_unassigned": 0,
+      "policy_id": "basin.synthetic.v1"
+    },
+    "provenance": {
+      "operator_id": "BasinOp",
+      "operator_version": "0.1.0",
+      "input_refs": [
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:4:8:9",
+        "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:4:8:9.5",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:4:8.5:9.5"
+      ]
+    }
+  },
+  {
+    "artifact_type": "BasinSet",
+    "artifact_class": "BN",
+    "stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+    "segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:5",
+    "basins": [
+      {
+        "basin_id": "BN:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:5:c0:71170ed4",
+        "stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+        "segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:5",
+        "member_state_ids": [
+          "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:5:9:10"
+        ],
+        "member_count": 1,
+        "centroid_band_profile": [
+          0.03462862138467466,
+          0.06538326502269413,
+          0.09139571711892087,
+          0.6513374804330978,
+          0.15725491604061262,
+          0,
+          0
+        ],
+        "centroid_energy_raw": 0.11926593555831935,
+        "radius": 0,
+        "mean_distance": 0,
+        "total_duration_sec": 1,
+        "span": {
+          "t_start": 9,
+          "t_end": 10
+        },
+        "receipts": {
+          "policy_id": "basin.synthetic.v1.single",
+          "linkage": "single_link",
+          "weight_mode": "duration",
+          "similarity_threshold": 0.35
+        }
+      }
+    ],
+    "unassigned_state_ids": [],
+    "receipts": {
+      "states_considered": 1,
+      "basins_formed": 1,
+      "states_unassigned": 0,
+      "policy_id": "basin.synthetic.v1.single"
+    },
+    "provenance": {
+      "operator_id": "BasinOp",
+      "operator_version": "0.1.0",
+      "input_refs": [
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:5:9:10"
+      ]
+    }
+  }
+]

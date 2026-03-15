@@ -1,0 +1,175 @@
+{
+  "artifact_type": "QueryResult",
+  "artifact_class": "Q",
+  "query_id": "query.synthetic.1",
+  "mode": "IDENTITY",
+  "scope": {
+    "stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+    "allow_cross_segment": true,
+    "same_grid_only": true
+  },
+  "results": [
+    {
+      "ref": "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:0:1",
+      "score": 1,
+      "rank": 1,
+      "artifact_class": "H1",
+      "stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+      "segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0",
+      "window_span": {
+        "t_start": 0,
+        "t_end": 1
+      },
+      "explain": {
+        "metric": "band_l1",
+        "phase_used": false,
+        "complex_distance": 0
+      }
+    },
+    {
+      "ref": "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:0:1.5",
+      "score": 0.9999328809237168,
+      "rank": 2,
+      "artifact_class": "M1",
+      "stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+      "segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0",
+      "window_span": {
+        "t_start": 0,
+        "t_end": 1.5
+      },
+      "explain": {
+        "metric": "band_l1",
+        "phase_used": false,
+        "complex_distance": 0.003906973750676128
+      }
+    },
+    {
+      "ref": "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:1:2.5",
+      "score": 0.9999197626665278,
+      "rank": 3,
+      "artifact_class": "M1",
+      "stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+      "segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0",
+      "window_span": {
+        "t_start": 1,
+        "t_end": 2.5
+      },
+      "explain": {
+        "metric": "band_l1",
+        "phase_used": false,
+        "complex_distance": 0.004953167648840276
+      }
+    },
+    {
+      "ref": "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:1:2",
+      "score": 0.9999150208334691,
+      "rank": 4,
+      "artifact_class": "H1",
+      "stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+      "segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0",
+      "window_span": {
+        "t_start": 1,
+        "t_end": 2
+      },
+      "explain": {
+        "metric": "band_l1",
+        "phase_used": false,
+        "complex_distance": 0.005459415257128526
+      }
+    },
+    {
+      "ref": "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:1.5:2.5",
+      "score": 0.9999149211387605,
+      "rank": 5,
+      "artifact_class": "H1",
+      "stream_id": "STR:synthetic_fixture_v1:ch0:voltage:arb:256",
+      "segment_id": "seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0",
+      "window_span": {
+        "t_start": 1.5,
+        "t_end": 2.5
+      },
+      "explain": {
+        "metric": "band_l1",
+        "phase_used": false,
+        "complex_distance": 0.004737974375054155
+      }
+    }
+  ],
+  "receipts": {
+    "query": {
+      "query_policy_id": "QUERY:pid=query.synthetic.v1:score=band_l1:norm=band_profile_norm:phase=false:lens=false:topK=5",
+      "scoring": "band_l1",
+      "normalization": "band_profile_norm",
+      "phase_used": false,
+      "filters": [
+        "same_grid",
+        "stream_id"
+      ],
+      "consulted_refs": [
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:0:1",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:0.5:1.5",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:1:2",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:1.5:2.5",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:2:3",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:2.5:3.5",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1:3:4",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1:3.5:4.5",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1:4:5",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1:4.5:5.5",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2:5:6",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2:5.5:6.5",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2:6:7",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2:6.5:7.5",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:3:7:8",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:3:7.5:8.5",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:4:8:9",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:4:8.5:9.5",
+        "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:5:9:10",
+        "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:0:1.5",
+        "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:1:2.5",
+        "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:2:3.5",
+        "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1:3:4.5",
+        "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1:4:5.5",
+        "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2:5:6.5",
+        "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2:6:7.5",
+        "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:3:7:8.5",
+        "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:4:8:9.5"
+      ],
+      "lens_artifact_used": false
+    }
+  },
+  "provenance": {
+    "input_refs": [
+      "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:0:1",
+      "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:0.5:1.5",
+      "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:1:2",
+      "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:1.5:2.5",
+      "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:2:3",
+      "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:2.5:3.5",
+      "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1:3:4",
+      "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1:3.5:4.5",
+      "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1:4:5",
+      "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1:4.5:5.5",
+      "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2:5:6",
+      "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2:5.5:6.5",
+      "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2:6:7",
+      "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2:6.5:7.5",
+      "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:3:7:8",
+      "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:3:7.5:8.5",
+      "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:4:8:9",
+      "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:4:8.5:9.5",
+      "H1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:5:9:10",
+      "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:0:1.5",
+      "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:1:2.5",
+      "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:0:2:3.5",
+      "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1:3:4.5",
+      "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:1:4:5.5",
+      "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2:5:6.5",
+      "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:2:6:7.5",
+      "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:3:7:8.5",
+      "M1:STR:synthetic_fixture_v1:ch0:voltage:arb:256:seg:STR:synthetic_fixture_v1:ch0:voltage:arb:256:4:8:9.5"
+    ],
+    "operator_id": "QueryOp",
+    "operator_version": "0.1.0"
+  }
+}
