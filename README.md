@@ -98,46 +98,46 @@ Later layers are planned as separate architectural doors:
 ├──out/
 ```
 
-Recommended Reading Order
+## Recommended Reading Order
 
 For a new reader:
-
-README.md
-
-README_MasterConstitution.md
-
-README_WorkflowContract.md
-
-README_ConstitutionAppendix.md
-
-README_RepoPlacementConstitution.md
-
-README_SubstrateLayer.md
+    
+    README.md
+    
+    README_MasterConstitution.md
+    
+    README_WorkflowContract.md
+    
+    README_ConstitutionAppendix.md
+    
+    README_RepoPlacementConstitution.md
+    
+    README_SubstrateLayer.md
 
 After that, move into the runtime and operator surfaces.
 
-Governance Documents
-README_MasterConstitution.md
+## Governance Documents
+*README_MasterConstitution.md*
+    
+    Defines the architectural law of the system: authority boundaries, layer semantics, canonical forms, and what each part of the stack is allowed to mean.
 
-Defines the architectural law of the system: authority boundaries, layer semantics, canonical forms, and what each part of the stack is allowed to mean.
+*README_WorkflowContract.md*
+    
+    Defines how work should be performed against the architecture so implementation does not drift from constitutional intent.
 
-README_WorkflowContract.md
+*README_ConstitutionAppendix.md*
+    
+    Provides quick-reference supporting definitions and implementation-facing clarifications.
 
-Defines how work should be performed against the architecture so implementation does not drift from constitutional intent.
+*README_RepoPlacementConstitution.md*
+    
+    Defines the intended repository topology and where different classes of files belong.
 
-README_ConstitutionAppendix.md
+*README_SubstrateLayer.md*
+    
+    Describes the substrate memory layer, trajectory semantics, segment handling, basin organization, and observational reporting surfaces.
 
-Provides quick-reference supporting definitions and implementation-facing clarifications.
-
-README_RepoPlacementConstitution.md
-
-Defines the intended repository topology and where different classes of files belong.
-
-README_SubstrateLayer.md
-
-Describes the substrate memory layer, trajectory semantics, segment handling, basin organization, and observational reporting surfaces.
-
-Current Door One Components
+## Current Door One Components
 
 The current implementation includes components in the following functional categories:
 
@@ -189,7 +189,7 @@ DoorOneHUD
 
 run_pipeline_substrate.js
 
-What This Repository Is Not
+## What This Repository Is Not
 
 This repository is not trying to:
 
@@ -205,7 +205,7 @@ replace scientific rigor with aesthetic abstraction
 
 Instead, it aims to provide a lawful base from which deeper interpretation can emerge without breaking provenance.
 
-Why This Matters
+## Why This Matters
 
 If a modeling system cannot preserve the history of its own transformations, then it becomes increasingly difficult to distinguish:
 
@@ -219,7 +219,7 @@ genuine rupture from smoothed-over drift
 
 Dynamical Memory Engine is an attempt to build a system that stays accountable to its own history while still remaining useful for live dynamical modeling.
 
-Long-Term Direction
+## Long-Term Direction
 
 The long-term goal is not only to model evolving systems, but to create a framework that can recursively refine its own descriptive power through contact with reality.
 
@@ -233,7 +233,7 @@ support interpretation without confusing it for canon
 
 generate deeper frameworks only when the limits of the current framework are actually encountered
 
-Development Status
+## Development Status
 
 This is an actively evolving research and engineering project.
 
@@ -249,10 +249,10 @@ substrate memory semantics
 
 preparation for higher-order interpretive layers
 
-License
+## License
 
 TBD
 
-Contributing
+## Contributing
 
 Contribution guidance is not yet formalized. For now, treat the constitution and workflow contract as the governing references for any architectural change.
