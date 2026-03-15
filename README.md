@@ -48,16 +48,16 @@ Later layers are planned as separate architectural doors:
 ## Repository Structure
 
 ```text
-/
-  README_MasterConstitution.md
-  README_WorkflowContract.md
-  README_ConstitutionAppendix.md
-  README_SubstrateLayer.md
-  README_DevelopmentPressure.md
-  README_RepoPlacementConstitution.md
-  package.json
 
-  operators/
+├──README_MasterConstitution.md
+├──README_WorkflowContract.md
+├──README_ConstitutionAppendix.md
+├──README_SubstrateLayer.md
+├──README_DevelopmentPressure.md
+├──README_RepoPlacementConstitution.md
+├──package.json
+
+├──operators/
     ingest/IngestOp.js
     clock/ClockAlignOp.js
     window/WindowOp.js
@@ -74,26 +74,26 @@ Later layers are planned as separate architectural doors:
     trajectory/TrajectoryBuffer.js
     substrate/MemorySubstrate.js
 
-  runtime/
+├──runtime/
     DoorOneOrchestrator.js
     run_hud_demo.js
     TrajectoryInterpretationReport.js
 
-  hud/
+├──hud/
     DoorOneHUD.js
 
-  scripts/
+├──scripts/
     run_pipeline_substrate.js
 
-  tests/
+├──tests/
     test_substrate_contracts.js
     test_door_one_orchestrator.js
     test_door_one_hud.js
     test_door_one_contracts.js
     test_trajectory_interpretation_report.js
 
-  fixtures/
+├──fixtures/
     test_signal.js
 
-  out/
+├──out/
 ```
