@@ -12,5 +12,6 @@
         "test:hud": "node tests/test_door_one_hud.js"
         "test:trajectory-interpretation": "node tests/test_trajectory_interpretation_report.js",
         "test:attention-memory": "node tests/test_attention_memory_report.js"
+        "test:door-one-contracts": "node tests/test_door_one_contracts.js"
     }
 }
