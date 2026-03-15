@@ -9,9 +9,12 @@
         "pipeline:substrate": "node scripts/run_pipeline_substrate.js",
         "test:substrate": "node tests/test_substrate_contracts.js",
         "test:orchestrator": "node tests/test_door_one_orchestrator.js",
-        "test:hud": "node tests/test_door_one_hud.js"
+        "test:hud": "node tests/test_door_one_hud.js",
         "test:trajectory-interpretation": "node tests/test_trajectory_interpretation_report.js",
-        "test:attention-memory": "node tests/test_attention_memory_report.js"
-        "test:door-one-contracts": "node tests/test_door_one_contracts.js"
+        "test:attention-memory": "node tests/test_attention_memory_report.js",
+        "test:door-one-contracts": "node tests/test_door_one_contracts.js",
+        "test:cross-run-dynamics": "node tests/test_cross_run_dynamics_report.js",
+        "test:cross-run-session": "node tests/test_cross_run_session.js",
+        "test:promotion-readiness": "node tests/test_promotion_readiness_report.js"
     }
 }
