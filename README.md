@@ -101,17 +101,17 @@ Later layers are planned as separate architectural doors:
 ## Recommended Reading Order
 
 For a new reader:
-    
+        
     README.md
-    
+        
     README_MasterConstitution.md
-    
+        
     README_WorkflowContract.md
-    
+        
     README_ConstitutionAppendix.md
-    
+        
     README_RepoPlacementConstitution.md
-    
+        
     README_SubstrateLayer.md
 
 After that, move into the runtime and operator surfaces.
@@ -119,75 +119,75 @@ After that, move into the runtime and operator surfaces.
 ## Governance Documents
 *README_MasterConstitution.md*
     
-    Defines the architectural law of the system: authority boundaries, layer semantics, canonical forms, and what each part of the stack is allowed to mean.
+Defines the architectural law of the system: authority boundaries, layer semantics, canonical forms, and what each part of the stack is allowed to mean.
 
 *README_WorkflowContract.md*
     
-    Defines how work should be performed against the architecture so implementation does not drift from constitutional intent.
+Defines how work should be performed against the architecture so implementation does not drift from constitutional intent.
 
 *README_ConstitutionAppendix.md*
     
-    Provides quick-reference supporting definitions and implementation-facing clarifications.
+Provides quick-reference supporting definitions and implementation-facing clarifications.
 
 *README_RepoPlacementConstitution.md*
     
-    Defines the intended repository topology and where different classes of files belong.
+Defines the intended repository topology and where different classes of files belong.
 
 *README_SubstrateLayer.md*
     
-    Describes the substrate memory layer, trajectory semantics, segment handling, basin organization, and observational reporting surfaces.
+Describes the substrate memory layer, trajectory semantics, segment handling, basin organization, and observational reporting surfaces.
 
 ## Current Door One Components
 
 The current implementation includes components in the following functional categories:
-
-Signal intake and alignment
-
-IngestOp
-
-AnalogSamplerOp
-
-ClockAlignOp
-
-WindowOp
-
-State formation
-
-TransformOp
-
-CompressOp
-
-ReconstructOp
-
-Novelty and segmentation
-
-AnomalyOp
-
-SegmentTracker
-
-Memory substrate and neighborhood organization
-
-MemorySubstrate
-
-TrajectoryBuffer
-
-BasinOp
-
-Aggregation and observation
-
-MergeOp
-
-QueryOp
-
-TrajectoryInterpretationReport
-
-Runtime and inspection
-
-DoorOneOrchestrator
-
-DoorOneHUD
-
-run_pipeline_substrate.js
+    
+    Signal intake and alignment
+    
+    IngestOp
+    
+    AnalogSamplerOp
+    
+    ClockAlignOp
+    
+    WindowOp
+    
+    State formation
+    
+    TransformOp
+    
+    CompressOp
+    
+    ReconstructOp
+    
+    Novelty and segmentation
+    
+    AnomalyOp
+    
+    SegmentTracker
+    
+    Memory substrate and neighborhood organization
+    
+    MemorySubstrate
+    
+    TrajectoryBuffer
+    
+    BasinOp
+    
+    Aggregation and observation
+    
+    MergeOp
+    
+    QueryOp
+    
+    TrajectoryInterpretationReport
+    
+    Runtime and inspection
+    
+    DoorOneOrchestrator
+    
+    DoorOneHUD
+    
+    run_pipeline_substrate.js
 
 ## What This Repository Is Not
 
