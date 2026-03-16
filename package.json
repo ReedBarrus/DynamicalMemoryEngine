@@ -16,6 +16,7 @@
         "test:cross-run-dynamics": "node tests/test_cross_run_dynamics_report.js",
         "test:cross-run-session": "node tests/test_cross_run_session.js",
         "test:promotion-readiness": "node tests/test_promotion_readiness_report.js",
-        "test:canon-candidate-dossier": "node tests/test_canon_candidate_dossier.js"
+        "test:canon-candidate-dossier": "node tests/test_canon_candidate_dossier.js",
+        "test:consensus-op": "node tests/test_consensus_op.js"
     }
 }
