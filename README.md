@@ -79,6 +79,10 @@ Later layers are planned as separate architectural doors:
     run_hud_demo.js
     TrajectoryInterpretationReport.js
     AttentionMemoryReport.js
+    CrossRunDynamicsReport.js
+    CrossRunSession.js
+    PromotionReadinessReport.js
+    CanonCandidateDossier.js
 
   hud/
     DoorOneHUD.js
@@ -93,6 +97,11 @@ Later layers are planned as separate architectural doors:
     test_door_one_contracts.js
     test_trajectory_interpretation_report.js
     test_attention_memory_report.js
+    test_cross_run_dynamics_report.js
+    test_cross_run_session.js
+    test_promotion_readiness_report.js
+    test_canon_candidate_dossier.js
+    test_consensus_op.js
 
   fixtures/
     test_signal.js
