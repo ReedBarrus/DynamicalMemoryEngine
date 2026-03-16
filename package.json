@@ -19,6 +19,7 @@
         "test:canon-candidate-dossier": "node tests/test_canon_candidate_dossier.js",
         "test:consensus-op": "node tests/test_consensus_op.js",
         "test:door-one-workbench": "node tests/test_door_one_workbench.js",
-        "workbench:door-one": "node scripts/run_door_one_workbench.js"
+        "workbench:door-one": "node scripts/run_door_one_workbench.js",
+        "live:door-one": "node scripts/run_door_one_live.js"
     }
 }
