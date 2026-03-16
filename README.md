@@ -55,7 +55,11 @@ Later layers are planned as separate architectural doors:
   README_SubstrateLayer.md
   README_DevelopmentPressure.md
   README_RepoPlacementConstitution.md
+  README_DevelopmentalPressure.md
+  README_DoorOneRuntimeBoundary.md
   package.json
+  vite.config.js
+  index.html
 
   operators/
     ingest/IngestOp.js
@@ -83,12 +87,20 @@ Later layers are planned as separate architectural doors:
     CrossRunSession.js
     PromotionReadinessReport.js
     CanonCandidateDossier.js
+    DoorOneWorkbench.js
+    DoorOneExecutiveLane.js
 
   hud/
     DoorOneHUD.js
+    DoorOneStructuralMemoryHud.jsx
+    DoorOneStructuralMemoryHudDemo.jsx
+    main.jsx
+    styles.css
 
   scripts/
     run_pipeline_substrate.js
+    run_door_one_workbench.js
+    run_door_one_live.js
 
   tests/
     test_substrate_contracts.js
@@ -102,6 +114,9 @@ Later layers are planned as separate architectural doors:
     test_promotion_readiness_report.js
     test_canon_candidate_dossier.js
     test_consensus_op.js
+    test_door_one_workbench.js
+    test_door_one_hud_workbench.js
+    test_door_one_executive_lane.js
 
   fixtures/
     test_signal.js
