@@ -94,6 +94,7 @@ Later layers are planned as separate architectural doors:
     DoorOneHUD.js
     DoorOneStructuralMemoryHud.jsx
     DoorOneStructuralMemoryHudDemo.jsx
+    DoorOneStructureMemoryHudModel.js
     main.jsx
     styles.css
 
@@ -117,6 +118,9 @@ Later layers are planned as separate architectural doors:
     test_door_one_workbench.js
     test_door_one_hud_workbench.js
     test_door_one_executive_lane.js
+    test_door_one_live_provenance_retention.js
+    test_door_one_anti_bypass_contracts.js
+    test_door_one_structural_memory_hud.js
 
   fixtures/
     test_signal.js
