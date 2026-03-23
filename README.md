@@ -141,7 +141,19 @@ Later layers are planned as separate architectural doors:
     test_door_one_archive_bundle.js
     test_door_one_ingest_hardening.js
 
-  fixtures/
+test_signal/
+    daw_tone_continuity/baseline_01.wav
+    daw_tone_continuity/baseline_02.wav
+    daw_tone_continuity/baseline_03.wav
+    daw_tone_continuity/continuity_break_01.wav
+    daw_tone_continuity/continuity_break_02.wav
+    daw_tone_continuity/continuity_break_03.wav
+    daw_tone_continuity/return_01.wav
+    daw_tone_continuity/return_02.wav
+    daw_tone_continuity/return_03.wav
+    220-440hzPulse.wav
+
+ fixtures/
     test_signal.js
 
   out/
