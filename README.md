@@ -52,14 +52,24 @@ Later layers are planned as separate architectural doors:
   README_MasterConstitution.md
   README_WorkflowContract.md
   README_ConstitutionAppendix.md
-  README_SubstrateLayer.md
-  README_DevelopmentPressure.md
   README_RepoPlacementConstitution.md
-  README_DevelopmentalPressure.md
-  README_DoorOneRuntimeBoundary.md
   package.json
   vite.config.js
   index.html
+
+  README/
+    README_DevelopmentPressure.md
+    README_ClaudeTaskRequest.md
+    README_DoorOneAcceptanceChecklist.md
+    README_DoorOneAdapterPolicy.md
+    README_DoorOneInspectionSurfacePosture.md
+    README_DoorOnePinArchivePolicy.md
+    README_DoorOneProvenanceRetention.md
+    README_DoorOneRuntimeBoundary.md
+    README_DoorOneSurfaceMap.md
+    README_DynamicalMemorySystemGlossary.md
+    README_DoorOneMultiScaleIngest.md
+
 
   operators/
     ingest/IngestOp.js
@@ -94,7 +104,7 @@ Later layers are planned as separate architectural doors:
     DoorOneHUD.js
     DoorOneStructuralMemoryHud.jsx
     DoorOneStructuralMemoryHudDemo.jsx
-    DoorOneStructureMemoryHudModel.js
+    DoorOneStructuralMemoryHudModel.js
     main.jsx
     styles.css
 
@@ -102,6 +112,11 @@ Later layers are planned as separate architectural doors:
     run_pipeline_substrate.js
     run_door_one_workbench.js
     run_door_one_live.js
+    run_door_one_provenance_digest.js
+    run_door_one_pin_packet.js
+    run_door_one_archive_bundle.js
+    run_door_one_audio_file_experiment.js
+    run_door_one_audio_file_slice.js
 
   tests/
     test_substrate_contracts.js
@@ -121,6 +136,10 @@ Later layers are planned as separate architectural doors:
     test_door_one_live_provenance_retention.js
     test_door_one_anti_bypass_contracts.js
     test_door_one_structural_memory_hud.js
+    test_door_one_provenance_digest.js
+    test_door_one_pin_packet.js
+    test_door_one_archive_bundle.js
+    test_door_one_ingest_hardening.js
 
   fixtures/
     test_signal.js
