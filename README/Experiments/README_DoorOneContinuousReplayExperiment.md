@@ -618,3 +618,75 @@ That is useful for:
 - and later comparison across source classes.
 
 It does not authorize semantic interpretation.
+
+## Multi-perturbation replay resilience result
+
+A bounded replay-resilience probe was added to extend the earlier baseline → perturbation → return flow diagnostic across multiple isolated perturbation families.
+
+### Constitutional posture
+
+This result remains:
+
+- read-side,
+- structural,
+- bounded,
+- probe-local,
+- non-canonical,
+- non-predictive,
+- non-promotive.
+
+It does not modify BasinOp, runtime artifact meaning, workbench readiness, or promotion behavior.
+
+### Perturbation families tested
+
+Within the current declared synthetic replay family, the following isolated perturbation axes were tested:
+
+- amplitude
+- boundary detuning
+- harmonic offset
+- noise depth
+
+### Current result
+
+All four tested perturbation families showed the same replay pattern:
+
+- baseline: `oscillatory_exchange`
+- perturbation: weakened or collapsed exchange regime
+- return: `oscillatory_exchange`
+
+Family-level classifications:
+
+- amplitude → `exchange_recovers_on_return`
+- boundary_detuning → `exchange_recovers_on_return`
+- harmonic_offset → `exchange_recovers_on_return`
+- noise_depth → `exchange_recovers_on_return`
+
+Cross-family summary:
+
+- `resilience_surface_class = broad_recovery_pattern`
+
+### Working meaning
+
+Within the current synthetic replay slice, oscillatory exchange appears robust across multiple independent disruption axes.
+
+This strengthens the current Door One reading:
+
+the exchange condition is not only support-horizon-sensitive and boundary-conditioned;
+it also shows bounded replay resilience under multiple isolated perturbations when the perturbation is removed.
+
+This remains a structural replay observation only.
+
+It is not yet:
+
+- canon,
+- ontology,
+- trusted prediction,
+- or a general law across all source families.
+
+### Measurement discipline note
+
+One proposed harmonic-offset family was rejected during probe construction because it triggered the current `oscillatory_exchange` classifier through a chaotic sign-flip path rather than through the coherent period-2 mechanism under investigation.
+
+The accepted harmonic-offset family preserves the nominal measurement lens while moving the harmonic off the active band edge, allowing cross-family comparison without changing the observational frame.
+
+This preserves probe honesty.
