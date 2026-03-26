@@ -29,7 +29,7 @@ measurement → structure → runtime memory → recognition
 
 Only the currently active lower layers may shape implementation unless explicitly promoted.
 
-### Repo Posture
+## Repo Posture
 
 This repo is organized to preserve clarity between:
 
@@ -42,7 +42,7 @@ This repo is organized to preserve clarity between:
 
 Repo topology is coordination, not ontology.
 
-### Root Constitutional Authority
+## Root Constitutional Authority
 
 These root documents define architectural law, workflow posture, and placement rules:
 
@@ -67,27 +67,27 @@ README/Roadmap/ — Door Two / Door Three forward architecture notes
 README/ResultInterpretation/ — experiment result interpretation writeups
 operators/
 ```
-Deterministic runtime operators and closely related substrate components.
+### Deterministic runtime operators and closely related substrate components.
 
 runtime/
 
-Importable runtime coordinators and bounded report/workbench surfaces.
+### Importable runtime coordinators and bounded report/workbench surfaces.
 
 hud/
 
-Inspection tooling and display surfaces. HUDs are read-side only and must not define runtime meaning.
+### Inspection tooling and display surfaces. HUDs are read-side only and must not define runtime meaning.
 
 scripts/
 
-Thin executable entrypoints, experiments, demos, and preservation helpers.
+### Thin executable entrypoints, experiments, demos, and preservation helpers.
 
 tests/
 
-Bounded contract and regression suites.
+### Bounded contract and regression suites.
 
 fixtures/ / test_signal/
 
-Synthetic inputs, reusable test signals, and experiment assets.
+### Synthetic inputs, reusable test signals, and experiment assets.
 
 ## Active Door One Stack
 
@@ -102,7 +102,7 @@ raw ingest input
 
 This is the current runtime and inspection spine for lawful repeated-run execution, single-run orchestration, bounded cross-run observation, and read-side interpretation.
 
-What Is Stable Right Now
+### What Is Stable Right Now
 
 Door One is currently stabilized enough to support:
 
@@ -156,7 +156,7 @@ The repo is the source of truth for active code state.
 The README bank is the supporting meaning/reference layer.
 Patch review should use small seam-specific packets rather than giant repo dumps.
 
-### Quick Start
+## Quick Start
 
 Typical active entrypoints include:
 
@@ -172,7 +172,7 @@ DME is building a grounded structural memory substrate that can later support tr
 The current goal is not to gesture at intelligence vaguely.
 The current goal is to make structural memory lawful, replay-honest, inspectable, and collaboration-ready.
 
-### Current Status Summary
+## Current Status Summary
 
 At the present checkpoint, Door One appears materially stabilized at the runtime, inspection, provenance, preservation, and anti-bypass seams. The repo is now at the point where clarity, consolidation, and collaboration hygiene create more leverage than adding new conceptual surface area.
 
