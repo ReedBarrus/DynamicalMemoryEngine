@@ -31,7 +31,7 @@ Only the currently active lower layers may shape implementation unless explicitl
 What the Repo Contains
 Active Door One runtime
 
-## Main execution chain:
+## *Main execution chain:*
 
 raw ingest input
 → DoorOneExecutiveLane
@@ -60,7 +60,7 @@ These root docs define project authority and coordination:
     README_WorkflowContract.md
     README_RepoPlacementConstitution.md
     
-## Door One supporting notes
+## *Door One supporting notes*
 
 Key Door One reference notes live in README/, including:
 
