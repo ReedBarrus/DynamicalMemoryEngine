@@ -330,6 +330,32 @@ This remains:
 
 It should not yet be treated as a universal basin law.
 
+## Continuous replay resilience refinement
+
+The current flow-resolved basin explanation has now been pressure-tested under multiple isolated replay perturbation families.
+
+Within the present synthetic replay family:
+
+- amplitude perturbation disrupted and then restored oscillatory exchange,
+- boundary detuning disrupted and then restored oscillatory exchange,
+- harmonic offset collapsed the exchange condition and then restored it on return,
+- noise-depth perturbation disrupted and then restored oscillatory exchange.
+
+Working refinement:
+
+the current strongest splitting cases are not only exact-edge / active-boundary events;
+they also participate in a replay-resilient exchange regime across multiple bounded perturbation axes.
+
+This remains:
+
+- read-side,
+- probe-local,
+- below canon,
+- subordinate to replay-honest lineage,
+- and limited to the current declared synthetic family.
+
+It should not yet be treated as a universal basin law.
+
 ## 14. Working principle
 
 A basin split is not automatically explained merely because an edge exists.
