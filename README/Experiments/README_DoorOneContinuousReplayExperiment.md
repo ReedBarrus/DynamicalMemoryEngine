@@ -548,3 +548,73 @@ It asks whether Door One can:
 - and fail honestly when horizons or layers no longer support the question.
 
 That is the right next step before passive multi-scale ingest or transform-family changes.
+
+## 21. Flow-resolved replay result
+
+A bounded continuous replay probe was added to test whether the current basin-facing oscillatory exchange diagnostic remains stable across a declared three-phase replay slice:
+
+- baseline
+- perturbation
+- return
+
+### Constitutional posture
+
+This result remains:
+
+- read-side,
+- structural,
+- bounded,
+- non-canonical,
+- non-predictive,
+- non-promotive.
+
+It does not modify BasinOp, runtime artifact authority, workbench readiness, or promotion behavior.
+
+### Current declared replay result
+
+Within the current synthetic replay family and declared perturbation axis, the strongest baseline splitting condition showed:
+
+- baseline: `flow_mode = oscillatory_exchange`
+- perturbation: `flow_mode = one_way_drift`
+- return: `flow_mode = oscillatory_exchange`
+
+Replay summary classification:
+
+- `exchange_persistence_class = exchange_recovers_on_return`
+
+Observed split persistence summary:
+
+- baseline: `3/3` runs split
+- perturbation: `0/3` runs split
+- return: `3/3` runs split
+
+### Working meaning
+
+This strengthens the current Door One interpretation:
+
+boundary-conditioned basin splitting is not only associated with oscillatory exchange at a single support horizon;
+in the current replay slice, that exchange regime can be disrupted by a declared perturbation and restored on return.
+
+This remains a replay-facing structural observation only.
+
+It is not yet:
+
+- canon,
+- trusted prediction,
+- ontology,
+- or a general law across all source families.
+
+### Practical implication
+
+Continuous replay can now be used to ask a sharper Door One question:
+
+does an exchange regime remain stable, collapse, or recover across bounded perturbation and return under a declared lens?
+
+That is useful for:
+
+- replay honesty,
+- retention-tier validation,
+- structural discrimination,
+- and later comparison across source classes.
+
+It does not authorize semantic interpretation.
