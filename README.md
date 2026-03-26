@@ -1,4 +1,4 @@
-**Dynamical Memory Engine**
+# **Dynamical Memory Engine**
 
 A physics-grounded structural memory substrate for dynamical signals.
 
