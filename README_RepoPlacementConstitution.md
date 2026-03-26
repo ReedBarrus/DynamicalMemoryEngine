@@ -256,6 +256,7 @@ Generated outputs are never authority surfaces.
       README.MVCS_HarmonicPlacement_Probe.md
       README.BoundaryConditionedBasinFormation.md
       README.IntegrationBridge_to_DME.md
+      README.DoorOneProbeMap.md
 
     Roadmap/
       README.DynamicalMemoryEngine_DoorTwo.md
