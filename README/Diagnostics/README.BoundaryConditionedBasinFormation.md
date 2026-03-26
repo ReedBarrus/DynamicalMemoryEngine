@@ -305,6 +305,31 @@ These are still Door One probe questions, not Door Two claims.
 
 ---
 
+## 13.5 Continuous replay refinement
+
+The current flow-resolved explanation has now been tested in a bounded continuous replay setting.
+
+Within the present synthetic replay slice:
+
+- baseline splitting cases expressed `oscillatory_exchange`,
+- perturbation shifted the same declared family into `one_way_drift`,
+- return restored `oscillatory_exchange`,
+- and splitting behavior tracked that regime change.
+
+Working refinement:
+
+the current strongest splitting cases are not merely exact-edge events;
+they are replay-sensitive exchange regimes whose structural expression can weaken under perturbation and recover on return.
+
+This remains:
+
+- probe-local,
+- read-side,
+- below canon,
+- and subordinate to replay-honest lineage.
+
+It should not yet be treated as a universal basin law.
+
 ## 14. Working principle
 
 A basin split is not automatically explained merely because an edge exists.
