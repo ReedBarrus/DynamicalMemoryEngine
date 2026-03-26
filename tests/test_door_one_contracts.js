@@ -317,19 +317,19 @@ assert("S1.artifact_class = S1", s1 && s1.artifact_class === "S1");
 // Receipt honesty: transform_type echoes policy, actual_algorithm records truth
 assert("transform_receipt.transform_type echoes policy",
     s1 && s1.transform_receipt.transform_type === "dft");
-assert("transform_receipt.actual_algorithm = 'dft' (Door One stub)",
-    s1 && s1.transform_receipt.actual_algorithm === "dft");
+assert("transform_receipt.actual_algorithm = 'fft_cooley_tukey_r2'",
+    s1 && s1.transform_receipt.actual_algorithm === "fft_cooley_tukey_r2");
 assert("transform_receipt.actual_algorithm is distinct field from transform_type",
     s1 && "actual_algorithm" in s1.transform_receipt);
 
-// When policy says "fft", transform_type = "fft" but actual_algorithm still = "dft"
+// When policy says "fft", transform_type = "fft" and actual_algorithm = "fft_cooley_tukey_r2"
 if (w1) {
     const fftResult = new TransformOp().run({
         w1,
         transform_policy: { transform_type: "fft", normalization_mode: "forward_1_over_N" },
     });
     assert("fft policy: transform_type = fft", fftResult.ok && fftResult.artifact.transform_receipt.transform_type === "fft");
-    assert("fft policy: actual_algorithm still = dft", fftResult.ok && fftResult.artifact.transform_receipt.actual_algorithm === "dft");
+    assert("fft policy: actual_algorithm = fft_cooley_tukey_r2", fftResult.ok && fftResult.artifact.transform_receipt.actual_algorithm === "fft_cooley_tukey_r2");
     assert("receipt distinguishes label from algorithm",
         fftResult.ok &&
         fftResult.artifact.transform_receipt.transform_type !== fftResult.artifact.transform_receipt.actual_algorithm);
