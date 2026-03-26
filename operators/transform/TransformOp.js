@@ -17,8 +17,10 @@
  * - accepts W1 WindowFrame
  * - emits S1 SpectralFrame
  * - computes all bins; preserves full bin structure and fixed k→freq_hz mapping
- * - records transform_type (policy label), actual_algorithm (always "dft" in
- *   Door One), normalization_mode, energy_total, and parseval_error
+ * - records transform_type (policy label), actual_algorithm ("fft_cooley_tukey_r2"),
+ *   normalization_mode, energy_total, and parseval_error
+ * - if input length is not a power-of-2, zero-pads to next power-of-2 and records
+ *   padded_length in the provenance receipt
  * - deterministic given identical W1 + TransformPolicy
  *
  * Non-responsibilities:
@@ -26,8 +28,8 @@
  * - does NOT decide what frequencies matter
  * - does NOT merge windows, detect anomalies, or compress
  * - receipt honesty: transform_type echoes policy label (e.g. "fft");
- *   actual_algorithm records what was used ("dft" in Door One); these are
- *   distinct fields so the stub is auditable and not a hidden lie
+ *   actual_algorithm records what was actually used ("fft_cooley_tukey_r2");
+ *   these are distinct fields so the implementation is auditable
  *
  * Artifact IO:
  *   Input:  W1 WindowFrame
@@ -38,6 +40,8 @@
  * - README_MasterConstitution.md §3 (structural layer)
  * - OPERATOR_CONTRACTS.md §4
  */
+
+import { cooleyTukeyFFT } from "./fft.js";
 
 /**
  * @typedef {Object} TransformPolicy
@@ -60,12 +64,13 @@
 /**
  * @typedef {Object} TransformReceipt
  * @property {"fft"|"dft"} transform_type
- * @property {"dft"} actual_algorithm
+ * @property {"fft_cooley_tukey_r2"} actual_algorithm
  * @property {"unitary"|"forward_raw"|"forward_1_over_N"} normalization_mode
  * @property {number} energy_total
  * @property {number|null} leakage_estimate
  * @property {"f64-js"} numerical_precision
  * @property {number|null} parseval_error
+ * @property {number} padded_length   — N used for FFT (next power-of-2 >= input N)
  */
 
 /**
@@ -108,11 +113,11 @@ export class TransformOp {
     /**
      * @param {Object} cfg
      * @param {string} [cfg.operator_id="TransformOp"]
-     * @param {string} [cfg.operator_version="0.1.0"]
+     * @param {string} [cfg.operator_version="0.2.0"]
      */
     constructor(cfg = {}) {
         this.operator_id = cfg.operator_id ?? "TransformOp";
-        this.operator_version = cfg.operator_version ?? "0.1.0";
+        this.operator_version = cfg.operator_version ?? "0.2.0";
     }
 
     /**
@@ -213,11 +218,11 @@ export class TransformOp {
             return {
                 ok: false,
                 error: "UNSUPPORTED_TRANSFORM",
-                reasons: [`transform_type=${transformType} not supported in Door One stub`],
+                reasons: [`transform_type=${transformType} not supported`],
             };
         }
 
-        // Door One honest handling: keep nulls invalid unless pre-repaired upstream.
+        // Reject null/NaN — TransformOp requires a fully numeric window.
         if (xRaw.some((v) => v == null || Number.isNaN(v))) {
             return {
                 ok: false,
@@ -231,14 +236,21 @@ export class TransformOp {
 
         const x = /** @type {number[]} */ (xRaw);
 
-        // Door One: both "fft" and "dft" map to the same exact DFT.
-        // actual_algorithm records the true algorithm; transform_type echoes the policy request.
-        // When a real FFT backend is added, change actualAlgorithm to "fft" there.
-        const actualAlgorithm = "dft"; // always exact DFT in Door One stub
-        const X = computeDFT(x);
+        // ── FFT ──────────────────────────────────────────────────────────────
+        // Cooley-Tukey radix-2. If N is not a power-of-2 the helper pads with
+        // zeros to the next power-of-2 and records paddedLength on the result.
+        const actualAlgorithm = "fft_cooley_tukey_r2";
+        const X = cooleyTukeyFFT(x);
+        const paddedLength = X.paddedLength; // always >= N; equals N when N is pow2
 
-        const Xn = applyNormalization(X, normalizationMode, N);
+        // Normalization applied to the full padded spectrum.
+        const Xn = applyNormalization(X, normalizationMode, paddedLength);
 
+        // The frequency grid follows the *original* declared Fs and N so that
+        // bin→freq_hz mapping is stable and compatible with downstream operators.
+        // We expose only the positive-frequency half of the original N, not the
+        // padded half — the padded bins carry no new physical information for
+        // real-signal analysis and would shift the bin→freq mapping.
         const df = Fs / N;
         const kMax = Math.floor(N / 2);
 
@@ -257,13 +269,20 @@ export class TransformOp {
             });
         }
 
+        // ── Parseval energy verification ────────────────────────────────────
+        // Time-domain energy uses the original N samples (no padding artifact).
         const timeEnergy = sumSquares(x);
+
+        // Spectral energy uses the full padded FFT output so the Parseval sum is
+        // self-consistent (summing all N_pad bins over the padded DFT).
         const spectralEnergy = spectralEnergyHalfSpectrum(
             Xn,
-            N,
+            paddedLength,
             normalizationMode,
             scalingConvention
         );
+
+        // Error is relative to max(timeEnergy, epsilon) to avoid divide-by-zero.
         const parsevalError =
             timeEnergy === 0 ? 0 : Math.abs(spectralEnergy - timeEnergy) / Math.max(timeEnergy, 1e-12);
 
@@ -289,6 +308,7 @@ export class TransformOp {
                 leakage_estimate: leakageEstimate,
                 numerical_precision: "f64-js",
                 parseval_error: parsevalError,
+                padded_length: paddedLength,
             },
             policies: {
                 clock_policy_id: w1.policies.clock_policy_id,
@@ -308,36 +328,12 @@ export class TransformOp {
 }
 
 /**
- * Exact O(N^2) DFT for Door One stub correctness.
- * Replace with FFT backend later without changing contract.
- * @param {number[]} x
- * @returns {{re:number, im:number}[]}
- */
-function computeDFT(x) {
-    const N = x.length;
-    const X = new Array(N);
-
-    for (let k = 0; k < N; k++) {
-        let re = 0;
-        let im = 0;
-        for (let n = 0; n < N; n++) {
-            const theta = (-2 * Math.PI * k * n) / N;
-            re += x[n] * Math.cos(theta);
-            im += x[n] * Math.sin(theta);
-        }
-        X[k] = { re, im };
-    }
-
-    return X;
-}
-
-/**
  * @param {{re:number, im:number}[]} X
  * @param {"unitary"|"forward_raw"|"forward_1_over_N"} mode
- * @param {number} N
+ * @param {number} N   — length of X (padded length)
  */
 function applyNormalization(X, mode, N) {
-    if (mode === "forward_raw") return X.map((z) => ({ ...z }));
+    if (mode === "forward_raw") return X.map((z) => ({ re: z.re, im: z.im }));
 
     if (mode === "forward_1_over_N") {
         return X.map((z) => ({ re: z.re / N, im: z.im / N }));
@@ -348,13 +344,14 @@ function applyNormalization(X, mode, N) {
         return X.map((z) => ({ re: z.re / s, im: z.im / s }));
     }
 
-    return X.map((z) => ({ ...z }));
+    return X.map((z) => ({ re: z.re, im: z.im }));
 }
 
 /**
  * Parseval-style estimate for real-input half-spectrum artifact.
- * @param {{re:number, im:number}[]} X
- * @param {number} N
+ * @param {{re:number, im:number}[]} X   — full padded normalized spectrum
+ * @param {number} N                     — padded length
+ * @param {string} normalizationMode
  * @param {string} scalingConvention
  */
 function spectralEnergyHalfSpectrum(X, N, normalizationMode, scalingConvention) {
