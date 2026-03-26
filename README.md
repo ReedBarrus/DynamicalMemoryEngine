@@ -85,9 +85,11 @@ tests/
 
 ### Bounded contract and regression suites.
 
-fixtures/ / test_signal/
+fixtures/
 
 ### Synthetic inputs, reusable test signals, and experiment assets.
+
+test_signal/
 
 ## Active Door One Stack
 
