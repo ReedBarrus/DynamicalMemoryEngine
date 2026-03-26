@@ -1,10 +1,10 @@
-Dynamical Memory Engine
+**Dynamical Memory Engine**
 
 A physics-grounded structural memory substrate for dynamical signals.
 
 The Dynamical Memory Engine (DME) develops upward from measured signal into structural memory, runtime organization, and bounded recognition — without collapsing runtime outputs into truth, canon, or ontology.
 
-Current Phase
+*Current Phase*
 
 Current active phase: Door One stabilization and orchestration cleanup.
 
@@ -19,7 +19,7 @@ inspection-first runtime surfaces
 
 Door One is below canon. It does not mint truth, canonical memory, prediction, or agency in normal runtime flow.
 
-Core Architectural Order
+*Core Architectural Order*
 
 The project follows this lawful layer order:
 
@@ -51,7 +51,7 @@ Current Repo Posture
 
 The repo is now centered around a constitutional/documented core plus bounded runtime/test seams.
 
-Constitutional authority
+**Constitutional authority**
 
 These root docs define project authority and coordination:
 
@@ -88,7 +88,7 @@ anti-bypass protections
 
 This means the project is currently in a strong cleanup, consolidation, and collaboration-hardening phase rather than a vague concept phase.
 
-Near-Term Development Pressure
+*Near-Term Development Pressure*
 
 The next justified pressures are:
 
@@ -121,7 +121,7 @@ Claude — implementation engineer for bounded patch tasks
 
 The repo is the source of truth for active code state. The README/ bank is the supporting meaning/reference layer. Patch review should use small seam-specific packets rather than giant repo dumps.
 
-Reading Order
+*Reading Order*
 
 If you are new to the repo, start here:
     
@@ -135,7 +135,7 @@ If you are new to the repo, start here:
 
 Then move into the relevant runtime, HUD, test, or experiment seam.
 
-Important Boundary Rules
+*Important Boundary Rules*
 
 A few rules matter enough to say twice:
 
@@ -151,8 +151,8 @@ DME is building a grounded structural memory substrate that can later support tr
 
 The current goal is not to gesture at intelligence vaguely. The current goal is to make structural memory lawful, replay-honest, inspectable, and collaboration-ready.
 
-Current Status Summary
+*Current Status Summary*
 
 At the present checkpoint, Door One appears materially stabilized at the runtime, inspection, provenance, preservation, and anti-bypass seams. The repo is now at the point where clarity, consolidation, and collaboration hygiene create more leverage than adding new conceptual surface area.
 
-License / contribution section
+*License / contribution section*
