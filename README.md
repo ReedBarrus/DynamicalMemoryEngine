@@ -1,37 +1,97 @@
-# **Dynamical Memory Engine**
+# Dynamical Memory Engine
 
 A physics-grounded structural memory substrate for dynamical signals.
 
 The Dynamical Memory Engine (DME) develops upward from measured signal into structural memory, runtime organization, and bounded recognition — without collapsing runtime outputs into truth, canon, or ontology.
 
-## *Current Phase*
+## Current Phase
 
-Current active phase: Door One stabilization and orchestration cleanup.
+**Current active phase:** Door One stabilization, orchestration cleanup, and collaboration hardening.
 
 Door One is the deterministic structural-memory runtime. It is focused on:
 
-lawful ingest and provenance anchoring
-structural transforms over signal
-replayable runtime memory objects
-substrate organization across segments, trajectories, and proto-basins
-bounded recognition support
-inspection-first runtime surfaces
+- lawful ingest and provenance anchoring
+- structural transforms over signal
+- replayable runtime memory objects
+- substrate organization across segments, trajectories, and proto-basins
+- bounded recognition support
+- inspection-first runtime surfaces
 
-Door One is below canon. It does not mint truth, canonical memory, prediction, or agency in normal runtime flow.
+Door One is **below canon**. It does not mint truth, canonical memory, prediction, or agency in normal runtime flow.
 
-## *Core Architectural Order*
+## Core Architectural Order
 
 The project follows this lawful layer order:
+
 
 measurement → structure → runtime memory → recognition
 → canon → prediction → agency → ecology → symbolic → meta
 
 Only the currently active lower layers may shape implementation unless explicitly promoted.
 
-What the Repo Contains
-Active Door One runtime
+Repo Posture
 
-## *Main execution chain:*
+This repo is organized to preserve clarity between:
+
+constitutional authority
+supporting reference notes
+runtime/operator implementation
+inspection tooling
+scripts and experiments
+tests and fixtures
+
+Repo topology is coordination, not ontology.
+
+Root Constitutional Authority
+
+These root documents define architectural law, workflow posture, and placement rules:
+
+README_MasterConstitution.md
+README_ConstitutionAppendix.md
+README_WorkflowContract.md
+README_RepoPlacementConstitution.md
+
+The top-level README.md is a collaboration entrypoint. It does not replace the constitutional documents.
+
+Repository Zones
+README/
+
+Supporting reference notes, handoff notes, experiment notes, diagnostics, and roadmap material.
+
+Current structure:
+
+README/Core/ — core Door One notes, policies, checklists, glossary, and handoff docs
+README/Experiments/ — experiment framing and experiment-method notes
+README/Diagnostics/ — diagnostic posture docs, probes, and investigative writeups
+README/Roadmap/ — Door Two / Door Three forward architecture notes
+README/ResultInterpretations/ — experiment result interpretation writeups
+operators/
+
+Deterministic runtime operators and closely related substrate components.
+
+runtime/
+
+Importable runtime coordinators and bounded report/workbench surfaces.
+
+hud/
+
+Inspection tooling and display surfaces. HUDs are read-side only and must not define runtime meaning.
+
+scripts/
+
+Thin executable entrypoints, experiments, demos, and preservation helpers.
+
+tests/
+
+Bounded contract and regression suites.
+
+fixtures/ / test_signal/
+
+Synthetic inputs, reusable test signals, and experiment assets.
+
+Active Door One Stack
+
+The current active Door One execution stack is centered around:
 
 raw ingest input
 → DoorOneExecutiveLane
@@ -40,45 +100,14 @@ raw ingest input
 → DoorOneWorkbench
 → DoorOneHUD / browser HUD
 
-Key active surfaces
-runtime/ — runtime coordinators and read-side runtime assembly
-operators/ — deterministic operators and substrate components
-hud/ — terminal and browser inspection surfaces
-scripts/ — thin runners and preservation helpers
-tests/ — seam-oriented contract and regression coverage
-README/ — supporting notes, policies, surface maps, and phase references
-Current Repo Posture
+This is the current runtime and inspection spine for lawful repeated-run execution, single-run orchestration, bounded cross-run observation, and read-side interpretation.
 
-The repo is now centered around a constitutional/documented core plus bounded runtime/test seams.
-
-## **Constitutional authority**
-
-These root docs define project authority and coordination:
-
-    README_MasterConstitution.md
-    README_ConstitutionAppendix.md
-    README_WorkflowContract.md
-    README_RepoPlacementConstitution.md
-    
-## *Door One supporting notes*
-
-Key Door One reference notes live in README/, including:
-
-runtime boundary
-acceptance checklist
-surface map
-adapter policy
-inspection surface posture
-provenance / retention / pin-archive policy
-real-device experiment and continuous replay notes
-multi-scale ingest note
-MVCS / basin diagnostic probe notes
 What Is Stable Right Now
 
 Door One is currently stabilized enough to support:
 
 lawful repeated-run execution
-single-run orchestration
+lawful single-run orchestration
 workbench assembly
 terminal and browser inspection surfaces
 bounded live outputs
@@ -86,56 +115,26 @@ durable provenance receipts
 digest / pin / archive support
 anti-bypass protections
 
-This means the project is currently in a strong cleanup, consolidation, and collaboration-hardening phase rather than a vague concept phase.
+This repo is no longer in a vague concept phase. It is in a cleanup, consolidation, and collaboration-hardening phase.
 
-## *Near-Term Development Pressure*
-
-The next justified pressures are:
-
-README and repo cleanup for collaboration clarity
-Door One inspection/handoff clarity
-real-device and continuous replay usefulness testing
-passive multi-scale and lens evaluation after baseline clarity is preserved
-Door Two design only after Door One findings are absorbed cleanly
-Quick Start
-
-These commands reflect the current Door One workflow surfaces described in the repo notes. Keep the scripts thin and treat the repo as source-of-truth for exact active behavior.
-
-Typical entry points include:
-
-npm run live:door-one
-node scripts/run_door_one_workbench.js
-
-Expected outputs include bounded live/workbench artifacts such as:
-    
-    out_live/
-    out_workbench/
-    out_provenance/
-    Collaboration Model
-
-The project currently uses a bounded collaboration model:
-
-Reed — system owner and final governance authority
-ChatGPT — architecture lead and constitutional auditor
-Claude — implementation engineer for bounded patch tasks
-
-The repo is the source of truth for active code state. The README/ bank is the supporting meaning/reference layer. Patch review should use small seam-specific packets rather than giant repo dumps.
-
-## *Reading Order*
+Reading Order
 
 If you are new to the repo, start here:
-    
-    README_MasterConstitution.md
-    README_ConstitutionAppendix.md
-    README_WorkflowContract.md
-    README_RepoPlacementConstitution.md
-    README/README_DoorOneSurfaceMap.md
-    README/README_DoorOneAcceptanceChecklist.md
-    README/README_DoorOneRuntimeBoundary.md
 
-Then move into the relevant runtime, HUD, test, or experiment seam.
+README_MasterConstitution.md
+README_ConstitutionAppendix.md
+README_WorkflowContract.md
+README_RepoPlacementConstitution.md
 
-## *Important Boundary Rules*
+Then move into the README bank:
+
+README/Core/README_DoorOneSurfaceMap.md
+README/Core/README_DoorOneAcceptanceChecklist.md
+README/Core/README_DoorOneRuntimeBoundary.md
+
+After that, move into the relevant runtime, HUD, test, experiment, or diagnostic seam.
+
+Important Boundary Rules
 
 A few rules matter enough to say twice:
 
@@ -145,14 +144,39 @@ substrate is not ontology
 replay is lens-bound
 consensus is promotion-only
 deferred upper layers stay deferred until explicitly activated
+Collaboration Model
+
+The project currently uses a bounded collaboration model:
+
+Reed — system owner and final governance authority
+ChatGPT — architecture lead and constitutional auditor
+Claude — implementation engineer for bounded patch tasks
+
+The repo is the source of truth for active code state.
+The README bank is the supporting meaning/reference layer.
+Patch review should use small seam-specific packets rather than giant repo dumps.
+
+Quick Start
+
+Typical active entrypoints include:
+
+npm run live:door-one
+node scripts/run_door_one_workbench.js
+
+Expected outputs include bounded live, workbench, provenance, and preservation artifacts written to their declared output zones.
+
 Why This Project Exists
 
 DME is building a grounded structural memory substrate that can later support trusted memory, prediction, and higher cognition without faking those layers early.
 
-The current goal is not to gesture at intelligence vaguely. The current goal is to make structural memory lawful, replay-honest, inspectable, and collaboration-ready.
+The current goal is not to gesture at intelligence vaguely.
+The current goal is to make structural memory lawful, replay-honest, inspectable, and collaboration-ready.
 
-## *Current Status Summary*
+Current Status Summary
 
 At the present checkpoint, Door One appears materially stabilized at the runtime, inspection, provenance, preservation, and anti-bypass seams. The repo is now at the point where clarity, consolidation, and collaboration hygiene create more leverage than adding new conceptual surface area.
 
-## *License / contribution section*
+License / Contributions
+
+TBD
+
