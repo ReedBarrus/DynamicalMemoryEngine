@@ -1,319 +1,158 @@
-# Dynamical Memory Engine
-
-Dynamical Memory Engine is a provenance-conserving framework for transforming live or recorded signals into auditable dynamical memory over time.
-
-It is designed to preserve lawful lineage across ingest, alignment, windowing, transformation, compression, anomaly detection, segmentation, substrate memory, and higher-order interpretation without collapsing the distinction between raw signal, derived state, observational memory, and promoted consensus.
-
-## Core Idea
-
-Most signal and modeling systems are good at producing outputs, but weak at preserving the full lawful story of how those outputs came to be.
-
-Dynamical Memory Engine is built around a different priority:
-
-- preserve provenance across every transformation layer
-- keep authority boundaries explicit
-- treat derived state as distinct from observational/query surfaces
-- preserve rupture and segment boundaries rather than smearing them
-- allow higher-order interpretation without pretending interpretation is canon
-
-The result is a framework for dynamical modeling that can say not only **what** a state is, but also:
-
-- where it came from
-- under what policy it was formed
-- what segment context it belonged to
-- what later layers are allowed to claim about it
-
-## Current Status
-
-This repository currently centers on **Door One**, the foundational layer of lawful state formation and substrate memory.
-
-Door One covers the base path from signal intake through compressed dynamical state, anomaly-driven segmentation, substrate organization, and observational reporting.
-
-Later layers are planned as separate architectural doors:
-
-- **Door One** — lawful state formation, segmentation, substrate memory, provenance conservation
-- **Door Two** — interpretation, prediction, explanatory layering, non-canonical read models
-- **Door Three** — action, agency, control, and higher-order operational loops
-
-## Design Principles
-
-- **Provenance first** — every transformation should preserve lawful lineage
-- **Bounded authority** — no layer may claim more than it has earned
-- **State is not signal** — derived state must remain distinct from raw input
-- **Query is not truth** — observational read models are not canonical artifacts
-- **Runtime is not canon** — orchestration and storage do not create authority by themselves
-- **Consensus is promotion-only** — canonical promotion must remain explicit and bounded
-- **Rupture matters** — novelty and segmentation boundaries must be preserved rather than blurred
-
-## Repository Structure
-
-```text
-/
-  README_MasterConstitution.md
-  README_WorkflowContract.md
-  README_ConstitutionAppendix.md
-  README_RepoPlacementConstitution.md
-  package.json
-  vite.config.js
-  index.html
-
-  README/
-    README_DevelopmentPressure.md
-    README_ClaudeTaskRequest.md
-    README_DoorOneAcceptanceChecklist.md
-    README_DoorOneAdapterPolicy.md
-    README_DoorOneInspectionSurfacePosture.md
-    README_DoorOnePinArchivePolicy.md
-    README_DoorOneProvenanceRetention.md
-    README_DoorOneRuntimeBoundary.md
-    README_DoorOneSurfaceMap.md
-    README_DynamicalMemorySystemGlossary.md
-    README_DoorOneMultiScaleIngest.md
-
-
-  operators/
-    ingest/IngestOp.js
-    clock/ClockAlignOp.js
-    window/WindowOp.js
-    transform/TransformOp.js
-    compress/CompressOp.js
-    anomaly/AnomalyOp.js
-    merge/MergeOp.js
-    reconstruct/ReconstructOp.js
-    query/QueryOp.js
-    basin/BasinOp.js
-    consensus/ConsensusOp.js
-    sampler/AnalogSamplerOp.js
-    trajectory/SegmentTracker.js
-    trajectory/TrajectoryBuffer.js
-    substrate/MemorySubstrate.js
-
-  runtime/
-    DoorOneOrchestrator.js
-    run_hud_demo.js
-    TrajectoryInterpretationReport.js
-    AttentionMemoryReport.js
-    CrossRunDynamicsReport.js
-    CrossRunSession.js
-    PromotionReadinessReport.js
-    CanonCandidateDossier.js
-    DoorOneWorkbench.js
-    DoorOneExecutiveLane.js
+Dynamical Memory Engine
 
-  hud/
-    DoorOneHUD.js
-    DoorOneStructuralMemoryHud.jsx
-    DoorOneStructuralMemoryHudDemo.jsx
-    DoorOneStructuralMemoryHudModel.js
-    main.jsx
-    styles.css
+A physics-grounded structural memory substrate for dynamical signals.
 
-  scripts/
-    run_pipeline_substrate.js
-    run_door_one_workbench.js
-    run_door_one_live.js
-    run_door_one_provenance_digest.js
-    run_door_one_pin_packet.js
-    run_door_one_archive_bundle.js
-    run_door_one_audio_file_experiment.js
-    run_door_one_audio_file_slice.js
+The Dynamical Memory Engine (DME) develops upward from measured signal into structural memory, runtime organization, and bounded recognition — without collapsing runtime outputs into truth, canon, or ontology.
 
-  tests/
-    test_substrate_contracts.js
-    test_door_one_orchestrator.js
-    test_door_one_hud.js
-    test_door_one_contracts.js
-    test_trajectory_interpretation_report.js
-    test_attention_memory_report.js
-    test_cross_run_dynamics_report.js
-    test_cross_run_session.js
-    test_promotion_readiness_report.js
-    test_canon_candidate_dossier.js
-    test_consensus_op.js
-    test_door_one_workbench.js
-    test_door_one_hud_workbench.js
-    test_door_one_executive_lane.js
-    test_door_one_live_provenance_retention.js
-    test_door_one_anti_bypass_contracts.js
-    test_door_one_structural_memory_hud.js
-    test_door_one_provenance_digest.js
-    test_door_one_pin_packet.js
-    test_door_one_archive_bundle.js
-    test_door_one_ingest_hardening.js
+Current Phase
 
-test_signal/
-    daw_tone_continuity/baseline_01.wav
-    daw_tone_continuity/baseline_02.wav
-    daw_tone_continuity/baseline_03.wav
-    daw_tone_continuity/continuity_break_01.wav
-    daw_tone_continuity/continuity_break_02.wav
-    daw_tone_continuity/continuity_break_03.wav
-    daw_tone_continuity/return_01.wav
-    daw_tone_continuity/return_02.wav
-    daw_tone_continuity/return_03.wav
-    220-440hzPulse.wav
+Current active phase: Door One stabilization and orchestration cleanup.
 
- fixtures/
-    test_signal.js
+Door One is the deterministic structural-memory runtime. It is focused on:
 
-  out/
-```
+lawful ingest and provenance anchoring
+structural transforms over signal
+replayable runtime memory objects
+substrate organization across segments, trajectories, and proto-basins
+bounded recognition support
+inspection-first runtime surfaces
 
-## Recommended Reading Order
+Door One is below canon. It does not mint truth, canonical memory, prediction, or agency in normal runtime flow.
 
-For a new reader:
+Core Architectural Order
 
-  README.md
+The project follows this lawful layer order:
 
-  README_MasterConstitution.md
+measurement → structure → runtime memory → recognition
+→ canon → prediction → agency → ecology → symbolic → meta
 
-  README_WorkflowContract.md
+Only the currently active lower layers may shape implementation unless explicitly promoted.
 
-  README_ConstitutionAppendix.md
+What the Repo Contains
+Active Door One runtime
 
-  README_RepoPlacementConstitution.md
+Main execution chain:
 
-  README_SubstrateLayer.md
+raw ingest input
+→ DoorOneExecutiveLane
+→ DoorOneOrchestrator
+→ CrossRunSession
+→ DoorOneWorkbench
+→ DoorOneHUD / browser HUD
 
-After that, move into the runtime and operator surfaces.
+Key active surfaces
+runtime/ — runtime coordinators and read-side runtime assembly
+operators/ — deterministic operators and substrate components
+hud/ — terminal and browser inspection surfaces
+scripts/ — thin runners and preservation helpers
+tests/ — seam-oriented contract and regression coverage
+README/ — supporting notes, policies, surface maps, and phase references
+Current Repo Posture
 
-## Governance Documents
-README_MasterConstitution.md
+The repo is now centered around a constitutional/documented core plus bounded runtime/test seams.
 
-Defines the architectural law of the system: authority boundaries, layer semantics, canonical forms, and what each part of the stack is allowed to mean.
+Constitutional authority
 
-README_WorkflowContract.md
+These root docs define project authority and coordination:
 
-Defines how work should be performed against the architecture so implementation does not drift from constitutional intent.
+    README_MasterConstitution.md
+    README_ConstitutionAppendix.md
+    README_WorkflowContract.md
+    README_RepoPlacementConstitution.md
+    
+Door One supporting notes
 
-README_ConstitutionAppendix.md
+Key Door One reference notes live in README/, including:
 
-Provides quick-reference supporting definitions and implementation-facing clarifications.
+runtime boundary
+acceptance checklist
+surface map
+adapter policy
+inspection surface posture
+provenance / retention / pin-archive policy
+real-device experiment and continuous replay notes
+multi-scale ingest note
+MVCS / basin diagnostic probe notes
+What Is Stable Right Now
 
-README_RepoPlacementConstitution.md
+Door One is currently stabilized enough to support:
 
-Defines the intended repository topology and where different classes of files belong.
+lawful repeated-run execution
+single-run orchestration
+workbench assembly
+terminal and browser inspection surfaces
+bounded live outputs
+durable provenance receipts
+digest / pin / archive support
+anti-bypass protections
 
-README_SubstrateLayer.md
+This means the project is currently in a strong cleanup, consolidation, and collaboration-hardening phase rather than a vague concept phase.
 
-Describes the substrate memory layer, trajectory semantics, segment handling, basin organization, and observational reporting surfaces.
+Near-Term Development Pressure
 
-## Current Door One Components
+The next justified pressures are:
 
-The current implementation includes components in the following functional categories:
+README and repo cleanup for collaboration clarity
+Door One inspection/handoff clarity
+real-device and continuous replay usefulness testing
+passive multi-scale and lens evaluation after baseline clarity is preserved
+Door Two design only after Door One findings are absorbed cleanly
+Quick Start
 
-  Signal intake and alignment
+These commands reflect the current Door One workflow surfaces described in the repo notes. Keep the scripts thin and treat the repo as source-of-truth for exact active behavior.
 
-  IngestOp
+Typical entry points include:
 
-  AnalogSamplerOp
+npm run live:door-one
+node scripts/run_door_one_workbench.js
 
-  ClockAlignOp
+Expected outputs include bounded live/workbench artifacts such as:
+    
+    out_live/
+    out_workbench/
+    out_provenance/
+    Collaboration Model
 
-  WindowOp
+The project currently uses a bounded collaboration model:
 
-  State formation
+Reed — system owner and final governance authority
+ChatGPT — architecture lead and constitutional auditor
+Claude — implementation engineer for bounded patch tasks
 
-  TransformOp
+The repo is the source of truth for active code state. The README/ bank is the supporting meaning/reference layer. Patch review should use small seam-specific packets rather than giant repo dumps.
 
-  CompressOp
+Reading Order
 
-  ReconstructOp
+If you are new to the repo, start here:
+    
+    README_MasterConstitution.md
+    README_ConstitutionAppendix.md
+    README_WorkflowContract.md
+    README_RepoPlacementConstitution.md
+    README/README_DoorOneSurfaceMap.md
+    README/README_DoorOneAcceptanceChecklist.md
+    README/README_DoorOneRuntimeBoundary.md
 
-  Novelty and segmentation
+Then move into the relevant runtime, HUD, test, or experiment seam.
 
-  AnomalyOp
+Important Boundary Rules
 
-  SegmentTracker
+A few rules matter enough to say twice:
 
-  Memory substrate and neighborhood organization
+runtime is not canon
+query is not truth
+substrate is not ontology
+replay is lens-bound
+consensus is promotion-only
+deferred upper layers stay deferred until explicitly activated
+Why This Project Exists
 
-  MemorySubstrate
+DME is building a grounded structural memory substrate that can later support trusted memory, prediction, and higher cognition without faking those layers early.
 
-  TrajectoryBuffer
+The current goal is not to gesture at intelligence vaguely. The current goal is to make structural memory lawful, replay-honest, inspectable, and collaboration-ready.
 
-  BasinOp
+Current Status Summary
 
-  Aggregation and observation
+At the present checkpoint, Door One appears materially stabilized at the runtime, inspection, provenance, preservation, and anti-bypass seams. The repo is now at the point where clarity, consolidation, and collaboration hygiene create more leverage than adding new conceptual surface area.
 
-  MergeOp
-
-  QueryOp
-
-  TrajectoryInterpretationReport
-
-  Runtime and inspection
-
-  DoorOneOrchestrator
-
-  DoorOneHUD
-
-  run_pipeline_substrate.js
-
-## What This Repository Is Not
-
-This repository is not trying to:
-
-collapse all modeling into one universal ontology
-
-pretend interpretation is the same as authoritative state
-
-hide uncertainty behind polished outputs
-
-treat runtime convenience as canonical truth
-
-replace scientific rigor with aesthetic abstraction
-
-Instead, it aims to provide a lawful base from which deeper interpretation can emerge without breaking provenance.
-
-## Why This Matters
-
-If a modeling system cannot preserve the history of its own transformations, then it becomes increasingly difficult to distinguish:
-
-real structure from artifact
-
-lawful inference from projection
-
-stable memory from overwritten convenience
-
-genuine rupture from smoothed-over drift
-
-Dynamical Memory Engine is an attempt to build a system that stays accountable to its own history while still remaining useful for live dynamical modeling.
-
-## Long-Term Direction
-
-The long-term goal is not only to model evolving systems, but to create a framework that can recursively refine its own descriptive power through contact with reality.
-
-That means building an engine that can:
-
-preserve lawful lineage
-
-remain open to rupture and novelty
-
-support interpretation without confusing it for canon
-
-generate deeper frameworks only when the limits of the current framework are actually encountered
-
-## Development Status
-
-This is an actively evolving research and engineering project.
-
-The core architecture is under active refinement, with current emphasis on:
-
-constitutional consistency
-
-provenance conservation
-
-lawful operator contracts
-
-substrate memory semantics
-
-preparation for higher-order interpretive layers
-
-## License
-
-TBD
-
-## Contributing
-
-Contribution guidance is not yet formalized. For now, treat the constitution and workflow contract as the governing references for any architectural change.
+License / contribution section
