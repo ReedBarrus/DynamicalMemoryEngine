@@ -64,7 +64,7 @@ README/Core/ — core Door One notes, policies, checklists, glossary, and handof
 README/Experiments/ — experiment framing and experiment-method notes
 README/Diagnostics/ — diagnostic posture docs, probes, and investigative writeups
 README/Roadmap/ — Door Two / Door Three forward architecture notes
-README/ResultInterpretations/ — experiment result interpretation writeups
+README/ResultInterpretation/ — experiment result interpretation writeups
 operators/
 
 Deterministic runtime operators and closely related substrate components.
