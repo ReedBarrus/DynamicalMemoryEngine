@@ -29,20 +29,20 @@ measurement → structure → runtime memory → recognition
 
 Only the currently active lower layers may shape implementation unless explicitly promoted.
 
-Repo Posture
+### Repo Posture
 
 This repo is organized to preserve clarity between:
 
-constitutional authority
-supporting reference notes
-runtime/operator implementation
-inspection tooling
-scripts and experiments
-tests and fixtures
+- constitutional authority
+- supporting reference notes
+- runtime/operator implementation
+- inspection tooling
+- scripts and experiments
+- tests and fixtures
 
 Repo topology is coordination, not ontology.
 
-Root Constitutional Authority
+### Root Constitutional Authority
 
 These root documents define architectural law, workflow posture, and placement rules:
 
@@ -53,20 +53,20 @@ README_RepoPlacementConstitution.md
 
 The top-level README.md is a collaboration entrypoint. It does not replace the constitutional documents.
 
-Repository Zones
+## Repository Zones
 README/
 
 Supporting reference notes, handoff notes, experiment notes, diagnostics, and roadmap material.
 
-Current structure:
-
+### Current structure:
+```text
 README/Core/ — core Door One notes, policies, checklists, glossary, and handoff docs
 README/Experiments/ — experiment framing and experiment-method notes
 README/Diagnostics/ — diagnostic posture docs, probes, and investigative writeups
 README/Roadmap/ — Door Two / Door Three forward architecture notes
 README/ResultInterpretation/ — experiment result interpretation writeups
 operators/
-
+```
 Deterministic runtime operators and closely related substrate components.
 
 runtime/
@@ -89,7 +89,7 @@ fixtures/ / test_signal/
 
 Synthetic inputs, reusable test signals, and experiment assets.
 
-Active Door One Stack
+## Active Door One Stack
 
 The current active Door One execution stack is centered around:
 
@@ -117,7 +117,7 @@ anti-bypass protections
 
 This repo is no longer in a vague concept phase. It is in a cleanup, consolidation, and collaboration-hardening phase.
 
-Reading Order
+## Reading Order
 
 If you are new to the repo, start here:
 
@@ -134,7 +134,7 @@ README/Core/README_DoorOneRuntimeBoundary.md
 
 After that, move into the relevant runtime, HUD, test, experiment, or diagnostic seam.
 
-Important Boundary Rules
+## Important Boundary Rules
 
 A few rules matter enough to say twice:
 
@@ -156,7 +156,7 @@ The repo is the source of truth for active code state.
 The README bank is the supporting meaning/reference layer.
 Patch review should use small seam-specific packets rather than giant repo dumps.
 
-Quick Start
+### Quick Start
 
 Typical active entrypoints include:
 
@@ -165,18 +165,18 @@ node scripts/run_door_one_workbench.js
 
 Expected outputs include bounded live, workbench, provenance, and preservation artifacts written to their declared output zones.
 
-Why This Project Exists
+## Why This Project Exists
 
 DME is building a grounded structural memory substrate that can later support trusted memory, prediction, and higher cognition without faking those layers early.
 
 The current goal is not to gesture at intelligence vaguely.
 The current goal is to make structural memory lawful, replay-honest, inspectable, and collaboration-ready.
 
-Current Status Summary
+### Current Status Summary
 
 At the present checkpoint, Door One appears materially stabilized at the runtime, inspection, provenance, preservation, and anti-bypass seams. The repo is now at the point where clarity, consolidation, and collaboration hygiene create more leverage than adding new conceptual surface area.
 
-License / Contributions
+## License / Contributions
 
 TBD
 
