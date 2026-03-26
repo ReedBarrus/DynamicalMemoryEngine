@@ -344,6 +344,7 @@ Generated outputs are never authority surfaces.
     run_basin_identity_diagnostics_calibrated.js
     run_active_interaction_zone_probe.js
     run_continuous_replay_flow_probe.js
+    run_replay_resilience_surface_probe.js
 
   tests/
     test_substrate_contracts.js
@@ -373,6 +374,7 @@ Generated outputs are never authority surfaces.
     test_basin_identity_diagnostics_calibrated.js
     test_active_interaction_zone_probe.js
     test_continuous_replay_flow_probe.js
+    test_replay_resilience_surface_probe.js
 
   test_signal/
     220-440hzPulse.wav
