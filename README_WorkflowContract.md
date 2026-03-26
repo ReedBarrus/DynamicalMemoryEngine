@@ -167,14 +167,6 @@ If chat-local copies and the repo diverge, the repo is presumed current unless a
 
 This project uses a bounded review-packet workflow rather than full-repo mirroring in chat.
 
-## Active Source-of-Truth Rule
-
-The Git repository is the authoritative source for active code and canonical file state.
-
-Uploaded files in chat are used for bounded review, semantic audit, and active patch-scope work.
-
-If chat-local copies and the repo diverge, the repo is presumed current unless a newer authority-doc patch is explicitly under review in the current task.
-
 ### ChatGPT context rule
 
 ChatGPT should treat project context in three layers:
