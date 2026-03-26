@@ -244,10 +244,10 @@ Generated outputs are never authority surfaces.
       README_DoorOneSurfaceMap.md
       README_IngestAdapterMatrix_v0.md
       README_ContinuousIngestRetentionLadder.md
+      README_DoorOneMultiScaleIngest.md
 
     Experiments/
       README_DoorOneRealDeviceExperiment.md
-      README_DoorOneMultiScaleIngest.md
       README_DoorOneContinuousReplayExperiment.md
 
     Diagnostics/
