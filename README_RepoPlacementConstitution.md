@@ -351,6 +351,7 @@ Generated outputs are never authority surfaces.
     run_replay_resilience_surface_probe.js
     run_real_source_replay_probe.js
     run_continuous_master_phase_probe.js
+    run_structural_transition_probe.js
 
   tests/
     test_substrate_contracts.js
@@ -383,6 +384,7 @@ Generated outputs are never authority surfaces.
     test_replay_resilience_surface_probe.js
     test_real_source_replay_probe.js
     test_continuous_master_phase_probe.js
+    test_structural_transition_probe.js
 
   test_signal/
     220-440hzPulse.wav
