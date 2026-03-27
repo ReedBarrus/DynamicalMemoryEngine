@@ -286,3 +286,23 @@ The project should now treat:
 - and ambiguity as lawful output rather than failure.
 
 This widens interpretive honesty without changing Door One runtime authority.
+
+## First cohort expression
+
+In the current `daw_mic_input` master-stream cohort, the vocabulary proved practically useful.
+
+Observed supported classes:
+- dwell
+- rupture
+- ingress
+- coupling
+- drift
+- re-entry
+
+Observed unsupported / excluded classes for this cohort:
+- branching
+- collapse
+- decoupling
+- distortion
+
+This confirms that the vocabulary can add real read-side discriminatory value beyond the coarse baseline / perturbation / return scaffold when applied to continuous unlabeled real-source streams.
