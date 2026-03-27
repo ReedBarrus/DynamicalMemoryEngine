@@ -386,3 +386,34 @@ downstream layers start compensating with guesswork or ontology leakage
 17. One-Line Summary
 
 This protocol checks whether a layer is still preserving the distinctions it is responsible for, and tells us when to refine vocabulary, add a derived probe, preserve ambiguity, or leave the architecture alone.
+
+## First real-source application example (400hz master.wav perturb)
+
+The first tighter-band real-source family provided a concrete example of lawful distortion audit use.
+
+Observed outcome:
+
+- coarse replay and continuous-master detection were excellent
+- phase separation and return structure were preserved strongly
+- but the structural transition vocabulary still flattened two distinct mechanisms into the same class
+
+Concrete flattening observed:
+
+- prior broadband microphone perturbation:
+  multi-band redistribution under room/fan/heater conditions
+- tighter-band `400 Hz` sine perturbation:
+  single-band concentration with much stronger boundary L1
+
+Both currently appear as `rupture`.
+
+This is a useful example of:
+
+- preserved distinctions at one layer
+- collapsed distinctions at a neighboring layer
+- and a correction that belongs in a derived read-side probe rather than an operator contract
+
+Recommended action from this example:
+
+- keep current rupture thresholding
+- add a read-side concentration descriptor / probe
+- avoid prematurely widening runtime vocabulary or rewriting operators
