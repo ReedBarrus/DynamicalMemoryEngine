@@ -261,6 +261,7 @@ Generated outputs are never authority surfaces.
       README.DerivedOperatorClass_Envelope.md
       README.BoundaryProbingActiveInteractionZones.md
       README.BoundaryConditionedEnergyFlow.md
+      README.DistortionAuditProtocol.md
 
     Roadmap/
       README.DynamicalMemoryEngine_DoorTwo.md
