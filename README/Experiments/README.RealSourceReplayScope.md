@@ -442,6 +442,47 @@ For the present `daw_mic_input` cohort:
 - `exchange_persistence_class = non_oscillatory_throughout`
 - perturbation remained clearly separable from baseline
 - return remained much closer to baseline than perturbation
+- 
+## Structural transition vocabulary refinement
+
+A downstream read-side transition probe was run over the same unlabeled `master_01-03` cohort.
+
+### Result posture
+
+This result remains:
+
+- read-side
+- provisional
+- probe-local
+- lens-bound
+- non-canonical
+- non-predictive
+- non-promotive
+
+It does not modify BasinOp, runtime contracts, workbench authority, or promotion behavior.
+
+### Current structural refinement
+
+Across the current master-stream cohort, the coarse three-phase scaffold can now be refined into a richer candidate transition description:
+
+- `dwell` in the early stable region
+- `rupture` at the dominant structural boundaries near `t≈32s` and `t≈64s`
+- `ingress` immediately after rupture as the stream settles into the new structural neighborhood
+- `coupling` inside the disrupted middle region
+- `drift` within the middle region
+- `re-entry` as the later region converges back toward the initial structural neighborhood
+- later `dwell` after re-entry
+
+Classes such as `branching`, `collapse`, `decoupling`, and `distortion` were not forced where support was weak or absent.
+
+### Working meaning
+
+The baseline / perturbation / return scaffold remains useful as experiment choreography.
+
+But for continuous real streams, the richer structural transition vocabulary provides a more honest read-side description of how the stream moves through profile space over time.
+
+This remains structural interpretation only.
+It is not event truth, canonical phase identity, or semantic cause.
 
 Representative replay summary:
 
