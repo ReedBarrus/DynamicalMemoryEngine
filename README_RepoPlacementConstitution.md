@@ -257,6 +257,10 @@ Generated outputs are never authority surfaces.
       README.BoundaryConditionedBasinFormation.md
       README.IntegrationBridge_to_DME.md
       README.DoorOneProbeMap.md
+      README.StructuralTransitionVocabulary.md
+      README.DerivedOperatorClass_Envelope.md
+      README.BoundaryProbingActiveInteractionZones.md
+      README.BoundaryConditionedEnergyFlow.md
 
     Roadmap/
       README.DynamicalMemoryEngine_DoorTwo.md
