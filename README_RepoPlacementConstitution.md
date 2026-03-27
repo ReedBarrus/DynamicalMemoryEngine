@@ -354,6 +354,7 @@ Generated outputs are never authority surfaces.
     run_continuous_master_phase_probe.js
     run_structural_transition_probe.js
     run_tighter_band_real_source_probe.js
+    run_spectral_concentration_probe.js
 
   tests/
     test_substrate_contracts.js
@@ -388,6 +389,7 @@ Generated outputs are never authority surfaces.
     test_continuous_master_phase_probe.js
     test_structural_transition_probe.js
     test_tighter_band_real_source_probe.js
+    test_spectral_concentration_probe.js
 
   test_signal/
     220-440hzPulse.wav
