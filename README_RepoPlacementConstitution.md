@@ -245,6 +245,8 @@ Generated outputs are never authority surfaces.
       README_IngestAdapterMatrix_v0.md
       README_ContinuousIngestRetentionLadder.md
       README_DoorOneMultiScaleIngest.md
+      README_Glossary.md
+      README_CrossFieldFormalSchema.md
 
     Experiments/
       README_DoorOneRealDeviceExperiment.md
