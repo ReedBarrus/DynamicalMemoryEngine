@@ -178,7 +178,12 @@ The current goal is to make structural memory lawful, replay-honest, inspectable
 
 At the present checkpoint, Door One appears materially stabilized at the runtime, inspection, provenance, preservation, and anti-bypass seams. The repo is now at the point where clarity, consolidation, and collaboration hygiene create more leverage than adding new conceptual surface area.
 
-## License / Contributions
+## License
 
 TBD
 
+## Contribution
+
+Refer to
+
+# README.CollaboratorTiers
