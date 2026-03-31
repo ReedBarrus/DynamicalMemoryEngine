@@ -1,0 +1,54 @@
+{
+  "canonical_id": "C1_BASELINE_SINE400_001",
+  "canonical_version": 1,
+  "canonical_status": "promoted",
+
+  "claim_type": "baseline_reference_claim",
+  "promoted_claim": "Under the declared medium FFT/Hann lens and within the daw_mic_sine_400hz cohort scope, the baseline phase profile is trusted as a stable comparison anchor for distinguishing perturbation and return-like recurrence in this family.",
+  "claim_summary": "Narrow same-family baseline comparison anchor for daw_mic_sine_400hz.",
+
+  "source_family_scope": "daw_mic_sine_400hz",
+  "cohort_scope": [
+    "baseline_01-03",
+    "perturb_01-03",
+    "return_01-03",
+    "supporting master_01-03"
+  ],
+  "lens_scope": "medium FFT/Hann baseline lens only",
+  "temporal_scope": "current bounded experiment family only",
+  "effective_scope_note": "same-family, same-lens, review-bounded narrow anchor only",
+
+  "allowed_use": [
+    "same-family baseline comparison",
+    "same-family perturbation-vs-baseline comparison",
+    "same-family narrow return-vs-perturb reference",
+    "bounded review-anchor consultation under same declared lens"
+  ],
+  "forbidden_use": [
+    "cross-family comparison",
+    "undeclared-lens comparison",
+    "prediction",
+    "ontology inference",
+    "event truth",
+    "policy/control input",
+    "symbolic binding authority"
+  ],
+
+  "runtime_handoff_enabled": true,
+
+  "status_reason": "promoted as narrow baseline anchor after passing legitimacy, utility, and governability review",
+  "challenge_posture": "none_active",
+  "challenge_trigger": "future same-family evidence under the same declared medium FFT/Hann lens no longer preserves the bounded anchor behavior that justified promotion",
+
+  "supersession_ref": null,
+  "revocation_ref": null,
+
+  "origin_candidate_packet_id": "CAND-BASELINE-REALSOURCE-SINE400-V1",
+  "promotion_memo_ref": "README_C1PromotionMemo_Packet1.md",
+  "support_refs": [
+    "C1_TrialPacket1_PassClaim.yaml",
+    "README_C1PromotionMemo_Packet1.md",
+    "bounded real-source replay support across baseline/perturbation/return cohort",
+    "bounded cross-run support across three baseline runs and three master files"
+  ]
+}
