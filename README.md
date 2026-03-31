@@ -180,7 +180,11 @@ At the present checkpoint, Door One appears materially stabilized at the runtime
 
 ## License
 
-TBD
+This repository is **All Rights Reserved**.
+
+No permission is granted to use, copy, modify, distribute, or create derivative works from this codebase or its contents without prior written permission.
+
+If you want to collaborate, evaluate, license, or use this work legitimately, contact Reed directly.
 
 ## Contribution
 
