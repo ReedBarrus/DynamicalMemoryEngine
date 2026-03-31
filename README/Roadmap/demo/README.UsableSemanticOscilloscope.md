@@ -388,29 +388,6 @@ Introduce modular source-object adapters that normalize selected object families
 
 At minimum, start with:
 
-- smart tag / annotation lifecycle
-- presence or interaction trajectory
-- derived-trace / LLM runtime metrics
-
-Audio/source-family ingest remains active in parallel as a proven comparison family.
-
-### Step 1 — Execution shell
-
-Build a bounded orchestration/control surface that can:
-
-- select source/object families,
-- launch lawful ingest/runtime execution,
-- show run state and emitted outputs,
-- expose explicit action points for consultation / activation when available.
-
-This is the new central seam.
-
-### Step 2 — Modular object ingest seam
-
-Introduce modular source-object adapters that normalize selected object families into the lawful ingest boundary.
-
-At minimum, start with:
-
 - generic file import (JSON / CSV / WAV)
 - derived-trace / LLM runtime metrics
 - later family/workflow-specific source handling layered on top of lawful import or capture paths
