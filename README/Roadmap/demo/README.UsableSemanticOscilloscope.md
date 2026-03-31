@@ -469,6 +469,9 @@ That means new object-family adapters must normalize into either:
 
 Object-family diversity does not create a second ingest ontology.
 
+Generic file import is a transport/adapter capability.
+Real-world audio family workflow is a declared provenance-bearing source-family posture built on top of lawful import or capture paths.
+
 This means the source-object layer must preserve:
 
 - timestamps or ordered sequence discipline
