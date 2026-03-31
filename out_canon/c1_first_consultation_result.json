@@ -1,0 +1,78 @@
+{
+  "record_type": "c1_first_consultation_result",
+  "generated_at": "2026-03-31T05:42:58.054Z",
+  "constitutional_posture": {
+    "c1_object_not_modified": true,
+    "packet3_not_instantiated": true,
+    "read_side_only": true
+  },
+  "consultation_target": {
+    "canonical_id": "C1_BASELINE_SINE400_001",
+    "canonical_status": "promoted",
+    "challenge_posture": "none_active",
+    "source_family": "daw_mic_sine_400hz"
+  },
+  "consultation_A": {
+    "source_family": "daw_mic_sine_400hz",
+    "lens_scope": "medium FFT/Hann",
+    "requested_use": "same-family baseline comparison",
+    "decision": "allow",
+    "reason": "consultation allowed — matched allowed_use: 'same-family baseline comparison'",
+    "effective_scope_note": "same-family, same-lens, review-bounded narrow anchor only"
+  },
+  "consultation_B_negative_control": {
+    "source_family": "daw_mic_input",
+    "decision": "deny",
+    "reason": "source family mismatch: requested 'daw_mic_input', declared scope 'daw_mic_sine_400hz'",
+    "note": "expected deny"
+  },
+  "band_profile_metrics": {
+    "lens": {
+      "target_Fs": 2400,
+      "window_N": 256,
+      "hop_N": 128,
+      "transform": "FFT/Hann",
+      "band_edges": [
+        0,
+        300,
+        600,
+        900,
+        1200
+      ]
+    },
+    "baseline_mean": [
+      0.55454,
+      0.181802,
+      0.133819,
+      0.129839
+    ],
+    "perturbation_mean": [
+      0.135898,
+      0.800794,
+      0.032086,
+      0.031223
+    ],
+    "return_mean": [
+      0.559833,
+      0.178782,
+      0.131403,
+      0.129981
+    ],
+    "bVsP": 1.237983,
+    "bVsR": 0.010871,
+    "return_closer_to_baseline": true,
+    "window_count": 447
+  },
+  "challenge_trigger_from_c1": "future same-family evidence under the same declared medium FFT/Hann lens no longer preserves the bounded anchor behavior that justified promotion",
+  "reference_values": {
+    "bVsP": 1.24,
+    "bVsR": 0.01
+  },
+  "challenge_thresholds": {
+    "bVsP_floor": 0.992,
+    "bVsR_ceil": 0.05
+  },
+  "challenge_pressure": "none",
+  "review_judgment": "keep_promoted",
+  "review_judgment_rationale": "bVsP=1.237983 (99.8% of reference 1.24). bVsR=0.010871. Return convergence holds. Challenge pressure: none."
+}
