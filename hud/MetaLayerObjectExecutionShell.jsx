@@ -4,11 +4,12 @@
 //
 // Constitutional posture:
 //   - Execution surface only — triggers lawful runs, does NOT define runtime meaning
+//   - Calls DoorOneOrchestrator directly (pure-JS, browser-compatible operator chain)
 //   - Display is read-side only — results are inspection surfaces, not authority
 //   - Unsupported source families are explicitly labeled, not faked
 //   - Request and replay surfaces are explicit fences below canon
 //   - Keeps lab HUD and public demo separate
-
+//
 // Wired source families (v0):
 //   - Synthetic Signal (fully wired — uses makeTestSignal → DoorOneOrchestrator)
 //   - File Import (JSON / CSV / WAV — wired through modular adapter seam)
@@ -26,7 +27,7 @@
 //   D. Request Surface
 //   E. Replay / Reconstruction
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { makeTestSignal } from "../fixtures/test_signal.js";
 import { DoorOneOrchestrator } from "../runtime/DoorOneOrchestrator.js";
@@ -450,7 +451,6 @@ function ControlRegion({ selectedFamily, onSelectFamily, preset, onSelectPreset,
     const isWired = family?.wired ?? false;
     const isFile = family?.isFileFamily ?? false;
     const running = runStatus === "running";
-    const fileRef = { current: null };
 
     // For file family: run is ready only when we have a validated payload
     const canRun = isFile
@@ -1256,7 +1256,11 @@ function TandemStrip({ hud, demo }) {
 }
 
 // ─── Main shell component ─────────────────────────────────────────────────────
-export default function MetaLayerObjectExecutionShell() {
+// onStateChange: optional callback for app-level state threading.
+// When provided, called with key shell state whenever workbench, runResult,
+// requestLog, replayLog, or sourceFamilyLabel change.
+// The shell remains the state owner — this is read-side export only.
+export default function MetaLayerObjectExecutionShell({ onStateChange = null } = {}) {
     const [selectedFamily, setSelectedFamily] = useState("synthetic_signal");
     const [presetIdx, setPresetIdx] = useState(0);
     const [runStatus, setRunStatus] = useState("idle");
@@ -1352,6 +1356,16 @@ export default function MetaLayerObjectExecutionShell() {
     const tandemProjection = projectBoth({
         runResult, workbench, requestLog, replayLog, sourceFamilyLabel, runStatus,
     });
+
+    // App-level state export — read-side only.
+    // Calls onStateChange when key state changes so parent app can thread
+    // the live state into other read-side surfaces (lab HUD, demo pane).
+    // The shell remains the state owner; this is a read-side callback only.
+    useEffect(() => {
+        if (typeof onStateChange === "function") {
+            onStateChange({ workbench, runResult, requestLog, replayLog, sourceFamilyLabel, runStatus });
+        }
+    }, [workbench, runResult, requestLog, replayLog, sourceFamilyLabel, runStatus, onStateChange]);
 
     return (
         <div style={{ minHeight: "100vh", background: C.bg, fontFamily: C.sans }}>
@@ -1484,7 +1498,7 @@ export default function MetaLayerObjectExecutionShell() {
                 {/* Footer */}
                 <div style={{ padding: "16px 0 40px", fontFamily: C.mono, fontSize: 10, color: C.textDim, display: "flex", gap: 20, flexWrap: "wrap" }}>
                     <span>execution surface · not authority</span>
-                    <span>lab HUD: index.html · public demo: demo.html</span>
+                    <span>lab HUD: index.html · public demo: demo.html · composed app: app.html</span>
                     <span>DME v0.1 · Door One below canon</span>
                 </div>
             </div>
