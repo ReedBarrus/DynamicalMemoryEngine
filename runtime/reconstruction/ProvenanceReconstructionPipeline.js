@@ -152,21 +152,29 @@ function extractReplayTarget(replayRequest) {
 function collectRuntimeSupport(runResult, workbench) {
     if (!runResult?.ok) return { available: false, refs: [], counts: {} };
     const arts = runResult.artifacts ?? {};
-    const refs = [];
+    const runtimeRefs = [];
+    const contextualRefs = [];
     const counts = {};
 
-    if (arts.a1)                counts.a1 = 1,            refs.push("a1_ingest_artifact");
-    if (Array.isArray(arts.h1s) && arts.h1s.length)  counts.h1s = arts.h1s.length, refs.push("h1s_harmonic_states");
-    if (Array.isArray(arts.m1s) && arts.m1s.length)  counts.m1s = arts.m1s.length, refs.push("m1s_merged_states");
+    if (arts.a1) counts.a1 = 1, runtimeRefs.push("a1_ingest_artifact");
+    if (Array.isArray(arts.h1s) && arts.h1s.length) counts.h1s = arts.h1s.length, runtimeRefs.push("h1s_harmonic_states");
+    if (Array.isArray(arts.m1s) && arts.m1s.length) counts.m1s = arts.m1s.length, runtimeRefs.push("m1s_merged_states");
     if (Array.isArray(arts.anomaly_reports) && arts.anomaly_reports.length) {
         counts.anomaly_reports = arts.anomaly_reports.length;
-        refs.push("anomaly_reports");
+        runtimeRefs.push("anomaly_reports");
     }
-    if (arts.q)                 counts.q = 1,             refs.push("q_query_result");
-    if (workbench?.scope)       refs.push("workbench_scope");
-    if (workbench?.runtime)     refs.push("workbench_runtime");
+    if (arts.q) counts.q = 1, runtimeRefs.push("q_query_result");
 
-    return { available: true, refs, counts };
+    if (workbench?.scope) contextualRefs.push("workbench_scope");
+    if (workbench?.runtime) contextualRefs.push("workbench_runtime");
+
+    return {
+        available: runtimeRefs.length > 0,
+        refs: [...runtimeRefs, ...contextualRefs],
+        runtime_refs: runtimeRefs,
+        contextual_refs: contextualRefs,
+        counts,
+    };
 }
 
 function collectInterpretiveSupport(workbench) {
@@ -201,27 +209,19 @@ function evaluateThresholdPosture({
         };
     }
 
-    // Local invariance: pass if we have live Tier 0 runtime support
     const localInvariance = (hasRunResult && hasWorkbench && hasRuntimeSupport)
         ? "pass" : "unknown";
 
-    // Compression survival: in Tier 0, the live state IS the compressed state
-    // H1/M1 are the compressed harmonic/merged states; if present, key invariants survive
     const compressionSurvival = hasRuntimeSupport ? "pass" : "unknown";
-
-    // Distortion posture: Tier 0 live state has minimal distortion vs runtime
     const distortionPosture = (hasRunResult && hasRuntimeSupport) ? "pass" : "warning";
-
-    // Retained-tier sufficiency: Tier 0 is sufficient for Tier 0 replay
     const tierSufficiency = (tierUsed <= 0) ? "pass" : "fail";
-
-    // Query equivalence: not wired in v0 beyond current-run q artifact
     const queryEquivalence = "not_applicable";
 
-    // Request replay: if isRequestReplay and target request is absent, degrade
     let downgradeOutput = null;
     if (isRequestReplay && !targetRequestPresent) {
         downgradeOutput = DOWNGRADE.SUPPORT_DEGRADED;
+    } else if (tierUsed > 0) {
+        downgradeOutput = DOWNGRADE.RETAINED_TIER_INSUFFICIENT;
     } else if (!hasRunResult || !hasRuntimeSupport) {
         downgradeOutput = DOWNGRADE.RETAINED_TIER_INSUFFICIENT;
     }
@@ -362,7 +362,7 @@ export function reconstructFromReplayRequest({
 
     if (isRtReplay && !runtimeSupport.available) {
         return failReplay(replayRequest, trace,
-            "runtime_reconstruction replay requires runResult with ok=true · no runtime support available");
+            "runtime_reconstruction replay requires runResult with meaningful runtime support · no sufficient runtime artifacts available");
     }
 
     trace.push(makeTraceStep({
@@ -371,9 +371,9 @@ export function reconstructFromReplayRequest({
         status:    runtimeSupport.available ? "ok" : "warning",
         label:     "runtime support collected",
         detail:    runtimeSupport.available
-            ? `refs=[${runtimeSupport.refs.join(", ")}] counts=${JSON.stringify(runtimeSupport.counts)}`
-            : "no runtime support available — operating from declared posture only",
-        evidenceRef: runtimeSupport.refs[0] ?? null,
+            ? `runtime_refs=[${runtimeSupport.runtime_refs.join(", ")}] context_refs=[${runtimeSupport.contextual_refs.join(", ")}] counts=${JSON.stringify(runtimeSupport.counts)}`
+            : "no meaningful runtime support available — operating from declared posture only",
+        evidenceRef: runtimeSupport.runtime_refs[0] ?? runtimeSupport.contextual_refs[0] ?? null,
         nonAuthorityNote:
             "runtime artifacts referenced by type only · not reconstructed from source · not operator-rerun",
     }));
@@ -402,7 +402,7 @@ export function reconstructFromReplayRequest({
         status:    "ok",
         label:     "scale / latency / fidelity declared",
         detail:    `latency: ${latency_posture.slice(0, 80)} | fidelity: ${fidelity_posture.slice(0, 80)}`,
-        nonAuthorityNote: "fidelity declared not measured · Tier 0 only",
+        nonAuthorityNote: "fidelity declared not measured · tier-honest support posture only",
     }));
 
     // ── Step 8: Request context ───────────────────────────────────────────────
@@ -441,10 +441,11 @@ export function reconstructFromReplayRequest({
         status:    "ok",
         label:     "reconstruction completed",
         detail:    `support-trace class · ${allRefs.length} evidence ref${allRefs.length !== 1 ? "s" : ""} · ` +
-                   `${trace.length} trace step${trace.length !== 1 ? "s" : ""} · Tier 0`,
+                   `${trace.length} trace step${trace.length !== 1 ? "s" : ""} · ${tierStr}`,
         evidenceRef: allRefs[0] ?? null,
+        retainedTier: tierStr,
         nonAuthorityNote:
-            "support-trace reconstruction complete · not raw restoration · not promotion · not truth",
+            "support-trace reconstruction complete · tier-honest · not raw restoration · not promotion · not truth",
     }));
 
     // ── Threshold posture evaluation ──────────────────────────────────────────
@@ -483,7 +484,7 @@ export function reconstructFromReplayRequest({
         lineage_bound:         hasLineage,
         threshold_outcome:     threshold_posture.local_invariance,
         downgrade_output:      threshold_posture.downgrade_output,
-        non_authority_note:    "support-trace only · Tier 0 · lens-bound · not raw restoration · not canon",
+        non_authority_note:    `support-trace only · ${tierStr} · lens-bound · not raw restoration · not canon`,
     };
 
     return {
