@@ -1,6 +1,6 @@
 // tests/door_two/test_reconstruction_replay_surface.js
 //
-// Focused contract tests for replay model reconstruction wiring.
+// Focused contract tests for replay model reconstruction wiring and replay rendering.
 
 import { readFile } from "node:fs/promises";
 import path from "node:path";
@@ -174,6 +174,26 @@ section("G. replaySummaryLine formatting");
     const rt = buildRuntimeReconstructionReplay({ workbench: MOCK_WB, runResult: MOCK_RUN });
     const line = replaySummaryLine(rt);
     ok(typeof line === "string" && line.includes("RT-RECON"), "G1: replay summary line remains available");
+}
+
+section("H. ReplayRegion rendering order and explicit posture");
+{
+    const src = await readFile(path.join(ROOT, "hud/ReplayRegion.jsx"), "utf8");
+    ok(src.includes("2 · Reconstruction Summary"), "H1: reconstruction summary section rendered");
+    ok(src.includes("3 · Threshold Posture / Downgrade"), "H2: threshold posture section rendered");
+    ok(src.includes("4 · Reconstruction Trace"), "H3: reconstruction trace section rendered");
+    ok(src.includes("5 · Non-Claims / Request Posture"), "H4: non-claims section rendered");
+    ok(src.includes("replay failed:"), "H5: failure path rendered explicitly");
+    ok(src.includes("explicit downgrade:"), "H6: downgrade rendered explicitly");
+    ok(src.includes("this is not fulfillment"), "H7: request-support replay notice preserved");
+    ok(src.includes("lastReplay.reconstruction_summary") && src.includes("lastReplay.threshold_posture") && src.includes("lastReplay.reconstruction_trace"), "H8: rendering reads mechanized reconstruction-backed fields");
+
+    const p1 = src.indexOf("1 · Provenance");
+    const p2 = src.indexOf("2 · Reconstruction Summary");
+    const p3 = src.indexOf("3 · Threshold Posture / Downgrade");
+    const p4 = src.indexOf("4 · Reconstruction Trace");
+    const p5 = src.indexOf("5 · Non-Claims / Request Posture");
+    ok(p1 > -1 && p2 > p1 && p3 > p2 && p4 > p3 && p5 > p4, "H9: replay panel uses required lawful rendering order");
 }
 
 finish();
