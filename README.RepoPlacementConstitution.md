@@ -67,7 +67,7 @@ Canonical subzones:
 
 
 Placement note:
-`README_ClaudeTaskRequest.md` is an operator handoff template for bounded implementation transfer. It is not constitutional authority and does not override the workflow contract.
+`README_EngineerTaskRequest.md` is an operator handoff template for bounded implementation transfer. It is not constitutional authority and does not override the workflow contract.
 
 README subfolder rule:
 Prefer adding new supporting notes to an existing `README/` subfolder by document type.
@@ -294,7 +294,7 @@ Generated outputs are never authority surfaces.
 
   README/
     Core/
-      README.ClaudeTaskRequest.md
+      README.EngineerTaskRequest.md
       README.ContinuousIngestRetentionLadder.md
       README.CrossFieldFormalSchema.md
       README.DeclaredVsMechanizedAudit.md
@@ -363,7 +363,11 @@ Generated outputs are never authority surfaces.
         README.C1PromotionMemo_Packet1.md
         README.C1ReviewMemo_Packet3.md
         README.C1SecondReviewDeferMemo_Packet3.md
+        README.ConsensusPressureDescriptor_(CPD).md
         README.DoorTwoTrialReviewSummary_v1.md
+        README.Resonance_DME_Integration_Boundary.md
+        README.ResonanceVocabularyTranslationTable.md
+        
       demo/
         README.MetaLayerConsultationDemo.md
 
@@ -436,6 +440,7 @@ Generated outputs are never authority surfaces.
     MetaLayerConsultationDemo.jsx
     MetaLayerObjectExecutionShell.jsx
     replayModel.js
+    ReplayRegion.jsx
     requestModel.js
     SemanticOscilloscopeApp.jsx
     styles.css
