@@ -224,101 +224,95 @@ export default function ReplayRegion({
 
                                 <div>
                                     <Label style={{ marginBottom: 6, color: C.amber }}>
-                                        2 · Runtime Evidence
+                                        2 · Reconstruction Summary
                                     </Label>
                                     <ReplayGrid
                                         ui={ui}
                                         rows={[
-                                            [
-                                                "support_basis",
-                                                (lastReplay.support_basis ?? []).join(" · ") || "—",
-                                            ],
-                                            ["anomaly_count", String(lastReplay.anomaly_count ?? 0)],
-                                            [
-                                                "cross_run",
-                                                lastReplay.cross_run_available
-                                                    ? `yes · ${lastReplay.cross_run_count ?? "?"}`
-                                                    : "no",
-                                            ],
-                                            [
-                                                "overall_readiness",
-                                                lastReplay.overall_readiness ?? "—",
-                                            ],
+                                            ["reconstruction_type", lastReplay.reconstruction_type ?? "—"],
+                                            ["reconstruction_status", lastReplay.reconstruction_status ?? "—"],
+                                            ["reconstruction_class", lastReplay.reconstruction_summary?.reconstruction_class ?? "—"],
+                                            ["evidence_refs", String(lastReplay.reconstruction_summary?.evidence_refs ?? 0)],
+                                            ["support_basis_count", String(lastReplay.reconstruction_summary?.support_basis_count ?? 0)],
+                                            ["runtime_available", String(lastReplay.reconstruction_summary?.runtime_available ?? "—")],
+                                            ["latency_posture", lastReplay.latency_posture ?? "—"],
+                                            ["fidelity_posture", lastReplay.fidelity_posture ?? "—"],
                                         ]}
                                     />
                                 </div>
 
                                 <div>
                                     <Label style={{ marginBottom: 6, color: C.amber }}>
-                                        3 · Declared Lens
+                                        3 · Threshold Posture / Downgrade
                                     </Label>
                                     <ReplayGrid
                                         ui={ui}
                                         rows={[
-                                            [
-                                                "transform_family",
-                                                lastReplay.declared_lens?.transform_family ?? "—",
-                                            ],
-                                            [
-                                                "window_N / hop_N",
-                                                `${lastReplay.declared_lens?.window_N ?? "—"} / ${lastReplay.declared_lens?.hop_N ?? "—"}`,
-                                            ],
-                                            [
-                                                "Fs_target",
-                                                String(lastReplay.declared_lens?.Fs_target ?? "—"),
-                                            ],
-                                            [
-                                                "scale_posture",
-                                                lastReplay.declared_lens?.scale_posture ?? "—",
-                                            ],
-                                            ["lens_note", lastReplay.declared_lens?.note ?? "—"],
+                                            ["local_invariance", lastReplay.threshold_posture?.local_invariance ?? "—"],
+                                            ["compression_survival", lastReplay.threshold_posture?.compression_survival ?? "—"],
+                                            ["distortion_posture", lastReplay.threshold_posture?.distortion_posture ?? "—"],
+                                            ["retained_tier_sufficiency", lastReplay.threshold_posture?.retained_tier_sufficiency ?? "—"],
+                                            ["downgrade_output", lastReplay.threshold_posture?.downgrade_output ?? "none"],
+                                            ["threshold_notes", lastReplay.threshold_posture?.notes ?? "—"],
                                         ]}
                                     />
+                                    {lastReplay.threshold_posture?.downgrade_output && (
+                                        <div
+                                            style={{
+                                                marginTop: 8,
+                                                padding: "6px 10px",
+                                                borderRadius: 4,
+                                                border: `1px solid ${C.amberDim}`,
+                                                background: C.amberFaint,
+                                                fontFamily: C.mono,
+                                                fontSize: 10,
+                                                color: C.amberDim,
+                                            }}
+                                        >
+                                            explicit downgrade: {lastReplay.threshold_posture.downgrade_output}
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div>
                                     <Label style={{ marginBottom: 6, color: C.amber }}>
-                                        4 · Retained Tier
+                                        4 · Reconstruction Trace
                                     </Label>
-                                    <ReplayGrid
-                                        ui={ui}
-                                        rows={[
-                                            [
-                                                "tier_used",
-                                                String(lastReplay.retained_tier_used?.tier_used ?? "—"),
-                                            ],
-                                            [
-                                                "tier_label",
-                                                lastReplay.retained_tier_used?.tier_label ?? "—",
-                                            ],
-                                            [
-                                                "honest_posture",
-                                                lastReplay.retained_tier_used?.honest_posture ?? "—",
-                                            ],
-                                            [
-                                                "higher_tiers",
-                                                lastReplay.retained_tier_used?.higher_tiers_note ?? "—",
-                                            ],
-                                        ]}
-                                    />
-                                </div>
-
-                                <div>
-                                    <Label style={{ marginBottom: 6, color: C.amber }}>
-                                        5 · Derived Posture / Non-Claims
-                                    </Label>
-                                    <div
-                                        style={{
-                                            fontFamily: C.mono,
-                                            fontSize: 11,
-                                            color: C.textDim,
-                                            marginBottom: 6,
-                                        }}
-                                    >
-                                        {lastReplay.derived_vs_durable}
+                                    <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                                        {(lastReplay.reconstruction_trace ?? []).map((step, i) => (
+                                            <div
+                                                key={`${step.step_index ?? i}-${step.step_type ?? "trace"}`}
+                                                style={{
+                                                    padding: "8px 10px",
+                                                    borderRadius: 4,
+                                                    border: `1px solid ${C.rule}`,
+                                                    background: C.surface,
+                                                }}
+                                            >
+                                                <div style={{ fontFamily: C.mono, fontSize: 10, color: C.blue, marginBottom: 3 }}>
+                                                    {step.step_index ?? i} · {step.step_type ?? "trace_step"} · {step.status ?? "—"}
+                                                </div>
+                                                <div style={{ fontFamily: C.mono, fontSize: 11, color: C.textMono, marginBottom: 3 }}>
+                                                    {step.label ?? "—"}
+                                                </div>
+                                                <div style={{ fontFamily: C.mono, fontSize: 10, color: C.textDim, lineHeight: 1.5 }}>
+                                                    {step.detail ?? "—"}
+                                                </div>
+                                                {step.non_authority_note && (
+                                                    <div style={{ fontFamily: C.mono, fontSize: 9, color: C.textDim, marginTop: 4 }}>
+                                                        {step.non_authority_note}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))}
                                     </div>
+                                </div>
 
-                                    <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
+                                <div>
+                                    <Label style={{ marginBottom: 6, color: C.amber }}>
+                                        5 · Non-Claims / Request Posture
+                                    </Label>
+                                    <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginBottom: 8 }}>
                                         {(lastReplay.explicit_non_claims ?? []).map((nc, i) => (
                                             <span
                                                 key={i}
@@ -336,24 +330,23 @@ export default function ReplayRegion({
                                             </span>
                                         ))}
                                     </div>
+                                    {lastReplay.replay_type === "request_support_replay" && (
+                                        <div
+                                            style={{
+                                                padding: "6px 10px",
+                                                borderRadius: 4,
+                                                border: `1px solid ${C.amberDim}`,
+                                                background: C.amberFaint,
+                                                fontFamily: C.mono,
+                                                fontSize: 10,
+                                                color: C.amberDim,
+                                            }}
+                                        >
+                                            replay of support context · the original request has not been
+                                            fulfilled · this is not fulfillment
+                                        </div>
+                                    )}
                                 </div>
-
-                                {lastReplay.replay_type === "request_support_replay" && (
-                                    <div
-                                        style={{
-                                            padding: "6px 10px",
-                                            borderRadius: 4,
-                                            border: `1px solid ${C.amberDim}`,
-                                            background: C.amberFaint,
-                                            fontFamily: C.mono,
-                                            fontSize: 10,
-                                            color: C.amberDim,
-                                        }}
-                                    >
-                                        replay of support context · the original request has not been
-                                        fulfilled · this is not fulfillment
-                                    </div>
-                                )}
                             </div>
                         </div>
                     )}
