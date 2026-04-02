@@ -26,7 +26,8 @@
 
 "use strict";
 
-// ─── ID generation ────────────────────────────────────────────────────────────
+import { reconstructFromReplayRequest } from "../runtime/reconstruction/ProvenanceReconstructionPipeline.js";
+
 function makeReplayId(type) {
     const ts = Date.now();
     const rand = Math.random().toString(36).slice(2, 7);
@@ -34,10 +35,6 @@ function makeReplayId(type) {
     return `${pfx}-${ts}-${rand}`;
 }
 
-// ─── Declared lens extraction ─────────────────────────────────────────────────
-// Builds a bounded lens record from available context.
-// v0 uses the policy constants baked into the shell (synthetic/file-import path).
-// These match the active POLICIES in MetaLayerObjectExecutionShell.jsx.
 export function declareLens(sourceFamilyLabel = "unspecified", runResult = null) {
     return {
         transform_family: "FFT/Hann",
@@ -56,10 +53,6 @@ export function declareLens(sourceFamilyLabel = "unspecified", runResult = null)
     };
 }
 
-// ─── Retained tier declaration ────────────────────────────────────────────────
-// v0 honestly declares Tier 0 (live working state).
-// Later tiers (durable receipts, digest, pinned packet, archive) are noted
-// as not yet materially wired for browser shell replay.
 export function declareRetainedTier(runResult = null) {
     return {
         tier_used: 0,
@@ -82,32 +75,54 @@ export function declareRetainedTier(runResult = null) {
     };
 }
 
-// ─── Derive replay support basis from workbench ───────────────────────────────
 function deriveReplaySupport(workbench, runResult) {
     if (!workbench && !runResult) return ["no_active_run"];
-    const runtime = workbench?.runtime ?? {};
+    const runtimeArtifacts = workbench?.runtime?.artifacts ?? runResult?.artifacts ?? {};
     const scope = workbench?.scope ?? {};
     const basis = [];
 
-    if ((runtime?.artifacts?.h1s?.length ?? 0) > 0) basis.push("harmonic_state_evidence");
-    if ((runtime?.artifacts?.m1s?.length ?? 0) > 0) basis.push("merged_state_evidence");
-    if (runtime?.artifacts?.q) basis.push("query_result_evidence");
-    if ((runtime?.artifacts?.anomaly_reports ?? []).length > 0) basis.push("anomaly_event_evidence");
+    if ((runtimeArtifacts?.h1s?.length ?? 0) > 0) basis.push("harmonic_state_evidence");
+    if ((runtimeArtifacts?.m1s?.length ?? 0) > 0) basis.push("merged_state_evidence");
+    if (runtimeArtifacts?.q) basis.push("query_result_evidence");
+    if ((runtimeArtifacts?.anomaly_reports ?? []).length > 0) basis.push("anomaly_event_evidence");
     if (scope?.cross_run_context?.available) basis.push("cross_run_evidence");
     if (basis.length === 0) basis.push("single_run_structural_evidence_only");
     return basis;
 }
 
-// ─── Runtime reconstruction replay builder ───────────────────────────────────
-//
-// Replay class: runtime_reconstruction
-// Target: current in-memory run/workbench (Tier 0)
-//
+function attachReconstruction(baseReplay, runResult, workbench) {
+    const reconstruction = reconstructFromReplayRequest({
+        replayRequest: baseReplay,
+        runResult,
+        workbench,
+    });
+
+    return {
+        ...baseReplay,
+        request_status: reconstruction.ok ? baseReplay.request_status : "failed",
+        reconstruction_type: reconstruction.reconstruction_type,
+        reconstruction_status: reconstruction.reconstruction_status,
+        reconstruction_trace: reconstruction.reconstruction_trace,
+        reconstruction_summary: reconstruction.reconstruction_summary,
+        threshold_posture: reconstruction.threshold_posture,
+        latency_posture: reconstruction.latency_posture,
+        fidelity_posture: reconstruction.fidelity_posture,
+        failure_reason: reconstruction.failure_reason,
+        support_basis: reconstruction.support_basis?.length ? reconstruction.support_basis : baseReplay.support_basis,
+        explicit_non_claims: reconstruction.explicit_non_claims?.length ? reconstruction.explicit_non_claims : baseReplay.explicit_non_claims,
+        declared_lens: reconstruction.declared_lens ?? baseReplay.declared_lens,
+        retained_tier_used: reconstruction.retained_tier_used ?? baseReplay.retained_tier_used,
+        derived_vs_durable: reconstruction.derived_vs_durable ?? baseReplay.derived_vs_durable,
+        replay_posture: `${baseReplay.replay_posture} · support-trace only`,
+    };
+}
+
 export function buildRuntimeReconstructionReplay({
     workbench,
     runResult,
     sourceFamilyLabel = "unspecified",
     notes = "",
+    retainedTierOverride = null,
 } = {}) {
     if (!runResult?.ok || !workbench) {
         return {
@@ -125,44 +140,30 @@ export function buildRuntimeReconstructionReplay({
     const read = workbench?.promotion_readiness?.report ?? {};
     const dos = workbench?.canon_candidate?.dossier ?? {};
     const lens = declareLens(sourceFamilyLabel, runResult);
-    const tier = declareRetainedTier(runResult);
+    const tier = retainedTierOverride ?? declareRetainedTier(runResult);
     const basis = deriveReplaySupport(workbench, runResult);
     const a1 = runResult?.artifacts?.a1 ?? workbench?.runtime?.artifacts?.a1 ?? null;
 
-    return {
+    const baseReplay = {
         replay_request_id: id,
         replay_type: "runtime_reconstruction",
         request_status: "prepared",
         requested_at: new Date().toISOString(),
-
-        // Target
         replay_target_type: "current_run_workbench",
         replay_target_ref: runResult.run_label,
-
-        // Provenance lineage
         source_family: sourceFamilyLabel,
-
-
         stream_id: scope?.stream_id ?? a1?.stream_id ?? null,
         source_id: a1?.source_id ?? null,
         run_label: runResult.run_label,
         segment_count: (scope?.segment_ids ?? []).length,
         cross_run_available: scope?.cross_run_context?.available ?? false,
         cross_run_count: scope?.cross_run_context?.run_count ?? null,
-
-        // Lens
         declared_lens: lens,
-
-        // Retained tier
         retained_tier_used: tier,
-
-        // Evidence / support
         support_basis: basis,
         anomaly_count: (workbench?.runtime?.artifacts?.anomaly_reports ?? []).length,
         overall_readiness: read?.readiness_summary?.overall_readiness ?? null,
         candidate_claim_type: dos?.candidate_claim?.claim_type ?? null,
-
-        // Posture
         derived_vs_durable: "derived · Tier 0 live working state · not durable beyond current session",
         allowed_use: "bounded read-side replay inspection only · not promotion · not truth",
         explicit_non_claims: [
@@ -175,22 +176,19 @@ export function buildRuntimeReconstructionReplay({
             "not receipt-backed in v0",
         ],
         replay_posture: "lens-bound support · runtime-derived · Tier 0 · non-authoritative",
-
         notes,
     };
+
+    return attachReconstruction(baseReplay, runResult, workbench);
 }
 
-// ─── Request support replay builder ──────────────────────────────────────────
-//
-// Replay class: request_support_replay
-// Target: a previously prepared consultation or activation/review request
-//
 export function buildRequestSupportReplay({
     targetRequest,
     workbench,
     runResult,
     sourceFamilyLabel = "unspecified",
     notes = "",
+    retainedTierOverride = null,
 } = {}) {
     if (!targetRequest) {
         return {
@@ -205,58 +203,45 @@ export function buildRequestSupportReplay({
 
     const id = makeReplayId("request_support_replay");
     const lens = declareLens(sourceFamilyLabel, runResult);
-    const tier = declareRetainedTier(runResult);
+    const tier = retainedTierOverride ?? declareRetainedTier(runResult);
     const basis = deriveReplaySupport(workbench, runResult);
 
-    return {
+    const baseReplay = {
         replay_request_id: id,
         replay_type: "request_support_replay",
         request_status: "prepared",
         requested_at: new Date().toISOString(),
-
-        // Target: the prepared request being replayed
         replay_target_type: "prepared_request",
         replay_target_ref: targetRequest.request_id,
         target_request_type: targetRequest.request_type,
-
-        // Provenance from the target request (preserving its lineage)
         source_family: targetRequest.source_family_label ?? sourceFamilyLabel,
         stream_id: targetRequest.stream_id,
         source_id: targetRequest.source_id,
         run_label: targetRequest.run_label,
         segment_count: targetRequest.segment_count ?? null,
         cross_run_available: targetRequest.cross_run_available ?? false,
-
-        // Lens
+        cross_run_count: targetRequest.cross_run_count ?? null,
         declared_lens: lens,
-
-        // Retained tier
         retained_tier_used: tier,
-
-        // Support from the linked request
         support_basis: targetRequest.support_basis ?? basis,
         anomaly_count: targetRequest.anomaly_count ?? 0,
         overall_readiness: targetRequest.overall_readiness ?? null,
-
-        // Non-claims pass through from the request
         explicit_non_claims: targetRequest.explicit_non_claims ?? [
             "not raw restoration",
             "not truth",
             "not canon",
             "not promotion",
         ],
-
-        // Posture
         derived_vs_durable: "derived · Tier 0 · re-presenting prior prepared request support",
         allowed_use: "bounded support replay for prepared-request inspection only · not fulfillment · not canon · not promotion",
         replay_posture: "request-support replay · lens-bound · Tier 0 · non-authoritative",
-        request_not_fulfilled: true,  // explicit: this replay does NOT fulfill the request
-
+        request_not_fulfilled: true,
         notes,
     };
+
+    return attachReconstruction(baseReplay, runResult, workbench);
 }
 
-// ─── Summary line for replay log ─────────────────────────────────────────────
 export function replaySummaryLine(req) {
     if (!req) return "—";
     const ts = req.requested_at?.slice(11, 19) ?? "??:??:??";
@@ -268,7 +253,6 @@ export function replaySummaryLine(req) {
     return `${ts} · ${type} · ${st} · target: ${ref}`;
 }
 
-// ─── Download replay request as JSON ─────────────────────────────────────────
 export function downloadReplayJson(req) {
     const blob = new Blob([JSON.stringify(req, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
