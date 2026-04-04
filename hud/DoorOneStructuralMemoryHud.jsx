@@ -899,6 +899,9 @@ export default function DoorOneStructuralMemoryHUD({
                                             source_id: data.provenance.source_id,
                                             source_mode: data.provenance.source_mode,
                                             source_format: data.provenance.source_format,
+                                            source_profile_note: data.provenance.source_profile_note,
+                                            source_seed: data.provenance.source_seed,
+                                            source_noise_std: data.provenance.source_noise_std,
                                             stream_id: data.provenance.stream_id,
                                             cross_run_available: data.provenance.cross_run_available,
                                             cross_run_count: data.provenance.cross_run_count,
@@ -918,6 +921,11 @@ export default function DoorOneStructuralMemoryHUD({
                                         ? ` / ${data.provenance.source_format}`
                                         : ""}
                                 </div>
+                                {data.provenance.source_profile_note && data.provenance.source_profile_note !== "—" ? (
+                                    <div className="mt-1 text-xs text-muted-foreground">
+                                        {data.provenance.source_profile_note}
+                                    </div>
+                                ) : null}
                             </div>
 
                             <div

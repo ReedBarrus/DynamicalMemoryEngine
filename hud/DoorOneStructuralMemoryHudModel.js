@@ -28,6 +28,14 @@ function resolveNeighborhoodIdentity(entry, idx, tr = {}) {
     );
 }
 
+function buildSourceProfileNote(meta = {}) {
+    const parts = [];
+    if (meta?.seed !== undefined && meta?.seed !== null) parts.push(`seed ${meta.seed}`);
+    if (meta?.noiseStd !== undefined && meta?.noiseStd !== null) parts.push(`noise std ${meta.noiseStd}`);
+    if (meta?.durationSec !== undefined && meta?.durationSec !== null) parts.push(`duration ${meta.durationSec}s`);
+    return parts.length > 0 ? parts.join(" · ") : "—";
+}
+
 export function shortId(id) {
     if (!id) return "—";
 
@@ -47,6 +55,7 @@ export function workbenchToStructuralHudModel(workbench, crossRunReport = null) 
     const segTransitions = safeArray(workbench?.runtime?.substrate?.segment_transitions);
     const readiness = workbench?.promotion_readiness?.report?.readiness_summary ?? {};
     const trajectory = workbench?.interpretation?.trajectory ?? {};
+    const sourceMeta = workbench?.runtime?.artifacts?.a1?.meta ?? {};
 
     const dwell = Array.isArray(tr.neighborhood_dwell)
         ? tr.neighborhood_dwell
@@ -155,6 +164,10 @@ export function workbenchToStructuralHudModel(workbench, crossRunReport = null) 
                 workbench?.runtime?.artifacts?.a1?.meta?.source_mode ??
                 workbench?.scope?.source_mode ??
                 "—",
+
+            source_seed: sourceMeta?.seed ?? null,
+            source_noise_std: sourceMeta?.noiseStd ?? null,
+            source_profile_note: buildSourceProfileNote(sourceMeta),
 
             source_format:
                 workbench?.runtime?.artifacts?.a1?.meta?.source_format ??

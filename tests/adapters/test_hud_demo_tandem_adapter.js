@@ -1,6 +1,6 @@
 // tests/door_two/test_hud_demo_tandem_adapter.js
 //
-// Contract tests for hud/tandemAdapter.js and its wiring into shell + demo.
+// Contract tests for hud/adapters/tandemAdapter.js and its wiring into shell + demo.
 //
 // Verifies all 13 required conditions from the task spec.
 
@@ -74,12 +74,37 @@ const FULL_INPUT = {
     sourceFamilyLabel: "Synthetic Signal", runStatus: "complete",
 };
 
+const DIFFERENTIATED_INPUT = {
+    runResult: {
+        ...MOCK_RUN,
+        artifacts: {
+            a1: {
+                source_id: "synthetic.seed42",
+                stream_id: "stream.tandem.002",
+                meta: { seed: 42, noiseStd: 0.12, durationSec: 10 },
+            },
+        },
+    },
+    workbench: {
+        ...MOCK_WB,
+        scope: {
+            ...MOCK_WB.scope,
+            stream_id: "stream.tandem.002",
+        },
+        runtime_evidence: { harmonic_state_count: 12, merged_state_count: 5, query_result_count: 3 },
+    },
+    requestLog: [MOCK_REQUEST],
+    replayLog: [MOCK_REPLAY],
+    sourceFamilyLabel: "Synthetic Signal",
+    runStatus: "complete",
+};
+
 // ─── A. tandemAdapter.js constitutional posture ───────────────────────────────
 section("A. tandemAdapter.js constitutional posture");
 {
     let src = null;
-    try { src = await readFile(path.join(ROOT, "hud/tandemAdapter.js"), "utf8"); } catch (_) { }
-    ok(src !== null, "A1: hud/tandemAdapter.js exists");
+    try { src = await readFile(path.join(ROOT, "hud/adapters/tandemAdapter.js"), "utf8"); } catch (_) { }
+    ok(src !== null, "A1: hud/adapters/tandemAdapter.js exists");
     if (src) {
         ok(src.includes("not authority") || src.includes("not redefine"), "A2: not-authority posture declared");
         ok(!src.includes("mintCanon"), "A3: no mintCanon");
@@ -172,6 +197,7 @@ section("E. projectForDemo — calmer and narrower");
     // 1. Provenance present
     ok(typeof demo.provenance.object_label === "string", "E2: object_label present");
     ok(typeof demo.provenance.declared_lens === "string", "E3: declared_lens present");
+    ok("source_profile_note" in demo.provenance, "E3b: source_profile_note present in demo provenance");
 
     // 2. Evidence compact (no raw counts)
     ok(Array.isArray(demo.evidence.summary_lines) && demo.evidence.summary_lines.length > 0,
@@ -202,11 +228,25 @@ section("E. projectForDemo — calmer and narrower");
         "E16: demo shows fewer non-authority notes than HUD");
 }
 
+section("E2. Source differentiation remains visible when evidence differs");
+{
+    const baseDemo = projectForDemo(FULL_INPUT);
+    const noisyDemo = projectForDemo(DIFFERENTIATED_INPUT);
+    const noisyHud = projectForHUD(DIFFERENTIATED_INPUT);
+
+    ok(baseDemo.provenance.source_profile_note !== noisyDemo.provenance.source_profile_note,
+        "E2.1: differing source metadata produces different demo provenance notes");
+    ok(baseDemo.evidence.summary_lines.join(" | ") !== noisyDemo.evidence.summary_lines.join(" | "),
+        "E2.2: differing source/evidence conditions do not collapse into identical demo summaries");
+    ok(noisyHud.provenance.source_profile_note?.includes("noise std 0.12"),
+        "E2.3: HUD projection preserves source-profile note from runtime metadata");
+}
+
 // ─── F. Provenance-first ordering in both projections ─────────────────────────
 section("F. Inspection ordering preserved");
 {
     let src = null;
-    try { src = await readFile(path.join(ROOT, "hud/tandemAdapter.js"), "utf8"); } catch (_) { }
+    try { src = await readFile(path.join(ROOT, "hud/adapters/tandemAdapter.js"), "utf8"); } catch (_) { }
     if (src) {
         const p1 = src.indexOf("1. Provenance");
         const p2 = src.indexOf("2. Runtime Evidence");
@@ -272,7 +312,7 @@ section("I. Demo surface wiring");
 section("J. Surface separation maintained");
 {
     let labHudSrc = null;
-    try { labHudSrc = await readFile(path.join(ROOT, "DoorOneStructuralMemoryHud.jsx"), "utf8"); } catch (_) { }
+    try { labHudSrc = await readFile(path.join(ROOT, "hud/DoorOneStructuralMemoryHud.jsx"), "utf8"); } catch (_) { }
     if (labHudSrc) {
         ok(!labHudSrc.includes("tandemAdapter"), "J1: lab HUD does not import tandemAdapter");
         ok(labHudSrc.includes("export default function DoorOneStructuralMemoryHUD"), "J2: lab HUD export intact");

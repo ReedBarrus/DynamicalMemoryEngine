@@ -82,6 +82,7 @@ if (demoSrc) {
     ok(demoSrc.includes("not prediction") || demoSrc.includes("Not prediction"), "B3: not-prediction disclaimer present");
     ok(demoSrc.includes("not semantic truth") || demoSrc.includes("Not semantic"), "B4: not-semantic-truth disclaimer present");
     ok(demoSrc.includes("non-authoritative"), "B5: non-authoritative label in interpretation plane");
+    ok(demoSrc.includes("derivative public_demo shaping"), "B5b: live demo branch preserves derivative-shaping posture");
     ok(!demoSrc.includes("consultC1("), "B6: demo does not call consultC1()");
     ok(!demoSrc.includes("canon/C1_BASELINE"), "B7: demo does not import live C1 object");
     ok(!demoSrc.includes("canonical_status ="), "B8: demo does not mutate any C1 field");
@@ -178,7 +179,7 @@ if (demoSrc) {
 section("F. Lab HUD intact and separate");
 
 try {
-    const labHud = await readFile(path.join(ROOT, "DoorOneStructuralMemoryHud.jsx"), "utf8");
+    const labHud = await readFile(path.join(ROOT, "hud/DoorOneStructuralMemoryHud.jsx"), "utf8");
     ok(labHud.includes("export default function DoorOneStructuralMemoryHUD"), "F1: lab HUD main export still present");
     ok(labHud.includes("Plane 1"), "F2: lab HUD Plane 1 still present");
     ok(labHud.includes("Plane 4"), "F3: lab HUD Plane 4 (Review) still present");

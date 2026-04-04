@@ -58,15 +58,30 @@ function safeNum(v, fallback = 0) {
     return Number.isFinite(Number(v)) ? Number(v) : fallback;
 }
 
+function buildSourceProfileNote(meta = {}) {
+    const parts = [];
+    if (meta?.seed !== undefined && meta?.seed !== null) parts.push(`seed ${meta.seed}`);
+    if (meta?.noiseStd !== undefined && meta?.noiseStd !== null) parts.push(`noise std ${meta.noiseStd}`);
+    if (meta?.durationSec !== undefined && meta?.durationSec !== null) parts.push(`duration ${meta.durationSec}s`);
+    return parts.length > 0 ? parts.join(" · ") : "—";
+}
+
 // Extract provenance block from shell state
 function extractProvenance(input) {
     const { runResult, workbench, sourceFamilyLabel, runStatus } = input;
     const scope = workbench?.scope ?? {};
-    const a1 = runResult?.artifacts?.a1 ?? workbench?.runtime?.artifacts?.a1 ?? {};
+    const a1 = runResult?.artifacts?.a1
+        ?? runResult?.ingest?.artifact
+        ?? workbench?.runtime?.artifacts?.a1
+        ?? {};
+    const sourceMeta = a1?.meta ?? {};
     return {
         source_family: sourceFamilyLabel,
         object_id: safeStr(scope?.stream_id ?? a1?.stream_id),
         source_id: safeStr(a1?.source_id),
+        source_seed: sourceMeta?.seed ?? null,
+        source_noise_std: sourceMeta?.noiseStd ?? null,
+        source_profile_note: buildSourceProfileNote(sourceMeta),
         run_label: safeStr(runResult?.run_label),
         run_status: runStatus,
         declared_lens: "medium FFT/Hann · N=256 · hop=128 · Fs=256Hz",
@@ -86,14 +101,17 @@ function extractEvidence(input) {
     const runtime = workbench?.runtime ?? {};
     const r = workbench?.promotion_readiness?.report ?? {};
     const dos = workbench?.canon_candidate?.dossier ?? {};
-    const anomalyReports = runtime?.artifacts?.anomaly_reports ?? [];
+    const anomalyReports = runtime?.artifacts?.anomaly_reports ?? runResult?.anomalies ?? [];
+    const harmonicStateCount = safeNum(runtime?.artifacts?.h1s?.length ?? workbench?.runtime_evidence?.harmonic_state_count);
+    const mergedStateCount = safeNum(runtime?.artifacts?.m1s?.length ?? workbench?.runtime_evidence?.merged_state_count);
+    const queryResultCount = runtime?.artifacts?.q ? 1 : safeNum(workbench?.runtime_evidence?.query_result_count);
     return {
         state_count: safeNum(runtime?.substrate?.state_count),
         basin_count: safeNum(runtime?.substrate?.basin_count),
         segment_count: safeNum(runtime?.substrate?.segment_count),
-        harmonic_state_count: safeNum(runtime?.artifacts?.h1s?.length),
-        merged_state_count: safeNum(runtime?.artifacts?.m1s?.length),
-        query_result_count: runtime?.artifacts?.q ? 1 : 0,
+        harmonic_state_count: harmonicStateCount,
+        merged_state_count: mergedStateCount,
+        query_result_count: queryResultCount,
         anomaly_count: anomalyReports.length,
         anomaly_events: anomalyReports.slice(0, 5).map(a => ({
             time_start: a?.comparison_window?.window_span?.t_start ?? null,
@@ -254,14 +272,20 @@ export function projectForDemo(input) {
     // Compact evidence summary for demo (no raw counts — just high-level)
     const evidenceSummary = norm.hasResult
         ? [
+            prov.source_profile_note !== "—"
+                ? `source profile: ${prov.source_profile_note}`
+                : null,
             prov.cross_run_available
                 ? `${prov.cross_run_count} cross-run comparison${prov.cross_run_count !== 1 ? "s" : ""} available`
                 : "single run",
             evid.anomaly_count > 0
                 ? `${evid.anomaly_count} anomaly event${evid.anomaly_count !== 1 ? "s" : ""} observed`
                 : "no anomaly events",
+            evid.harmonic_state_count > 0 || evid.merged_state_count > 0
+                ? `runtime profile: ${evid.harmonic_state_count} harmonic · ${evid.merged_state_count} merged`
+                : null,
             `${prov.segment_count} segment${prov.segment_count !== 1 ? "s" : ""}`,
-        ]
+        ].filter(Boolean)
         : ["no evidence yet"];
 
     // Compact request/replay status for demo card
@@ -281,6 +305,7 @@ export function projectForDemo(input) {
             object_label: objectLabel,
             object_id: prov.object_id,
             source_family: prov.source_family,
+            source_profile_note: prov.source_profile_note,
             declared_lens: prov.declared_lens,
             lineage_note: prov.lineage_note,
             ingest_ok: prov.ingest_ok,

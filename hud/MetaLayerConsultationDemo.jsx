@@ -575,6 +575,96 @@ function HistoryPlane({ history }) {
     );
 }
 
+function LiveProjectionPlanes({ projection }) {
+    const provenanceRows = [
+        ["object_label", projection?.provenance?.object_label],
+        ["source_family", projection?.provenance?.source_family],
+        ["source_profile", projection?.provenance?.source_profile_note],
+        ["declared_lens", projection?.provenance?.declared_lens],
+        ["lineage_note", projection?.provenance?.lineage_note],
+    ];
+
+    return (
+        <>
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.45, ease: "easeOut" }} style={{ marginBottom: 32 }}>
+                <Rule style={{ marginBottom: 24 }} />
+                <section>
+                    <PlaneHeader plane="Plane 1" title="Live Provenance" />
+                    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                        {provenanceRows.map(([key, val]) => (
+                            <div key={key} style={{ display: "grid", gridTemplateColumns: "160px 1fr", gap: 16, alignItems: "start" }}>
+                                <Label style={{ paddingTop: 1 }}>{key}</Label>
+                                <Mono style={{ fontSize: 12, lineHeight: 1.6 }}>{val ?? "—"}</Mono>
+                            </div>
+                        ))}
+                    </div>
+                    <div style={{ marginTop: 16, padding: "8px 12px", background: C.amberFaint, border: `1px solid ${C.amberDim}`, borderRadius: 4, fontFamily: C.mono, fontSize: 11, color: C.amber }}>
+                        derivative public_demo shaping · provenance-first · not deep-inspection parity
+                    </div>
+                </section>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.45, ease: "easeOut" }} style={{ marginBottom: 32 }}>
+                <Rule style={{ marginBottom: 24 }} />
+                <section>
+                    <PlaneHeader plane="Plane 2" title="Live Evidence" />
+                    <div style={{ padding: "14px 18px", background: C.surfaceHigh, border: `1px solid ${C.ruleLight}`, borderRadius: 6, display: "flex", flexDirection: "column", gap: 8 }}>
+                        {(projection?.evidence?.summary_lines ?? []).map((line, idx) => (
+                            <div key={idx} style={{ fontFamily: C.mono, fontSize: 12, color: C.textMono }}>{line}</div>
+                        ))}
+                        <div style={{ fontFamily: C.mono, fontSize: 10, color: C.textDim, borderTop: `1px solid ${C.rule}`, paddingTop: 8 }}>
+                            {projection?.evidence?.readiness_note ?? "readiness: not evaluated"}
+                        </div>
+                    </div>
+                </section>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25, duration: 0.45, ease: "easeOut" }} style={{ marginBottom: 32 }}>
+                <Rule style={{ marginBottom: 24 }} />
+                <section>
+                    <PlaneHeader plane="Plane 3" title="Live Interpretation" />
+                    <div style={{ padding: "14px 18px", background: C.surfaceHigh, border: `1px solid ${C.ruleLight}`, borderRadius: 6 }}>
+                        <div style={{ fontFamily: C.serif, fontSize: 15, lineHeight: 1.65, color: C.text, marginBottom: 10 }}>
+                            {projection?.interpretation?.summary}
+                        </div>
+                        <div style={{ fontFamily: C.mono, fontSize: 10, color: C.textDim, borderTop: `1px solid ${C.rule}`, paddingTop: 8 }}>
+                            {projection?.interpretation?.derived_note}
+                        </div>
+                    </div>
+                </section>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.45, ease: "easeOut" }} style={{ marginBottom: 32 }}>
+                <Rule style={{ marginBottom: 24 }} />
+                <section>
+                    <PlaneHeader plane="Plane 4" title="Live Review / Replay Posture" />
+                    <div style={{ padding: "14px 18px", border: `1px solid ${C.rule}`, borderRadius: 6, background: C.surface, opacity: 0.9 }}>
+                        <div style={{ marginBottom: 14 }}>
+                            <Label style={{ marginBottom: 6 }}>request_note</Label>
+                            <Mono style={{ fontSize: 11 }}>{projection?.review_request_replay?.request_note ?? "—"}</Mono>
+                        </div>
+                        <div style={{ marginBottom: 14 }}>
+                            <Label style={{ marginBottom: 6 }}>replay_note</Label>
+                            <Mono style={{ fontSize: 11 }}>{projection?.review_request_replay?.replay_note ?? "—"}</Mono>
+                        </div>
+                        <div style={{ marginBottom: 14 }}>
+                            <Label style={{ marginBottom: 6 }}>posture_note</Label>
+                            <Mono style={{ fontSize: 11 }}>{projection?.review_request_replay?.posture_note ?? "—"}</Mono>
+                        </div>
+                        <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                            {(projection?.explicit_non_authority_notes ?? []).map((note, idx) => (
+                                <Pill key={idx} color={C.textDim} bg="transparent" border={C.rule}>
+                                    {note}
+                                </Pill>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            </motion.div>
+        </>
+    );
+}
+
 // ─── Main demo component ──────────────────────────────────────────────────────
 // MetaLayerConsultationDemo may be used in two modes:
 //   1. Standalone (default): renders the hardcoded C1 room-change story.
@@ -588,6 +678,7 @@ function HistoryPlane({ history }) {
 export default function MetaLayerConsultationDemo({ liveShellState = null } = {}) {
     // If live shell state is provided, compute the demo projection
     const liveProjection = liveShellState ? projectForDemo(liveShellState) : null;
+    const isLiveMode = !!liveProjection?.has_result;
     return (
         <div style={{
             minHeight: "100vh",
@@ -619,6 +710,11 @@ export default function MetaLayerConsultationDemo({ liveShellState = null } = {}
                         <div style={{ color: "#cbd5e1" }}>
                             {liveProjection.provenance?.object_label}
                         </div>
+                        {liveProjection.provenance?.source_profile_note && liveProjection.provenance?.source_profile_note !== "—" ? (
+                            <div style={{ color: "#94a3b8", fontSize: 10 }}>
+                                {liveProjection.provenance?.source_profile_note}
+                            </div>
+                        ) : null}
                         <div style={{ color: "#64748b" }}>
                             {(liveProjection.evidence?.summary_lines ?? []).join(" · ")}
                         </div>
@@ -656,7 +752,7 @@ export default function MetaLayerConsultationDemo({ liveShellState = null } = {}
                             textTransform: "uppercase",
                             letterSpacing: "0.16em",
                         }}>
-                            Dynamical Memory Engine · {DEMO_OBJECT.object_label}
+                            Dynamical Memory Engine · {isLiveMode ? "Live Public Demo Readout" : DEMO_OBJECT.object_label}
                         </span>
                     </div>
                     <h1 style={{
@@ -668,37 +764,41 @@ export default function MetaLayerConsultationDemo({ liveShellState = null } = {}
                         marginBottom: 10,
                         maxWidth: 680,
                     }}>
-                        {DEMO_OBJECT.bounded_claim}
+                        {isLiveMode ? (liveProjection?.interpretation?.summary ?? "Live public demo projection") : DEMO_OBJECT.bounded_claim}
                     </h1>
                     <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
-                        <Pill color={C.green} bg={C.greenFaint} border="#15803d">
-                            {DEMO_OBJECT.current_status}
+                        <Pill color={isLiveMode ? C.amber : C.green} bg={isLiveMode ? C.amberFaint : C.greenFaint} border={isLiveMode ? C.amberDim : "#15803d"}>
+                            {isLiveMode ? "live_projection" : DEMO_OBJECT.current_status}
                         </Pill>
                         <Mono style={{ fontSize: 11, color: C.textDim }}>
-                            {DEMO_OBJECT.object_id}
+                            {isLiveMode ? liveProjection?.provenance?.object_id : DEMO_OBJECT.object_id}
                         </Mono>
                     </div>
                 </motion.div>
 
                 {/* ── Planes ── */}
-                {[
-                    { key: "provenance", delay: 0.1, content: <ProvenancePlane obj={DEMO_OBJECT} /> },
-                    { key: "evidence", delay: 0.2, content: <EvidencePlane history={HISTORY} /> },
-                    { key: "interpretation", delay: 0.25, content: <InterpretationPlane obj={DEMO_OBJECT} /> },
-                    { key: "review", delay: 0.3, content: <ReviewPlane obj={DEMO_OBJECT} /> },
-                    { key: "history", delay: 0.35, content: <HistoryPlane history={HISTORY} /> },
-                ].map(({ key, delay, content }) => (
-                    <motion.div
-                        key={key}
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay, duration: 0.45, ease: "easeOut" }}
-                        style={{ marginBottom: 32 }}
-                    >
-                        <Rule style={{ marginBottom: 24 }} />
-                        {content}
-                    </motion.div>
-                ))}
+                {isLiveMode ? (
+                    <LiveProjectionPlanes projection={liveProjection} />
+                ) : (
+                    [
+                        { key: "provenance", delay: 0.1, content: <ProvenancePlane obj={DEMO_OBJECT} /> },
+                        { key: "evidence", delay: 0.2, content: <EvidencePlane history={HISTORY} /> },
+                        { key: "interpretation", delay: 0.25, content: <InterpretationPlane obj={DEMO_OBJECT} /> },
+                        { key: "review", delay: 0.3, content: <ReviewPlane obj={DEMO_OBJECT} /> },
+                        { key: "history", delay: 0.35, content: <HistoryPlane history={HISTORY} /> },
+                    ].map(({ key, delay, content }) => (
+                        <motion.div
+                            key={key}
+                            initial={{ opacity: 0, y: 8 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay, duration: 0.45, ease: "easeOut" }}
+                            style={{ marginBottom: 32 }}
+                        >
+                            <Rule style={{ marginBottom: 24 }} />
+                            {content}
+                        </motion.div>
+                    ))
+                )}
 
                 {/* ── Footer ── */}
                 <Rule style={{ marginTop: 16 }} />
