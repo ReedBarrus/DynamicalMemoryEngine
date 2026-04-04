@@ -656,6 +656,222 @@ HUD confusion does not invalidate runtime truth.
 Retention complexity does not invalidate replay lineage.
 Feeling lost means we re-anchor to artifacts, not to abstraction.
 
+## Solo VS Code / Codex / Git Workflow Hygiene
+
+This section defines the default solo development hygiene for Reed working locally in VS Code with Git, GitHub, and Codex.
+
+It exists to preserve bounded packet discipline, branch cleanliness, rollback safety, and lawful implementation flow without requiring heavyweight organizational ceremony.
+
+This section governs:
+- local branch hygiene
+- Codex execution posture inside a packet branch
+- packet-to-branch mapping
+- commit / push / merge hygiene
+- post-merge local resynchronization
+- stop / escalation conditions for local AI-assisted implementation
+
+It does **not** override:
+- the Master Constitution
+- the Workflow Contract role hierarchy
+- packet templates
+- architectural authority
+- repo placement law
+- declared-vs-mechanized closure rules
+
+### Core rule
+
+Each bounded implementation packet should normally execute on its own local branch created from an updated local `main`, with Codex operating only inside that branch, followed by explicit accept / revise / narrow / defer / escalate review before merge and explicit resynchronization of local `main` after the merge.
+
+This preserves:
+- rollback safety
+- packet isolation
+- clean diffs
+- lawful branch-to-packet attribution
+- and a stable current trunk
+
+### Branch posture
+
+#### Main branch
+
+`main` is the local and remote trunk.
+
+It should remain:
+- the current stable integration line
+- the branch Reed syncs from before new packet work
+- the branch Reed syncs back to after merge
+
+Normal bounded implementation work should not begin directly on `main` unless Reed explicitly intends a direct trunk edit.
+
+#### Packet branch
+
+Each bounded packet should normally use one branch.
+
+Preferred naming posture:
+
+- `packet/<seam>-<goal>`
+- `hotfix/<seam>-<issue>`
+- `audit/<surface>-<question>`
+- `setup/<tooling-change>`
+
+Examples:
+
+- `packet/replay-honesty-gate`
+- `packet/reconstruction-support-trace`
+- `setup/codex-project-config`
+
+The exact branch label may vary, but it should preserve:
+- seam identity
+- bounded goal
+- enough clarity to map branch ⇄ packet ⇄ PR
+
+### Packet-to-branch mapping rule
+
+A bounded implementation packet should carry an explicit branch name whenever practical.
+
+At minimum, Reed should be able to answer:
+
+- what packet is active?
+- what branch is carrying it?
+- what seam is being changed?
+- what files are in scope?
+
+If a packet and branch drift apart, that should be treated as workflow drift rather than ignored.
+
+### Default local execution loop
+
+The normal loop is:
+
+1. sync local `main`
+2. create packet branch from local `main`
+3. hand packet to Codex inside that branch
+4. inspect diff and local results
+5. choose: accept / revise / narrow / defer / escalate
+6. commit and push the packet branch
+7. merge through GitHub when ready
+8. resync local `main`
+9. close the completed branch when appropriate
+
+Representative command posture:
+
+```bash
+git checkout main
+git pull origin main
+git checkout -b packet/<seam>-<goal>
+```
+After work is accepted on the branch:
+```bash
+git add <scoped files or .>
+git commit -m "<bounded commit message>"
+git push -u origin <branch-name>
+```
+After merge:
+```bash
+git checkout main
+git pull origin main
+Why post-merge resync is required
+```
+Pushing a packet branch to GitHub does not by itself update local main.
+
+Once a GitHub merge occurs, remote main has changed.
+Local main must be explicitly resynchronized before the next packet branch is created.
+
+Otherwise, later packet branches may be created from a stale local trunk.
+
+### Commit posture
+
+Commit messages should remain bounded and legible.
+
+Preferred styles include:
+
+packet: wire replay reconstruction model
+packet: tighten replay downgrade posture
+setup: add codex repo instructions
+audit: narrow replay support claim
+docs: clarify structural identity wording
+
+The point is not stylistic purity.
+The point is preserving enough signal that history remains searchable and attributable.
+
+### Codex execution posture
+
+Codex should normally operate:
+
+inside the currently checked out packet branch
+inside the active repo workspace
+under the current AGENTS.md instructions
+under the current .codex/config.toml posture
+inside bounded packet scope
+
+Codex should not be treated as an independent architectural authority.
+
+Codex is an implementation agent operating under:
+
+  Reed authority
+  Architect authority
+  the active packet
+  and the repo’s governing notes
+  Codex stop / escalation conditions
+
+Codex should stop and hand back rather than silently widening scope when any of the following occur:
+
+contract conflict
+hidden dependency outside packet scope
+destructive operation would be required
+broader architectural redesign pressure appears
+governance docs or root authority docs would need modification outside explicit scope
+broad dependency or package changes would be required
+unrelated file drift appears
+tests reveal broader seam breakage than the packet admits
+the task cannot be completed honestly within the active seam
+
+The correct response is:
+
+stop
+summarize the issue
+preserve the bounded packet
+and request clarification or escalation
+Git hygiene rules
+
+Reed should prefer the following hygiene:
+
+start each packet from updated local main
+keep working tree clean before major Codex runs
+inspect git status and git diff regularly
+avoid staging unrelated files
+keep generated outputs ignored
+avoid force-push unless explicitly intended
+avoid branch sprawl once a packet is complete
+Acceptance posture on the human side
+
+After Codex completes a bounded pass, Reed should explicitly choose one of:
+
+accept
+revise
+narrow
+defer
+escalate
+
+This keeps solo workflow aligned with the same bounded routing grammar used elsewhere in the project.
+
+### Closure note
+
+For each accepted packet pass, the preferred closure summary is:
+
+what is now true
+what is still not claimed
+
+This preserves declared-vs-mechanized honesty and reduces upward drift from local implementation convenience.
+
+Scope note
+
+This section exists to make solo local development:
+
+scalable
+non-messy
+branch-safe
+Codex-compatible
+and packet-aligned
+
 ## Development Sequence
 
 **Phase A — Runtime Honesty** *(complete)*

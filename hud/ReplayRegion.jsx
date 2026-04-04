@@ -224,7 +224,27 @@ export default function ReplayRegion({
 
                                 <div>
                                     <Label style={{ marginBottom: 6, color: C.amber }}>
-                                        2 · Reconstruction Summary
+                                        2 · Replay Fidelity Record
+                                    </Label>
+                                    <ReplayGrid
+                                        ui={ui}
+                                        rows={[
+                                            ["mechanization_status", lastReplay.replay_fidelity_record_v0?.mechanization_status ?? "—"],
+                                            ["retained_tier", lastReplay.replay_fidelity_record_v0?.retained_tier ?? "—"],
+                                            ["reconstruction_class", lastReplay.replay_fidelity_record_v0?.reconstruction_class ?? "—"],
+                                            ["threshold_outcome", lastReplay.replay_fidelity_record_v0?.threshold_outcome ?? "—"],
+                                            ["downgrade_posture", lastReplay.replay_fidelity_record_v0?.downgrade_posture ?? "—"],
+                                            ["latency_posture", lastReplay.replay_fidelity_record_v0?.latency_posture ?? "—"],
+                                            ["fidelity_posture", lastReplay.replay_fidelity_record_v0?.fidelity_posture ?? "—"],
+                                            ["reconstruction_summary", lastReplay.replay_fidelity_record_v0?.reconstruction_summary ?? "—"],
+                                            ["failure_posture", lastReplay.replay_fidelity_record_v0?.failure_posture ?? "—"],
+                                        ]}
+                                    />
+                                </div>
+
+                                <div>
+                                    <Label style={{ marginBottom: 6, color: C.amber }}>
+                                        3 · Reconstruction Summary
                                     </Label>
                                     <ReplayGrid
                                         ui={ui}
@@ -243,7 +263,7 @@ export default function ReplayRegion({
 
                                 <div>
                                     <Label style={{ marginBottom: 6, color: C.amber }}>
-                                        3 · Threshold Posture / Downgrade
+                                        4 · Threshold Posture / Downgrade
                                     </Label>
                                     <ReplayGrid
                                         ui={ui}
@@ -253,6 +273,7 @@ export default function ReplayRegion({
                                             ["distortion_posture", lastReplay.threshold_posture?.distortion_posture ?? "—"],
                                             ["retained_tier_sufficiency", lastReplay.threshold_posture?.retained_tier_sufficiency ?? "—"],
                                             ["downgrade_output", lastReplay.threshold_posture?.downgrade_output ?? "none"],
+                                            ["failure_posture", lastReplay.threshold_posture?.failure_posture ?? lastReplay.failure_posture ?? "—"],
                                             ["threshold_notes", lastReplay.threshold_posture?.notes ?? "—"],
                                         ]}
                                     />
@@ -276,7 +297,7 @@ export default function ReplayRegion({
 
                                 <div>
                                     <Label style={{ marginBottom: 6, color: C.amber }}>
-                                        4 · Reconstruction Trace
+                                        5 · Reconstruction Trace
                                     </Label>
                                     <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                                         {(lastReplay.reconstruction_trace ?? []).map((step, i) => (
@@ -310,7 +331,7 @@ export default function ReplayRegion({
 
                                 <div>
                                     <Label style={{ marginBottom: 6, color: C.amber }}>
-                                        5 · Non-Claims / Request Posture
+                                        6 · Non-Claims / Request Posture
                                     </Label>
                                     <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginBottom: 8 }}>
                                         {(lastReplay.explicit_non_claims ?? []).map((nc, i) => (

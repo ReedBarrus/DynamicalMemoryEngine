@@ -75,6 +75,44 @@ export function declareRetainedTier(runResult = null) {
     };
 }
 
+function tierExplicitNonClaims(tierUsed = 0) {
+    const base = [
+        "not raw restoration",
+        "not truth",
+        "not canon",
+        "not promotion",
+        "not ontology",
+        "not equivalent to original source artifact",
+    ];
+
+    if (tierUsed === 0) {
+        base.push("not receipt-backed in Tier 0");
+    }
+    if (tierUsed === 1) {
+        base.push("receipt-backed lineage is not source-equivalent replay");
+    }
+    return base;
+}
+
+function normalizeReceiptSupport(receiptSupport = null) {
+    if (!receiptSupport) return null;
+    const receiptRefs = Array.isArray(receiptSupport.receipt_refs)
+        ? receiptSupport.receipt_refs.filter(Boolean)
+        : [];
+    const receiptLineage = Array.isArray(receiptSupport.receipt_lineage)
+        ? receiptSupport.receipt_lineage.filter(Boolean)
+        : [];
+
+    return {
+        receipt_refs: receiptRefs,
+        receipt_lineage: receiptLineage,
+        receipt_count: Number(receiptSupport.receipt_count ?? receiptRefs.length + receiptLineage.length),
+        provenance_complete: receiptSupport.provenance_complete === true,
+        replayable_support_present: receiptSupport.replayable_support_present === true,
+        lineage_summary: receiptSupport.lineage_summary ?? null,
+    };
+}
+
 function deriveReplaySupport(workbench, runResult) {
     if (!workbench && !runResult) return ["no_active_run"];
     const runtimeArtifacts = workbench?.runtime?.artifacts ?? runResult?.artifacts ?? {};
@@ -108,11 +146,13 @@ function attachReconstruction(baseReplay, runResult, workbench) {
         latency_posture: reconstruction.latency_posture,
         fidelity_posture: reconstruction.fidelity_posture,
         failure_reason: reconstruction.failure_reason,
+        failure_posture: reconstruction.failure_posture,
         support_basis: reconstruction.support_basis?.length ? reconstruction.support_basis : baseReplay.support_basis,
         explicit_non_claims: reconstruction.explicit_non_claims?.length ? reconstruction.explicit_non_claims : baseReplay.explicit_non_claims,
         declared_lens: reconstruction.declared_lens ?? baseReplay.declared_lens,
         retained_tier_used: reconstruction.retained_tier_used ?? baseReplay.retained_tier_used,
         derived_vs_durable: reconstruction.derived_vs_durable ?? baseReplay.derived_vs_durable,
+        replay_fidelity_record_v0: reconstruction.replay_fidelity_record_v0 ?? null,
         replay_posture: `${baseReplay.replay_posture} · support-trace only`,
     };
 }
@@ -123,6 +163,7 @@ export function buildRuntimeReconstructionReplay({
     sourceFamilyLabel = "unspecified",
     notes = "",
     retainedTierOverride = null,
+    receiptSupport = null,
 } = {}) {
     if (!runResult?.ok || !workbench) {
         return {
@@ -141,8 +182,13 @@ export function buildRuntimeReconstructionReplay({
     const dos = workbench?.canon_candidate?.dossier ?? {};
     const lens = declareLens(sourceFamilyLabel, runResult);
     const tier = retainedTierOverride ?? declareRetainedTier(runResult);
+    const normalizedReceiptSupport = normalizeReceiptSupport(receiptSupport);
     const basis = deriveReplaySupport(workbench, runResult);
+    if (normalizedReceiptSupport?.receipt_refs?.length || normalizedReceiptSupport?.receipt_lineage?.length) {
+        basis.push("durable_receipt_lineage");
+    }
     const a1 = runResult?.artifacts?.a1 ?? workbench?.runtime?.artifacts?.a1 ?? null;
+    const tierUsed = Number(tier?.tier_used ?? 0);
 
     const baseReplay = {
         replay_request_id: id,
@@ -160,22 +206,19 @@ export function buildRuntimeReconstructionReplay({
         cross_run_count: scope?.cross_run_context?.run_count ?? null,
         declared_lens: lens,
         retained_tier_used: tier,
+        receipt_support: normalizedReceiptSupport,
         support_basis: basis,
         anomaly_count: (workbench?.runtime?.artifacts?.anomaly_reports ?? []).length,
         overall_readiness: read?.readiness_summary?.overall_readiness ?? null,
         candidate_claim_type: dos?.candidate_claim?.claim_type ?? null,
-        derived_vs_durable: "derived · Tier 0 live working state · not durable beyond current session",
+        derived_vs_durable: tierUsed === 1
+            ? "mixed · Tier 1 durable receipt lineage · replay support remains receipt-bounded"
+            : "derived · Tier 0 live working state · not durable beyond current session",
         allowed_use: "bounded read-side replay inspection only · not promotion · not truth",
-        explicit_non_claims: [
-            "not raw restoration",
-            "not truth",
-            "not canon",
-            "not promotion",
-            "not ontology",
-            "not equivalent to original source artifact",
-            "not receipt-backed in v0",
-        ],
-        replay_posture: "lens-bound support · runtime-derived · Tier 0 · non-authoritative",
+        explicit_non_claims: tierExplicitNonClaims(tierUsed),
+        replay_posture: tierUsed === 1
+            ? "lens-bound support · receipt-backed lineage · Tier 1 · non-authoritative"
+            : "lens-bound support · runtime-derived · Tier 0 · non-authoritative",
         notes,
     };
 
@@ -189,6 +232,7 @@ export function buildRequestSupportReplay({
     sourceFamilyLabel = "unspecified",
     notes = "",
     retainedTierOverride = null,
+    receiptSupport = null,
 } = {}) {
     if (!targetRequest) {
         return {
@@ -204,7 +248,14 @@ export function buildRequestSupportReplay({
     const id = makeReplayId("request_support_replay");
     const lens = declareLens(sourceFamilyLabel, runResult);
     const tier = retainedTierOverride ?? declareRetainedTier(runResult);
-    const basis = deriveReplaySupport(workbench, runResult);
+    const normalizedReceiptSupport = normalizeReceiptSupport(
+        receiptSupport ?? targetRequest.receipt_support ?? null
+    );
+    const basis = targetRequest.support_basis ?? deriveReplaySupport(workbench, runResult);
+    if (normalizedReceiptSupport?.receipt_refs?.length || normalizedReceiptSupport?.receipt_lineage?.length) {
+        basis.push("durable_receipt_lineage");
+    }
+    const tierUsed = Number(tier?.tier_used ?? 0);
 
     const baseReplay = {
         replay_request_id: id,
@@ -223,18 +274,18 @@ export function buildRequestSupportReplay({
         cross_run_count: targetRequest.cross_run_count ?? null,
         declared_lens: lens,
         retained_tier_used: tier,
-        support_basis: targetRequest.support_basis ?? basis,
+        receipt_support: normalizedReceiptSupport,
+        support_basis: basis,
         anomaly_count: targetRequest.anomaly_count ?? 0,
         overall_readiness: targetRequest.overall_readiness ?? null,
-        explicit_non_claims: targetRequest.explicit_non_claims ?? [
-            "not raw restoration",
-            "not truth",
-            "not canon",
-            "not promotion",
-        ],
-        derived_vs_durable: "derived · Tier 0 · re-presenting prior prepared request support",
+        explicit_non_claims: targetRequest.explicit_non_claims ?? tierExplicitNonClaims(tierUsed),
+        derived_vs_durable: tierUsed === 1
+            ? "mixed · Tier 1 durable receipt lineage · re-presenting bounded request support"
+            : "derived · Tier 0 · re-presenting prior prepared request support",
         allowed_use: "bounded support replay for prepared-request inspection only · not fulfillment · not canon · not promotion",
-        replay_posture: "request-support replay · lens-bound · Tier 0 · non-authoritative",
+        replay_posture: tierUsed === 1
+            ? "request-support replay · lens-bound · Tier 1 receipt lineage · non-authoritative"
+            : "request-support replay · lens-bound · Tier 0 · non-authoritative",
         request_not_fulfilled: true,
         notes,
     };

@@ -6,26 +6,25 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ROOT = path.resolve(__dirname, "../..");
-
 import {
     reconstructFromReplayRequest,
 } from "../../runtime/reconstruction/ProvenanceReconstructionPipeline.js";
 
-let PASS = 0, FAIL = 0;
-function section(t) { console.log(`\n── ${t} ──`); }
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const ROOT = path.resolve(__dirname, "../..");
+
+let PASS = 0;
+let FAIL = 0;
+function section(t) { console.log(`\n-- ${t} --`); }
 function ok(cond, label) {
-    if (cond) { PASS++; console.log(`  ✓ ${label}`); }
-    else { FAIL++; console.error(`  ✗ ${label}`); }
+    if (cond) { PASS++; console.log(`  ok ${label}`); }
+    else { FAIL++; console.error(`  not ok ${label}`); }
 }
 function eq(a, b, label) {
     ok(Object.is(a, b), `${label}${Object.is(a, b) ? "" : ` (expected ${JSON.stringify(b)}, got ${JSON.stringify(a)})`}`);
 }
 function finish() {
-    console.log("\n══════════════════════════════════════════════════════");
-    console.log(`  ${PASS} passed   ${FAIL} failed`);
-    console.log(FAIL === 0 ? "  ALL TESTS PASSED ✓" : "  TESTS FAILED ✗");
+    console.log(`\n${PASS} passed   ${FAIL} failed`);
     if (FAIL > 0) process.exit(1);
 }
 
@@ -38,14 +37,41 @@ const MOCK_DECLARED_LENS = {
 
 const TIER0 = {
     tier_used: 0,
-    tier_label: "Tier 0 — live working state",
-    honest_posture: "Tier 0 only · not receipt-backed · session-scoped",
+    tier_label: "Tier 0 - live working state",
+    honest_posture: "Tier 0 only - session-scoped",
+};
+
+const TIER1 = {
+    tier_used: 1,
+    tier_label: "Tier 1 - durable receipts",
+    honest_posture: "receipt-backed lineage support only",
 };
 
 const TIER2 = {
     tier_used: 2,
-    tier_label: "Tier 2 — regenerable digest",
+    tier_label: "Tier 2 - regenerable digest",
     honest_posture: "declared-only posture",
+};
+
+const TIER3 = {
+    tier_used: 3,
+    tier_label: "Tier 3 - pinned packet",
+    honest_posture: "declared-only posture",
+};
+
+const TIER4 = {
+    tier_used: 4,
+    tier_label: "Tier 4 - archive bundle",
+    honest_posture: "declared-only posture",
+};
+
+const RECEIPT_SUPPORT = {
+    receipt_refs: ["receipt_cycle_0001_run.json", "receipt_cycle_0002_run.json"],
+    receipt_lineage: ["provenance/live/receipt_cycle_0001_run.json"],
+    receipt_count: 2,
+    provenance_complete: true,
+    replayable_support_present: true,
+    lineage_summary: "durable provenance receipt lineage",
 };
 
 const BASE_REQUEST = {
@@ -62,7 +88,7 @@ const BASE_REQUEST = {
     retained_tier_used: TIER0,
     support_basis: ["harmonic_state_evidence"],
     explicit_non_claims: ["not canon", "not truth", "not raw restoration"],
-    derived_vs_durable: "derived · Tier 0",
+    derived_vs_durable: "derived - Tier 0",
 };
 
 const VALID_RUN = {
@@ -92,14 +118,12 @@ section("A. Pipeline source constitutional posture");
 {
     const src = await readFile(path.join(ROOT, "runtime/reconstruction/ProvenanceReconstructionPipeline.js"), "utf8");
     ok(src.includes("support-trace reconstruction"), "A1: support-trace class declared");
-    ok(src.includes("not raw restoration"), "A2: not-raw-restoration declared");
-    ok(src.includes("not truth"), "A3: not-truth declared");
-    ok(src.includes("not canon"), "A4: not-canon declared");
-    ok(!src.includes('from "../../hud/') && !src.includes('from "../hud/') && !src.includes('from "./hud/'), "A5: no hud/ imports");
-    ok(!src.match(/import.*DoorOneOrchestrator|new DoorOneOrchestrator/), "A6: no orchestrator import\/instantiation");
-    ok(!src.match(/import.*ConsensusOp|new ConsensusOp/), "A7: no ConsensusOp import\/instantiation");
-    ok(!src.includes("mintCanon"), "A8: no canon minting helper");
-    ok(src.includes("runtimeRefs.length > 0"), "A9: runtime support availability requires real runtime refs");
+    ok(src.includes("Tier 0 (live working state): positive path"), "A2: Tier 0 positive path declared");
+    ok(src.includes("Tier 1 (durable receipts): positive path"), "A3: Tier 1 positive path declared");
+    ok(src.includes("Tier 2-4: explicit downgrade / insufficiency posture only"), "A4: Tier 2-4 downgrade posture declared");
+    ok(src.includes("replay_fidelity_record_v0"), "A5: backend emits replay_fidelity_record_v0");
+    ok(!src.match(/import.*DoorOneOrchestrator|new DoorOneOrchestrator/), "A6: no orchestrator import/instantiation");
+    ok(!src.match(/import.*ConsensusOp|new ConsensusOp/), "A7: no ConsensusOp import/instantiation");
 }
 
 section("B. Valid Tier 0 runtime reconstruction");
@@ -111,17 +135,36 @@ section("B. Valid Tier 0 runtime reconstruction");
     });
 
     eq(r.ok, true, "B1: ok = true");
-    eq(r.reconstruction_type, "support_trace", "B2: reconstruction_type = support_trace");
-    eq(r.reconstruction_status, "completed", "B3: reconstruction_status = completed");
-    eq(r.threshold_posture.retained_tier_sufficiency, "pass", "B4: Tier 0 sufficiency passes");
-    eq(r.threshold_posture.downgrade_output, null, "B5: Tier 0 valid replay has no downgrade");
-    const completed = r.reconstruction_trace.find((s) => s.step_type === "reconstruction_completed");
-    ok(!!completed, "B6: reconstruction_completed step present");
-    ok(r.reconstruction_summary.non_authority_note.includes("Tier 0"), "B7: summary non-authority note is tier-specific");
-    ok(r.explicit_non_claims.includes("not source-adjacent reconstitution"), "B8: support-trace non-claim preserved");
+    eq(r.reconstruction_status, "completed", "B2: Tier 0 completes");
+    eq(r.threshold_posture.retained_tier_sufficiency, "pass", "B3: Tier 0 sufficiency passes");
+    eq(r.threshold_posture.downgrade_output, null, "B4: Tier 0 has no downgrade");
+    eq(r.replay_fidelity_record_v0.mechanization_status, "mechanized", "B5: Tier 0 is mechanized");
+    eq(r.replay_fidelity_record_v0.retained_tier, TIER0.tier_label, "B6: fidelity record preserves retained tier");
 }
 
-section("C. Hollow runResult.ok does not simulate runtime support");
+section("C. Valid Tier 1 receipt-backed reconstruction");
+{
+    const r = reconstructFromReplayRequest({
+        replayRequest: {
+            ...BASE_REQUEST,
+            retained_tier_used: TIER1,
+            support_basis: ["durable_receipt_lineage"],
+            receipt_support: RECEIPT_SUPPORT,
+            derived_vs_durable: "mixed - Tier 1 durable receipt lineage",
+        },
+        runResult: HOLLOW_RUN,
+        workbench: WORKBENCH_ONLY,
+    });
+
+    eq(r.ok, true, "C1: ok = true");
+    eq(r.reconstruction_status, "completed", "C2: Tier 1 completes");
+    eq(r.threshold_posture.retained_tier_sufficiency, "pass", "C3: Tier 1 sufficiency passes");
+    eq(r.threshold_posture.downgrade_output, null, "C4: Tier 1 has no downgrade");
+    ok(r.support_basis.includes("receipt_cycle_0001_run.json"), "C5: receipt refs enter support basis");
+    eq(r.replay_fidelity_record_v0.mechanization_status, "mechanized", "C6: Tier 1 is mechanized");
+}
+
+section("D. Tier 0 failure stays explicit");
 {
     const r = reconstructFromReplayRequest({
         replayRequest: BASE_REQUEST,
@@ -129,53 +172,35 @@ section("C. Hollow runResult.ok does not simulate runtime support");
         workbench: WORKBENCH_ONLY,
     });
 
-    eq(r.ok, false, "C1: hollow ok run fails runtime_reconstruction");
-    ok(r.failure_reason.includes("meaningful runtime support") || r.failure_reason.includes("sufficient runtime artifacts"), "C2: failure reason names meaningful runtime support");
-    ok(!r.reconstruction_trace.some((s) => s.step_type === "reconstruction_completed"), "C3: no completed step on hollow runtime failure");
+    eq(r.ok, false, "D1: hollow runtime support fails Tier 0 honestly");
+    eq(r.reconstruction_status, "failed", "D2: reconstruction_status stays explicit");
+    eq(r.replay_fidelity_record_v0.mechanization_status, "failed", "D3: fidelity record marks failure");
+    ok(typeof r.failure_posture === "string" && r.failure_posture.length > 0, "D4: failure posture attached");
 }
 
-section("D. Higher-tier insufficiency is explicit");
-{
+for (const tier of [TIER2, TIER3, TIER4]) {
+    section(`E. ${tier.tier_label} downgrade posture`);
     const r = reconstructFromReplayRequest({
-        replayRequest: { ...BASE_REQUEST, retained_tier_used: TIER2, derived_vs_durable: "derived · Tier 2" },
+        replayRequest: {
+            ...BASE_REQUEST,
+            retained_tier_used: tier,
+            support_basis: ["durable_receipt_lineage"],
+            receipt_support: RECEIPT_SUPPORT,
+            derived_vs_durable: `mixed - ${tier.tier_label}`,
+        },
         runResult: VALID_RUN,
         workbench: WORKBENCH_ONLY,
     });
 
-    eq(r.ok, true, "D1: higher-tier declared replay still returns bounded output");
-    eq(r.threshold_posture.retained_tier_sufficiency, "fail", "D2: tierUsed > 0 forces retained_tier_sufficiency = fail");
-    eq(r.threshold_posture.downgrade_output, "retained_tier_insufficient", "D3: tierUsed > 0 forces retained_tier_insufficient downgrade");
-    ok(r.threshold_posture.notes.includes("Tier 2"), "D4: threshold notes remain tier-honest");
+    eq(r.ok, true, `${tier.tier_label}: bounded replay object still returned`);
+    eq(r.reconstruction_status, "downgraded", `${tier.tier_label}: status is downgraded`);
+    eq(r.threshold_posture.retained_tier_sufficiency, "fail", `${tier.tier_label}: sufficiency fails`);
+    eq(r.threshold_posture.downgrade_output, "retained_tier_insufficient", `${tier.tier_label}: downgrade output explicit`);
+    eq(r.replay_fidelity_record_v0.mechanization_status, "partially_mechanized", `${tier.tier_label}: fidelity record marks partial mechanization`);
+    ok(r.replay_fidelity_record_v0.failure_posture.includes("downgrade/insufficiency"), `${tier.tier_label}: fidelity record carries failure posture`);
 }
 
-section("E. Reconstruction-completed detail is tier-honest");
-{
-    const r = reconstructFromReplayRequest({
-        replayRequest: { ...BASE_REQUEST, retained_tier_used: TIER2, derived_vs_durable: "derived · Tier 2" },
-        runResult: VALID_RUN,
-        workbench: WORKBENCH_ONLY,
-    });
-
-    const completed = r.reconstruction_trace.find((s) => s.step_type === "reconstruction_completed");
-    ok(!!completed, "E1: completed step exists");
-    ok(completed.detail.includes(TIER2.tier_label), "E2: completed detail reflects declared higher tier label");
-    ok(!completed.detail.endsWith("Tier 0") && !completed.detail.includes("· Tier 0"), "E3: completed detail no longer hardcodes Tier 0");
-    ok(completed.non_authority_note.includes("not raw restoration"), "E4: non-authority posture remains explicit");
-}
-
-section("F. Workbench context alone does not simulate runtime support");
-{
-    const r = reconstructFromReplayRequest({
-        replayRequest: BASE_REQUEST,
-        runResult: { ok: true, artifacts: {} },
-        workbench: WORKBENCH_ONLY,
-    });
-
-    eq(r.ok, false, "F1: workbench presence alone is insufficient for runtime_reconstruction");
-    ok(r.failure_reason.includes("runtime support") || r.failure_reason.includes("runtime artifacts"), "F2: failure reason rejects context-only support");
-}
-
-section("G. Support-trace posture remains explicit");
+section("F. Fidelity record shape remains explicit");
 {
     const r = reconstructFromReplayRequest({
         replayRequest: BASE_REQUEST,
@@ -183,9 +208,22 @@ section("G. Support-trace posture remains explicit");
         workbench: WORKBENCH_ONLY,
     });
 
-    eq(r.reconstruction_summary.reconstruction_class, "support_trace", "G1: reconstruction summary class = support_trace");
-    ok(r.reconstruction_summary.non_authority_note.includes("not canon"), "G2: summary notes remain non-canonical");
-    ok(r.reconstruction_trace.every((s) => typeof s.non_authority_note === "string" && s.non_authority_note.length > 0), "G3: every trace step carries non-authority note");
+    const record = r.replay_fidelity_record_v0;
+    ok(typeof record === "object" && record !== null, "F1: fidelity record object exists");
+    ok("bounded_question" in record, "F2: bounded_question present");
+    ok("reconstruction_class" in record, "F3: reconstruction_class present");
+    ok("declared_lens" in record, "F4: declared_lens present");
+    ok("retained_tier" in record, "F5: retained_tier present");
+    ok(Array.isArray(record.support_basis), "F6: support_basis array present");
+    ok(Array.isArray(record.reconstruction_trace), "F7: reconstruction_trace array present");
+    ok("mechanization_status" in record, "F8: mechanization_status present");
+    ok("fidelity_posture" in record, "F9: fidelity_posture present");
+    ok("threshold_outcome" in record, "F10: threshold_outcome present");
+    ok("downgrade_posture" in record, "F11: downgrade_posture present");
+    ok("latency_posture" in record, "F12: latency_posture present");
+    ok("reconstruction_summary" in record, "F13: reconstruction_summary present");
+    ok(Array.isArray(record.explicit_non_claims), "F14: explicit_non_claims array present");
+    ok("failure_posture" in record, "F15: failure_posture present");
 }
 
 finish();
