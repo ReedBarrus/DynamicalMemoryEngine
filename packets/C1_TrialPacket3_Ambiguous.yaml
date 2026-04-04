@@ -1,0 +1,156 @@
+candidate_packet_id: "CAND-RETURNLIKE-MASTER-EDGE-V1"
+candidate_label: "Continuous master return-like convergence anchor"
+candidate_version: "v1"
+candidate_status: proposed
+
+proposed_claim: >
+  Under the declared medium FFT/Hann lens and within the current daw_mic_input
+  master-stream cohort, the later region is trusted as return-like convergence
+  toward the early region for use as a bounded continuity/review anchor.
+
+claim_type: cohort_anchor_claim
+claim_scope:
+  source_family_scope: "daw_mic_input continuous master cohort"
+  cohort_scope: "master_01-03"
+  run_scope: "cohort-level only"
+  lens_scope: "medium FFT/Hann baseline lens"
+  temporal_scope: "current bounded master files"
+  reuse_scope: "continuity/review anchor, not truth of phase identity"
+explicit_non_claims:
+  - "not true phase identity"
+  - "not semantic return"
+  - "not canonical event segmentation truth"
+  - "not universal across other source families"
+  - "not ontology"
+
+source_family: "daw_mic_input"
+source_ids:
+  - "local microphone real-source family"
+stream_ids:
+  - "master_01"
+  - "master_02"
+  - "master_03"
+channel_modality_scope:
+  - "mono microphone audio"
+run_lineage:
+  - "continuous master cohort"
+receipt_refs:
+  - "continuous master probe receipts"
+pinned_packet_refs:
+  - "master cohort packet"
+preservation_posture:
+  - "receipts"
+  - "digest"
+  - "pin"
+
+declared_lens:
+  nominal_fs: 48000
+  effective_fs: 2400
+  transform_family: "FFT/Hann"
+  window_family: "Hann"
+  window_N: 256
+  hop_N: 128
+  band_partition: "declared real-source band basis"
+  segmentation_rule: "continuous master candidate boundary rule"
+  comparison_basis: "return-like similarity / profile geometry"
+  scale_posture: "medium"
+  replay_lens: "declared read-side master-stream lens"
+lens_variation_tested:
+  - "short/long passive scales compared in family-level evaluation"
+lens_scope_note: "single-lens active reading; not cross-lens canonized"
+
+support_basis:
+  - "candidate_boundary"
+  - "return_similarity"
+  - "recurrence_match"
+  - "boundary_peak"
+  - "weak_support_only in local regions where applicable"
+runtime_artifact_refs:
+  - "A1"
+  - "A2"
+  - "W1"
+  - "S1"
+  - "H1"
+  - "M1"
+read_side_probe_refs:
+  - "continuous master phase probe"
+  - "structural transition vocabulary probe"
+cross_run_evidence: >
+  All three master files showed two dominant boundaries near the same times and
+  later-region similarity to earlier structure.
+real_source_support: "real-source"
+preserved_distinctions:
+  - "three-phase structural reading across cohort"
+  - "later region is more similar to early region than perturbation region"
+collapsed_distinctions:
+  - "return-like convergence vs true same-regime identity"
+  - "local ambiguities inside middle transition regions"
+
+ambiguity_posture: "bounded_ambiguity"
+ambiguity_notes: >
+  The claim is useful but remains vulnerable to overreading as true phase identity.
+  It is safer as a bounded continuity/review anchor than as stronger canon.
+distortion_audit_status:
+  audited_layers:
+    - "transition vocabulary"
+    - "continuous master summaries"
+  severity: "moderate"
+  downstream_impact: "manageable if scope remains narrow"
+  recommended_action: "request_narrower_claim / clarify_language"
+authority_breaking_risks:
+  - "return-like may be overread as true return"
+  - "cohort summary may flatten local ambiguities"
+
+legitimacy_summary: >
+  The candidate has real-source support, declared lens, and cross-file agreement,
+  but ambiguity remains around how strongly return-like should be trusted.
+legitimacy_requirements_met:
+  - "bounded claim"
+  - "declared lens"
+  - "replay-honest lineage"
+  - "support basis sufficient"
+  - "non-claims explicit"
+failure_risk_if_wrong: >
+  Medium: later continuity review may overtrust one return story and underweight
+  local ambiguity or alternate interpretations.
+
+allowed_downstream_use:
+  - "bounded continuity/review anchor"
+  - "cohort-level comparison aid"
+reuse_compression_benefit: "moderate"
+packet_burden_if_not_promoted: >
+  Later reviews must re-open the full master-stream packet and re-establish the
+  same return-like reading each time.
+utility_summary: >
+  There is real bounded utility, but it is weaker and more ambiguity-sensitive than
+  the baseline-reference candidate.
+
+governability_summary: >
+  Governability is the active question. The claim may be safe only if explicitly
+  framed as return-like and not true return.
+scope_inflation_risk: "moderate-to-high"
+authority_gravity_risk: "moderate"
+contestability_path: >
+  Future cross-lens, cross-family, or local-transition evidence may challenge the
+  strength of the return-like reading.
+revocation_or_supersession_path: >
+  Narrow to weaker review-anchor status, supersede with stronger cross-lens support,
+  or revoke if later cohorts show inconsistent return geometry.
+blast_radius_if_misused: "moderate"
+canon_ineligible_attachments:
+  - "candidate transition rows as truth"
+  - "boundary scores as event ontology"
+  - "review summaries as settled phase identity"
+
+review_recommendation: "request_narrower_claim"
+review_blockers:
+  - "governability unclear"
+  - "return-like could be overread as true return"
+  - "moderate distortion/ambiguity remains"
+review_notes: >
+  This is the best edge case because it is plausible, useful, and still clearly
+  pressures the ambiguity/governability rules.
+consensus_scope: >
+  Decide whether return-like continuity may be canonized only as a weak
+  cohort-level review anchor, or should remain below canon until stronger
+  lens/cross-family stability is available.

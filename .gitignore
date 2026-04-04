@@ -1,0 +1,49 @@
+
+# Node / JS
+node_modules/
+dist/
+build/
+
+# Python
+__pycache__/
+*.pyc
+
+# Logs
+*.log
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/
+
+# Env files
+.env
+
+# Temporary
+tmp/
+temp/
+.cache/
+
+# Generated outputs
+out/**
+!out/.gitkeep
+
+out_canon/**
+!out_canon/.gitkeep
+
+out_experiments/**
+!out_experiments/.gitkeep
+
+out_live/**
+!out_live/.gitkeep
+
+out_provenance/**
+!out_provenance/.gitkeep
+
+out_substrate/**
+!out_substrate/.gitkeep
+
+out_workbench/**
+!out_workbench/.gitkeep

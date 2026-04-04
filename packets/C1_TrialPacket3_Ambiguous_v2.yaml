@@ -1,0 +1,184 @@
+candidate_packet_id: "CAND-RETURNLIKE-MASTER-EDGE-V1"
+candidate_label: "Bounded return-like convergence review anchor — daw_mic_input master cohort, medium lens"
+candidate_version: "v2"
+candidate_status: proposed
+
+proposed_claim: >
+  Under the declared medium FFT/Hann lens and within the current daw_mic_input
+  master-stream cohort, the later region is trusted as return-like convergence
+  toward the early region for use as a bounded continuity/review anchor.
+
+claim_type: cohort_anchor_claim
+claim_scope:
+  source_family_scope: "daw_mic_input continuous master cohort"
+  cohort_scope: "master_01-03"
+  run_scope: "cohort-level only"
+  lens_scope: "medium FFT/Hann baseline lens"
+  temporal_scope: "current bounded master files"
+  reuse_scope: "cohort-level continuity/review anchor only; not cross-family, not regime identity, not return-class generalization"
+explicit_non_claims:
+  - "not true phase identity"
+  - "not semantic return"
+  - "not canonical event segmentation truth"
+  - "not universal across other source families"
+  - "not ontology"
+  - "not a general return-class anchor applicable to other cohorts or families"
+  - "not event truth for any specific transition"
+  - "not a basis for cross-family return-regime inference"
+intended_forbidden_use:
+  - "cross-family inference"
+  - "regime identity claims"
+  - "general return-class reference"
+  - "return-class generalization"
+  - "event truth"
+  - "phase-truth inference"
+
+source_family: "daw_mic_input"
+source_ids:
+  - "local microphone real-source family"
+stream_ids:
+  - "master_01"
+  - "master_02"
+  - "master_03"
+channel_modality_scope:
+  - "mono microphone audio"
+run_lineage:
+  - "continuous master cohort"
+receipt_refs:
+  - "continuous master probe receipts"
+pinned_packet_refs:
+  - "master cohort packet"
+preservation_posture:
+  - "receipts"
+  - "digest"
+  - "pin"
+
+declared_lens:
+  nominal_fs: 48000
+  effective_fs: 2400
+  transform_family: "FFT/Hann"
+  window_family: "Hann"
+  window_N: 256
+  hop_N: 128
+  band_partition: "declared real-source band basis"
+  segmentation_rule: "continuous master candidate boundary rule"
+  comparison_basis: "return-like similarity / profile geometry"
+  scale_posture: "medium"
+  replay_lens: "declared read-side master-stream lens"
+lens_variation_tested:
+  - "short/long passive scales compared in family-level evaluation"
+lens_scope_note: "single-lens active reading; not cross-lens canonized"
+
+support_basis:
+  - "candidate_boundary"
+  - "return_similarity"
+  - "recurrence_match"
+  - "boundary_peak"
+  - "weak_support_only in local regions where applicable"
+runtime_artifact_refs:
+  - "A1"
+  - "A2"
+  - "W1"
+  - "S1"
+  - "H1"
+  - "M1"
+read_side_probe_refs:
+  - "continuous master phase probe"
+  - "structural transition vocabulary probe"
+cross_run_evidence: >
+  All three master files showed two dominant boundaries near the same times and
+  later-region similarity to earlier structure.
+real_source_support: "real-source"
+preserved_distinctions:
+  - "three-phase structural reading across cohort"
+  - "later region is more similar to early region than perturbation region"
+collapsed_distinctions:
+  - "return-like convergence vs true same-regime identity"
+  - "local ambiguities inside middle transition regions"
+
+ambiguity_posture: "bounded_ambiguity"
+ambiguity_notes: >
+  The claim is useful but remains vulnerable to overreading as true phase identity.
+  It is safer as a bounded continuity/review anchor than as stronger canon.
+distortion_audit_status:
+  audited_layers:
+    - "transition vocabulary"
+    - "continuous master summaries"
+  severity: "moderate"
+  downstream_impact: "manageable if scope remains narrow"
+  recommended_action: "clarify_language_only"
+authority_breaking_risks:
+  - "return-like may be overread as true return"
+  - "cohort summary may flatten local ambiguities"
+
+legitimacy_summary: >
+  The candidate has real-source support, declared lens, cross-file agreement across
+  three master files, and explicit non-claims. With the narrowed use scope, ambiguity
+  remains within acceptable range for the cohort-level review anchor application.
+  Cross-run support is adequate for this bounded use.
+legitimacy_requirements_met:
+  - "bounded claim"
+  - "declared lens"
+  - "replay-honest lineage"
+  - "support basis sufficient"
+  - "non-claims explicit"
+  - "cross-run support adequate"
+  - "ambiguity within acceptable range for narrowed use"
+failure_risk_if_wrong: >
+  Medium: later continuity review may overtrust one return story and underweight
+  local ambiguity or alternate interpretations.
+
+allowed_downstream_use:
+  - "cohort-level continuity/review anchor for daw_mic_input master cohort only"
+  - "reference for later same-cohort review of return-like structural pattern"
+  - >
+    explicitly excluded: cross-family inference, regime identity claims,
+    general return-class reference, event truth, phase-truth inference
+reuse_compression_benefit: "moderate"
+packet_burden_if_not_promoted: >
+  Later reviews must re-open the full master-stream packet and re-establish the
+  same return-like reading each time.
+utility_summary: >
+  There is real bounded utility, but it is weaker and more ambiguity-sensitive than
+  the baseline-reference candidate.
+intended_effective_scope_note: "return-like convergence reading only — cohort-level, single-lens, daw_mic_input master anchor, not true return identity"
+
+governability_summary: >
+  With the narrowed allowed use and explicit exclusions in place, the core governability
+  risk is reduced from moderate-to-high to moderate. The claim is fenced to cohort-level
+  use only. Contestability is now operationally specified.
+scope_inflation_risk: "moderate"
+authority_gravity_risk: "moderate"
+contestability_path: >
+  Concrete challenge type: a later same-cohort evaluation under the same declared
+  medium FFT/Hann lens that produces baseline-vs-later-region L1 distance above 0.08
+  (ingress threshold) in the majority of master files would challenge the return-like
+  convergence reading.
+  Trigger condition: any new daw_mic_input master cohort batch processed under the
+  same declared lens that fails to reproduce the three-file cross-cohort return-like
+  similarity (L1 < 0.08 between early and later regions) should trigger challenge review
+  of this canon anchor.
+revocation_or_supersession_path: >
+  Narrow to weaker review-anchor status, supersede with stronger cross-lens support,
+  or revoke if later cohorts show inconsistent return geometry.
+blast_radius_if_misused: "moderate"
+canon_ineligible_attachments:
+  - "candidate transition rows as truth"
+  - "boundary scores as event ontology"
+  - "review summaries as settled phase identity"
+
+review_recommendation: "defer_candidate"
+review_blockers:
+  - "authority gravity risk remains moderate — requires active scope-fence enforcement at reuse"
+  - "cross-lens stability not yet established (single-lens active reading only)"
+review_notes: >
+  Revised from v1. Four required narrowings from mock review have been applied:
+  allowed use is explicitly cohort-level only with named exclusions; contestability
+  is now operationally specified with a concrete challenge type and trigger condition;
+  legitimacy checklist is complete; candidate label now embeds return-like visibly.
+  Remaining blockers are residual moderate risks, not structural failures. Packet is
+  ready for a second formal review pass.
+consensus_scope: >
+  Review whether the narrowed cohort-level use with explicit exclusions and operationally
+  specified contestability is now governable enough for weak review-anchor promotion,
+  or whether single-lens-only status requires deferral pending cross-lens evidence.
