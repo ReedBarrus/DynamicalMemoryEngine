@@ -13,6 +13,8 @@ const C = {
     blueFaint: "#0c1a3a",
     green: "#22c55e",
     greenFaint: "#052e16",
+    red: "#ef4444",
+    redFaint: "#2a0a0a",
     text: "#e2e8f0",
     textMid: "#94a3b8",
     textDim: "#475569",
@@ -37,9 +39,14 @@ function tone(status) {
         status === "bounded_runtime_support" ||
         status === "partial_runtime_differentiation" ||
         status === "available_if_requested" ||
-        status === "trace_available_if_requested"
+        status === "trace_available_if_requested" ||
+        status === "downgraded" ||
+        status === "partially_mechanized"
     ) {
         return { fg: C.amber, bg: C.amberFaint, border: C.amberDim };
+    }
+    if (status === "failed") {
+        return { fg: C.red, bg: C.redFaint, border: C.red };
     }
     return { fg: C.blue, bg: C.blueFaint, border: C.blue };
 }
@@ -121,7 +128,19 @@ function AnswerRow({ label, value }) {
     );
 }
 
-function ObjectCard({ title, status, objectName, producedBy, dependsOn, currentStatus, legalClaim, nextAction }) {
+function ObjectCard({
+    title,
+    status,
+    objectName,
+    producedBy,
+    dependsOn,
+    currentStatus,
+    legalClaim,
+    nextAction,
+    auditFacts = [],
+    postureChips = [],
+    postureNote = "",
+}) {
     return (
         <div
             style={{
@@ -151,6 +170,48 @@ function ObjectCard({ title, status, objectName, producedBy, dependsOn, currentS
             <AnswerRow label="current status" value={currentStatus} />
             <AnswerRow label="legal claim" value={legalClaim} />
             <AnswerRow label="what next" value={nextAction} />
+
+            {postureChips.length > 0 && (
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                    {postureChips.map((chip) => (
+                        <Badge key={chip} status={chip}>{chip}</Badge>
+                    ))}
+                </div>
+            )}
+
+            {auditFacts.length > 0 && (
+                <div
+                    style={{
+                        borderTop: `1px solid ${C.rule}`,
+                        paddingTop: 12,
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 8,
+                    }}
+                >
+                    <Label style={{ color: C.amber }}>operator replay audit</Label>
+                    {auditFacts.map(([label, value]) => (
+                        <AnswerRow key={label} label={label} value={value} />
+                    ))}
+                </div>
+            )}
+
+            {postureNote && (
+                <div
+                    style={{
+                        padding: "10px 12px",
+                        borderRadius: 10,
+                        border: `1px solid ${C.rule}`,
+                        background: C.surface,
+                        fontFamily: C.sans,
+                        fontSize: 13,
+                        color: C.textMid,
+                        lineHeight: 1.45,
+                    }}
+                >
+                    {postureNote}
+                </div>
+            )}
         </div>
     );
 }
@@ -176,6 +237,10 @@ function StageCard({ stage }) {
                         <div style={{ fontFamily: C.sans, fontSize: 22, color: C.text }}>{stage.title}</div>
                     </div>
                     <Badge status={stage.status}>{stage.status}</Badge>
+                </div>
+                <div style={{ fontFamily: C.sans, fontSize: 14, color: C.textMid, lineHeight: 1.5 }}>
+                    Replay and Reconstruction remain distinct bounded objects. Source-available versus retained-only basis,
+                    fidelity posture, threshold posture, downgrade posture, and failure posture stay explicit here.
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
                     {stage.objects.map((obj) => (
@@ -380,8 +445,9 @@ export default function OperatorLegibilityPanel({ shellState }) {
                     <Label style={{ marginBottom: 8 }}>non-claims</Label>
                     <div style={{ fontFamily: C.sans, fontSize: 14, color: C.textMid, lineHeight: 1.55 }}>
                         Read-side only. Not authority. Replay is not fused with reconstruction. Prepared request
-                        is not fulfilled review. Current synthetic preset evidence can remain coarse at top-line
-                        runtime counters and should be read that way.
+                        is not fulfilled review. Replay is not raw restoration. Reconstruction is not source
+                        equivalence. Current synthetic preset evidence can remain coarse at top-line runtime
+                        counters and should be read that way.
                     </div>
                 </div>
             </div>

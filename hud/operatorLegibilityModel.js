@@ -19,6 +19,119 @@ function summarizeSupportBasis(supportBasis, fallback = "bounded support only") 
     return basis.length > 0 ? basis.join(", ") : fallback;
 }
 
+function tierLabel(replay) {
+    return replay?.replay_fidelity_record_v0?.retained_tier
+        ?? replay?.retained_tier_used?.tier_label
+        ?? "retained tier not declared";
+}
+
+function basisModeLabel(replay) {
+    if (!replay) return "awaiting explicit replay request";
+    const tierUsed = Number(replay?.retained_tier_used?.tier_used ?? 0);
+    const hasReceiptLineage =
+        replay?.receipt_support?.provenance_complete === true &&
+        replay?.receipt_support?.replayable_support_present === true;
+
+    if (tierUsed === 0) {
+        return "source-available live runtime support";
+    }
+    if (tierUsed === 1 && hasReceiptLineage) {
+        return "retained-only durable receipt lineage";
+    }
+    if (tierUsed >= 2) {
+        return `retained-only requested at Tier ${tierUsed} - explicit insufficiency`;
+    }
+    return "bounded retained/support basis only";
+}
+
+function thresholdOutcomeLabel(replay) {
+    return replay?.replay_fidelity_record_v0?.threshold_outcome
+        ?? replay?.threshold_posture?.threshold_outcome
+        ?? "threshold posture not yet active";
+}
+
+function downgradeFailureLabel(replay) {
+    if (!replay) return "no replay object prepared yet";
+    const parts = [];
+    const downgrade =
+        replay?.replay_fidelity_record_v0?.downgrade_posture
+        ?? replay?.threshold_posture?.downgrade_output
+        ?? null;
+    const failure =
+        replay?.replay_fidelity_record_v0?.failure_posture
+        ?? replay?.failure_posture
+        ?? replay?.failure_reason
+        ?? null;
+
+    if (downgrade) parts.push(`downgrade ${downgrade}`);
+    if (failure) parts.push(`failure ${failure}`);
+    return parts.length > 0 ? parts.join(" | ") : "no explicit downgrade or failure";
+}
+
+function replayStatusChips(replay) {
+    if (!replay) return [];
+    const chips = [
+        replay.request_status ?? null,
+        replay.replay_fidelity_record_v0?.mechanization_status ?? null,
+        thresholdOutcomeLabel(replay),
+    ].filter(Boolean);
+    return chips.slice(0, 3);
+}
+
+function reconstructionStatusChips(replay) {
+    if (!replay) return [];
+    const chips = [
+        replay.reconstruction_status ?? null,
+        replay.replay_fidelity_record_v0?.reconstruction_class ?? null,
+        replay.replay_fidelity_record_v0?.downgrade_posture ?? null,
+    ].filter(Boolean);
+    return chips.slice(0, 3);
+}
+
+function replayAuditFacts(replay) {
+    if (!replay) {
+        return [
+            ["basis mode", "awaiting explicit replay request"],
+            ["retained tier", "not yet declared in an active replay object"],
+            ["support basis", "bounded retained support becomes visible once replay is prepared"],
+            ["mechanization", "not yet active"],
+            ["threshold posture", "not yet active"],
+            ["downgrade / failure", "not yet active"],
+        ];
+    }
+
+    return [
+        ["basis mode", basisModeLabel(replay)],
+        ["retained tier", tierLabel(replay)],
+        ["support basis", summarizeSupportBasis(replay?.replay_fidelity_record_v0?.support_basis ?? replay.support_basis)],
+        ["mechanization", replay?.replay_fidelity_record_v0?.mechanization_status ?? "not declared"],
+        ["threshold posture", thresholdOutcomeLabel(replay)],
+        ["downgrade / failure", downgradeFailureLabel(replay)],
+    ];
+}
+
+function reconstructionAuditFacts(replay) {
+    if (!replay) {
+        return [
+            ["basis mode", "awaiting explicit replay request"],
+            ["retained tier", "not yet declared in an active replay object"],
+            ["support basis", "support-trace basis becomes visible once reconstruction is prepared"],
+            ["fidelity posture", "not yet active"],
+            ["trace depth", "not yet active"],
+            ["downgrade / failure", "not yet active"],
+        ];
+    }
+
+    return [
+        ["basis mode", basisModeLabel(replay)],
+        ["retained tier", tierLabel(replay)],
+        ["support basis", summarizeSupportBasis(replay?.replay_fidelity_record_v0?.support_basis ?? replay.support_basis)],
+        ["fidelity posture", replay?.replay_fidelity_record_v0?.fidelity_posture ?? replay?.fidelity_posture ?? "not declared"],
+        ["trace depth", `${safeArray(replay?.reconstruction_trace).length} trace steps`],
+        ["downgrade / failure", downgradeFailureLabel(replay)],
+    ];
+}
+
 function sourceProfileNote(runResult) {
     const meta = runResult?.artifacts?.a1?.meta ?? {};
     const parts = [];
@@ -214,6 +327,11 @@ function buildReplayObject({ hasActiveResult, replay }) {
         nextAction: replay
             ? "Inspect downgrade, fidelity, and support basis before treating replay as stronger than bounded support."
             : hasActiveResult ? "Prepare replay from the active run when needed." : "Run a source before requesting replay.",
+        auditFacts: replayAuditFacts(replay),
+        postureChips: replayStatusChips(replay),
+        postureNote: replay
+            ? "Replay is bounded re-exposure under the declared lens. Not raw restoration, not truth, not canon."
+            : "Replay stays inactive until explicitly requested from the current bounded object path.",
     };
 }
 
@@ -248,7 +366,19 @@ function buildReconstructionObject({ hasActiveResult, replay }) {
                 ? "Honor explicit failure or downgrade posture."
                 : "Compare reconstruction posture against retained support and interpretation.")
             : hasActiveResult ? "Request replay to activate the reconstruction seam." : "Run a source before reconstruction is possible.",
+        auditFacts: reconstructionAuditFacts(replay),
+        postureChips: reconstructionStatusChips(replay),
+        postureNote: replay
+            ? "Reconstruction stays support-trace bounded. It does not imply source equivalence or operator reversal."
+            : "Reconstruction remains inactive until replay invokes the backend support-trace seam.",
     };
+}
+
+function replayStageStatus({ replay, hasActiveResult }) {
+    if (!replay) return hasActiveResult ? "available_if_requested" : "awaiting_run";
+    if (replay.request_status === "failed" || replay.reconstruction_status === "failed") return "failed";
+    if (replay.reconstruction_status === "downgraded") return "downgraded";
+    return "prepared";
 }
 
 function buildInterpretationStage({ hasActiveResult, workbench }) {
@@ -356,7 +486,7 @@ export function buildOperatorLegibilityModel(shellState = {}) {
             {
                 id: "replay_reconstruction",
                 title: "Replay / Reconstruction",
-                status: replay ? "prepared" : (hasActiveResult ? "available_if_requested" : "awaiting_run"),
+                status: replayStageStatus({ replay, hasActiveResult }),
                 objects: [
                     buildReplayObject({ hasActiveResult, replay }),
                     buildReconstructionObject({ hasActiveResult, replay }),
