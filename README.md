@@ -42,7 +42,7 @@ The active constitutional order is:
 ```text
 measurement → structure → runtime memory → recognition
 → canon → prediction → agency → ecology → symbolic → meta
-
+```
 The non-negotiable boundary rules remain:
 
 runtime is not canon
@@ -64,7 +64,7 @@ current repo topology
 Supporting notes explain posture and accounting, but they do not overrule current repo reality. If a compact note and current repo topology disagree about what actively exists, the repo wins for current implementation state.
 
 How to read the project
-1. Constitutional authority
+## 1. Constitutional authority
 
 Start here:
 
@@ -79,7 +79,7 @@ layer law
 naming law
 workflow authority
 repo placement/topology
-2. Core Door One accounting and governance
+## 2. Core Door One accounting and governance
 
 Then read:
 
@@ -102,21 +102,21 @@ current growth-line
 capability-status discipline
 replay / retention / continuity thresholds
 memory-bearing closure posture
-3. Ingest and source-family posture
+## 3. Ingest and source-family posture
 
 For lawful source diversity and normalization:
 
 README/Core/README_DoorOneAdapterPolicy.md
 README/Core/README_IngestAdapterMatrix_v0.md
 README/Core/README.SourceFamilyWorkflowTypes.md
-4. Diagnostics and refinement notes
+## 4. Diagnostics and refinement notes
 
 For probe/refinement surfaces:
 
 README/Diagnostics/README.DistortionAuditProtocol.md
 README/Diagnostics/README.MinimalViableChannelSet(MVCS).md
 README/Diagnostics/README.StructuralTransitionVocabulary.md
-5. Workflow mechanization facet
+## 5. Workflow mechanization facet
 
 For bounded development-workflow support:
 
@@ -146,7 +146,7 @@ README/Core/README_DoorOneInspectionSurfacePosture.md
 For current developmental sequence, see:
 
 README/Core/README_DoorOneDevelopmentalOutline.md
-Repo topology
+## Repo topology
 
 The canonical repo zones are:
 
@@ -163,7 +163,7 @@ out*/ for generated outputs only
 
 Generated outputs are never authority surfaces.
 
-Development posture
+## Development posture
 
 DME should grow in grounded sequence:
 
@@ -175,7 +175,7 @@ Current pressure rule:
 
 Prefer runtime honesty, inspection honesty, provenance, replay support, and real-device usefulness over upward semantic expansion.
 
-Project summary
+## Project summary
 
 DME is building a lawful memory substrate that can preserve, replay, inspect, compare, and later trust changing structure over time without collapsing runtime output into truth, display into authority, or preservation into canon.
 
