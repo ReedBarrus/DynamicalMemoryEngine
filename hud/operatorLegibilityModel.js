@@ -1,6 +1,10 @@
 "use strict";
 
 import { shortId, workbenchToStructuralHudModel } from "./DoorOneStructuralMemoryHudModel.js";
+import {
+    deriveOperatorThresholdPosture,
+    deriveOperatorFidelityPosture,
+} from "./replayThresholdFidelityPosture.js";
 
 function safeArray(value) {
     return Array.isArray(value) ? value : [];
@@ -19,10 +23,31 @@ function summarizeSupportBasis(supportBasis, fallback = "bounded support only") 
     return basis.length > 0 ? basis.join(", ") : fallback;
 }
 
+function summarizeList(items, fallback = "none declared") {
+    const values = safeArray(items).filter(Boolean);
+    return values.length > 0 ? values.join(", ") : fallback;
+}
+
 function tierLabel(replay) {
     return replay?.replay_fidelity_record_v0?.retained_tier
         ?? replay?.retained_tier_used?.tier_label
         ?? "retained tier not declared";
+}
+
+function tierNumber(replay) {
+    return Number(replay?.retained_tier_used?.tier_used ?? -1);
+}
+
+function mechanizationStatus(replay) {
+    return replay?.replay_fidelity_record_v0?.mechanization_status ?? "not_declared";
+}
+
+function tierChip(replay) {
+    const tierUsed = tierNumber(replay);
+    if (tierUsed === 0) return "tier_0_live";
+    if (tierUsed === 1) return "tier_1_receipt";
+    if (tierUsed >= 2) return "tier_2_plus_insufficient";
+    return "tier_not_declared";
 }
 
 function basisModeLabel(replay) {
@@ -68,54 +93,240 @@ function downgradeFailureLabel(replay) {
     return parts.length > 0 ? parts.join(" | ") : "no explicit downgrade or failure";
 }
 
+function replayLegitimacyLabel(replay) {
+    if (!replay) return "awaiting explicit replay request";
+    const tierUsed = tierNumber(replay);
+    const mechanization = mechanizationStatus(replay);
+
+    if (replay?.request_status === "failed" || mechanization === "failed") {
+        return "replay legitimacy not established - explicit failure";
+    }
+    if (tierUsed === 0 && mechanization === "mechanized") {
+        return "Tier 0 live replay legitimacy - session-scoped runtime support only";
+    }
+    if (tierUsed === 1 && mechanization === "mechanized") {
+        return "Tier 1 replay legitimacy - receipt-backed lineage only";
+    }
+    if (tierUsed >= 2) {
+        return `Tier ${tierUsed} replay legitimacy not established - explicit insufficiency`;
+    }
+    return "replay legitimacy remains bounded by surviving support and declared lens";
+}
+
+function reconstructionLegitimacyLabel(replay) {
+    if (!replay) return "awaiting explicit replay request";
+    const tierUsed = tierNumber(replay);
+    const mechanization = mechanizationStatus(replay);
+
+    if (replay?.reconstruction_status === "failed" || mechanization === "failed") {
+        return "reconstruction legitimacy not established - explicit failure";
+    }
+    if (tierUsed === 0 && replay?.reconstruction_status === "completed") {
+        return "Tier 0 support-trace reconstruction legitimacy - live support only";
+    }
+    if (tierUsed === 1 && replay?.reconstruction_status === "completed") {
+        return "Tier 1 support-trace reconstruction legitimacy - receipt-backed lineage only";
+    }
+    if (tierUsed >= 2) {
+        return `Tier ${tierUsed} support-trace reconstruction legitimacy not established - explicit insufficiency`;
+    }
+    return "reconstruction legitimacy remains bounded by declared tier and surviving support";
+}
+
+function preservedReplayPosture(replay) {
+    if (!replay) return ["explicit request boundary only"];
+    const tierUsed = tierNumber(replay);
+    const mechanization = mechanizationStatus(replay);
+
+    if (replay?.request_status === "failed" || mechanization === "failed") {
+        return ["explicit failure visibility", "non-claims remain intact"];
+    }
+    if (tierUsed === 0) {
+        return [
+            "live-session bounded replay",
+            "declared-lens replay of active retained support",
+            "support-trace path while runtime support survives",
+        ];
+    }
+    if (tierUsed === 1) {
+        return [
+            "receipt-backed lineage replay",
+            "retained-only replay basis",
+            "support survives without live source availability",
+        ];
+    }
+    return [
+        "tier declaration remains visible",
+        "downgrade / insufficiency remains visible",
+        "non-authority posture remains explicit",
+    ];
+}
+
+function notPreservedReplayPosture(replay) {
+    if (!replay) return ["mechanized replay legitimacy"];
+    const tierUsed = tierNumber(replay);
+    const mechanization = mechanizationStatus(replay);
+
+    if (replay?.request_status === "failed" || mechanization === "failed") {
+        return ["lawful replay legitimacy", "completed replay continuity"];
+    }
+    if (tierUsed === 0) {
+        return [
+            "durable replay after session loss",
+            "receipt-backed lineage continuity",
+            "source equivalence",
+        ];
+    }
+    if (tierUsed === 1) {
+        return [
+            "live source availability",
+            "raw source continuity",
+            "source equivalence",
+        ];
+    }
+    return [
+        "lawful replay legitimacy",
+        "completed replay continuity",
+        "source continuity",
+    ];
+}
+
+function preservedReconstructionPosture(replay) {
+    if (!replay) return ["explicit backend boundary only"];
+    const tierUsed = tierNumber(replay);
+    const mechanization = mechanizationStatus(replay);
+
+    if (replay?.reconstruction_status === "failed" || mechanization === "failed") {
+        return ["explicit failure visibility", "support-trace boundary remains explicit"];
+    }
+    if (tierUsed === 0) {
+        return [
+            "live support-trace reconstruction",
+            "declared-lens retained support basis",
+            "threshold outcome from active runtime support",
+        ];
+    }
+    if (tierUsed === 1) {
+        return [
+            "receipt-backed support-trace reconstruction",
+            "retained-only lineage basis",
+            "durable receipt support basis remains inspectable",
+        ];
+    }
+    return [
+        "tier declaration remains visible",
+        "downgrade / insufficiency remains visible",
+        "support-trace non-claims remain explicit",
+    ];
+}
+
+function notPreservedReconstructionPosture(replay) {
+    if (!replay) return ["mechanized support-trace reconstruction"];
+    const tierUsed = tierNumber(replay);
+    const mechanization = mechanizationStatus(replay);
+
+    if (replay?.reconstruction_status === "failed" || mechanization === "failed") {
+        return ["completed support-trace reconstruction", "reconstruction legitimacy"];
+    }
+    if (tierUsed === 0) {
+        return [
+            "durable reconstruction after session loss",
+            "receipt-backed retained lineage",
+            "source equivalence",
+        ];
+    }
+    if (tierUsed === 1) {
+        return [
+            "live source availability",
+            "operator reversal",
+            "source equivalence",
+        ];
+    }
+    return [
+        "completed support-trace reconstruction",
+        "lawful reconstruction legitimacy",
+        "source continuity",
+    ];
+}
+
 function replayStatusChips(replay) {
     if (!replay) return [];
+    const threshold = deriveOperatorThresholdPosture(replay);
     const chips = [
+        tierChip(replay),
+        threshold.classCode,
         replay.request_status ?? null,
         replay.replay_fidelity_record_v0?.mechanization_status ?? null,
-        thresholdOutcomeLabel(replay),
     ].filter(Boolean);
-    return chips.slice(0, 3);
+    return chips.slice(0, 4);
 }
 
 function reconstructionStatusChips(replay) {
     if (!replay) return [];
+    const threshold = deriveOperatorThresholdPosture(replay);
+    const fidelity = deriveOperatorFidelityPosture(replay);
     const chips = [
+        tierChip(replay),
+        threshold.classCode,
+        fidelity.classCode,
         replay.reconstruction_status ?? null,
-        replay.replay_fidelity_record_v0?.reconstruction_class ?? null,
-        replay.replay_fidelity_record_v0?.downgrade_posture ?? null,
     ].filter(Boolean);
-    return chips.slice(0, 3);
+    return chips.slice(0, 4);
 }
 
 function replayAuditFacts(replay) {
+    const threshold = deriveOperatorThresholdPosture(replay);
+    const fidelity = deriveOperatorFidelityPosture(replay);
     if (!replay) {
         return [
+            ["legitimacy", "awaiting explicit replay request"],
             ["basis mode", "awaiting explicit replay request"],
             ["retained tier", "not yet declared in an active replay object"],
+            ["preserved", "explicit request boundary only"],
+            ["not preserved", "mechanized replay legitimacy"],
             ["support basis", "bounded retained support becomes visible once replay is prepared"],
             ["mechanization", "not yet active"],
+            ["threshold class", threshold.classLabel],
+            ["threshold meaning", threshold.note],
             ["threshold posture", "not yet active"],
+            ["fidelity class", fidelity.classLabel],
+            ["fidelity meaning", fidelity.note],
             ["downgrade / failure", "not yet active"],
         ];
     }
 
     return [
+        ["legitimacy", replayLegitimacyLabel(replay)],
         ["basis mode", basisModeLabel(replay)],
         ["retained tier", tierLabel(replay)],
+        ["preserved", summarizeList(preservedReplayPosture(replay))],
+        ["not preserved", summarizeList(notPreservedReplayPosture(replay))],
         ["support basis", summarizeSupportBasis(replay?.replay_fidelity_record_v0?.support_basis ?? replay.support_basis)],
         ["mechanization", replay?.replay_fidelity_record_v0?.mechanization_status ?? "not declared"],
+        ["threshold class", threshold.classLabel],
+        ["threshold meaning", threshold.note],
         ["threshold posture", thresholdOutcomeLabel(replay)],
+        ["fidelity class", fidelity.classLabel],
+        ["fidelity meaning", fidelity.note],
         ["downgrade / failure", downgradeFailureLabel(replay)],
     ];
 }
 
 function reconstructionAuditFacts(replay) {
+    const threshold = deriveOperatorThresholdPosture(replay);
+    const fidelity = deriveOperatorFidelityPosture(replay);
     if (!replay) {
         return [
+            ["legitimacy", "awaiting explicit replay request"],
             ["basis mode", "awaiting explicit replay request"],
             ["retained tier", "not yet declared in an active replay object"],
+            ["preserved", "explicit backend boundary only"],
+            ["not preserved", "mechanized support-trace reconstruction"],
             ["support basis", "support-trace basis becomes visible once reconstruction is prepared"],
+            ["threshold class", threshold.classLabel],
+            ["threshold meaning", threshold.note],
+            ["fidelity class", fidelity.classLabel],
+            ["fidelity meaning", fidelity.note],
             ["fidelity posture", "not yet active"],
             ["trace depth", "not yet active"],
             ["downgrade / failure", "not yet active"],
@@ -123,9 +334,16 @@ function reconstructionAuditFacts(replay) {
     }
 
     return [
+        ["legitimacy", reconstructionLegitimacyLabel(replay)],
         ["basis mode", basisModeLabel(replay)],
         ["retained tier", tierLabel(replay)],
+        ["preserved", summarizeList(preservedReconstructionPosture(replay))],
+        ["not preserved", summarizeList(notPreservedReconstructionPosture(replay))],
         ["support basis", summarizeSupportBasis(replay?.replay_fidelity_record_v0?.support_basis ?? replay.support_basis)],
+        ["threshold class", threshold.classLabel],
+        ["threshold meaning", threshold.note],
+        ["fidelity class", fidelity.classLabel],
+        ["fidelity meaning", fidelity.note],
         ["fidelity posture", replay?.replay_fidelity_record_v0?.fidelity_posture ?? replay?.fidelity_posture ?? "not declared"],
         ["trace depth", `${safeArray(replay?.reconstruction_trace).length} trace steps`],
         ["downgrade / failure", downgradeFailureLabel(replay)],

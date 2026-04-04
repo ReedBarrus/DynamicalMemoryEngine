@@ -28,7 +28,10 @@ function tone(status) {
         status === "available" ||
         status === "retained" ||
         status === "replayable" ||
-        status === "reconstructable"
+        status === "reconstructable" ||
+        status === "tier_0_live" ||
+        status === "conserved" ||
+        status === "conserved_support_trace"
     ) {
         return { fg: C.green, bg: C.greenFaint, border: C.green };
     }
@@ -41,9 +44,23 @@ function tone(status) {
         status === "available_if_requested" ||
         status === "trace_available_if_requested" ||
         status === "downgraded" ||
-        status === "partially_mechanized"
+        status === "partially_mechanized" ||
+        status === "tier_2_plus_insufficient" ||
+        status === "insufficient" ||
+        status === "insufficient_support_trace" ||
+        status === "unresolved" ||
+        status === "unresolved_support_trace" ||
+        status === "degraded" ||
+        status === "degraded_support_trace"
     ) {
         return { fg: C.amber, bg: C.amberFaint, border: C.amberDim };
+    }
+    if (
+        status === "tier_1_receipt" ||
+        status === "narrowed" ||
+        status === "narrowed_support_trace"
+    ) {
+        return { fg: C.blue, bg: C.blueFaint, border: C.blue };
     }
     if (status === "failed") {
         return { fg: C.red, bg: C.redFaint, border: C.red };
@@ -241,6 +258,9 @@ function StageCard({ stage }) {
                 <div style={{ fontFamily: C.sans, fontSize: 14, color: C.textMid, lineHeight: 1.5 }}>
                     Replay and Reconstruction remain distinct bounded objects. Source-available versus retained-only basis,
                     fidelity posture, threshold posture, downgrade posture, and failure posture stay explicit here.
+                    Tier 0 live support, Tier 1 receipt lineage, and Tier 2+ insufficiency are not equivalent.
+                    Preserved does not mean equivalent.
+                    Conserved, narrowed, degraded, insufficient, unresolved, and failed are separate bounded postures.
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
                     {stage.objects.map((obj) => (
@@ -446,8 +466,8 @@ export default function OperatorLegibilityPanel({ shellState }) {
                     <div style={{ fontFamily: C.sans, fontSize: 14, color: C.textMid, lineHeight: 1.55 }}>
                         Read-side only. Not authority. Replay is not fused with reconstruction. Prepared request
                         is not fulfilled review. Replay is not raw restoration. Reconstruction is not source
-                        equivalence. Current synthetic preset evidence can remain coarse at top-line runtime
-                        counters and should be read that way.
+                        equivalence. Preserved does not mean equivalent. Current synthetic preset evidence can
+                        remain coarse at top-line runtime counters and should be read that way.
                     </div>
                 </div>
             </div>
