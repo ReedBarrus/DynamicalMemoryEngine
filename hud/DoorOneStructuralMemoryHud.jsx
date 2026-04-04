@@ -398,93 +398,93 @@ function NeighborhoodField({ neighborhoods, transitions, focusId }) {
                         stays bounded until runtime support exists.
                     </div>
                 ) : (
-                <div
-                    style={{
-                        aspectRatio: "1 / 1",
-                        width: "100%",
-                        borderRadius: "18px",
-                        border: "1px solid #243047",
-                        background: "#0b1020",
-                        padding: "12px",
-                    }}
-                >
-                    <svg
-                        viewBox="0 0 100 100"
-                        className="h-full w-full"
-                        preserveAspectRatio="xMidYMid meet"
+                    <div
+                        style={{
+                            aspectRatio: "1 / 1",
+                            width: "100%",
+                            borderRadius: "18px",
+                            border: "1px solid #243047",
+                            background: "#0b1020",
+                            padding: "12px",
+                        }}
                     >
-                        {nodes.length > 1
-                            ? nodes.map((n, i) => {
-                                const next = nodes[(i + 1) % nodes.length];
+                        <svg
+                            viewBox="0 0 100 100"
+                            className="h-full w-full"
+                            preserveAspectRatio="xMidYMid meet"
+                        >
+                            {nodes.length > 1
+                                ? nodes.map((n, i) => {
+                                    const next = nodes[(i + 1) % nodes.length];
+                                    return (
+                                        <line
+                                            key={`ring-${n.id}`}
+                                            x1={n.x}
+                                            y1={n.y}
+                                            x2={next.x}
+                                            y2={next.y}
+                                            stroke="#22304a"
+                                            opacity={0.45}
+                                            strokeWidth={0.35}
+                                        />
+                                    );
+                                })
+                                : null}
+
+                            {safeArray(transitions).map((t, idx) => {
+                                const fromNode = nodes.find((n) => n.id === t.from);
+                                const toNode = nodes.find((n) => n.id === t.to);
+                                if (!fromNode || !toNode) return null;
+
+                                const count = Number(t.count || 0);
+                                const share = Number(t.share || 0);
+                                const strokeWidth = 0.4 + Math.min(2.4, count * 0.45);
+                                const opacity = 0.18 + Math.min(0.55, share * 1.2);
+
                                 return (
                                     <line
-                                        key={`ring-${n.id}`}
-                                        x1={n.x}
-                                        y1={n.y}
-                                        x2={next.x}
-                                        y2={next.y}
-                                        stroke="#22304a"
-                                        opacity={0.45}
-                                        strokeWidth={0.35}
+                                        key={`transition-${idx}-${t.from}-${t.to}`}
+                                        x1={fromNode.x}
+                                        y1={fromNode.y}
+                                        x2={toNode.x}
+                                        y2={toNode.y}
+                                        stroke="#60a5fa"
+                                        strokeWidth={strokeWidth}
+                                        opacity={opacity}
                                     />
                                 );
-                            })
-                            : null}
+                            })}
 
-                        {safeArray(transitions).map((t, idx) => {
-                            const fromNode = nodes.find((n) => n.id === t.from);
-                            const toNode = nodes.find((n) => n.id === t.to);
-                            if (!fromNode || !toNode) return null;
+                            {nodes.map((n) => {
+                                const activity = Number(n.activity || 0);
+                                const nodeRadius = 3.8 + activity * 4.4;
+                                const isActive = n.id === activeNodeId;
 
-                            const count = Number(t.count || 0);
-                            const share = Number(t.share || 0);
-                            const strokeWidth = 0.4 + Math.min(2.4, count * 0.45);
-                            const opacity = 0.18 + Math.min(0.55, share * 1.2);
-
-                            return (
-                                <line
-                                    key={`transition-${idx}-${t.from}-${t.to}`}
-                                    x1={fromNode.x}
-                                    y1={fromNode.y}
-                                    x2={toNode.x}
-                                    y2={toNode.y}
-                                    stroke="#60a5fa"
-                                    strokeWidth={strokeWidth}
-                                    opacity={opacity}
-                                />
-                            );
-                        })}
-
-                        {nodes.map((n) => {
-                            const activity = Number(n.activity || 0);
-                            const nodeRadius = 3.8 + activity * 4.4;
-                            const isActive = n.id === activeNodeId;
-
-                            return (
-                                <g key={n.id}>
-                                    <circle
-                                        cx={n.x}
-                                        cy={n.y}
-                                        r={nodeRadius}
-                                        fill="#0f172a"
-                                        stroke={isActive ? "#7dd3fc" : "#475569"}
-                                        strokeWidth={isActive ? 1.6 : 1.0}
-                                    />
-                                    <text
-                                        x={n.x}
-                                        y={n.y + nodeRadius + 4}
-                                        textAnchor="middle"
-                                        fontSize="3.2"
-                                        className="fill-muted-foreground"
-                                    >
-                                        {shortId(n.id)}
-                                        {n.current ? " [current]" : ""}
-                                    </text>
-                                </g>
-                            );
-                        })}
-                    </svg>
-                </div>
+                                return (
+                                    <g key={n.id}>
+                                        <circle
+                                            cx={n.x}
+                                            cy={n.y}
+                                            r={nodeRadius}
+                                            fill="#0f172a"
+                                            stroke={isActive ? "#7dd3fc" : "#475569"}
+                                            strokeWidth={isActive ? 1.6 : 1.0}
+                                        />
+                                        <text
+                                            x={n.x}
+                                            y={n.y + nodeRadius + 4}
+                                            textAnchor="middle"
+                                            fontSize="3.2"
+                                            className="fill-muted-foreground"
+                                        >
+                                            {shortId(n.id)}
+                                            {n.current ? " [current]" : ""}
+                                        </text>
+                                    </g>
+                                );
+                            })}
+                        </svg>
+                    </div>
                 )}
             </CardContent>
         </Card>
@@ -601,51 +601,51 @@ function SegmentTimeline({ events, onSelectEvent }) {
                         No segment-boundary evidence is available for the active run context.
                     </div>
                 ) : (
-                <div className="relative h-28 rounded-2xl border bg-muted/30">
-                    <div className="absolute left-3 right-3 top-1/2 h-px -translate-y-1/2 bg-border" />
+                    <div className="relative h-28 rounded-2xl border bg-muted/30">
+                        <div className="absolute left-3 right-3 top-1/2 h-px -translate-y-1/2 bg-border" />
 
-                    {rows.map((e, idx) => {
-                        const left = `${((Number(e.t) || 0) / maxT) * 100}%`;
+                        {rows.map((e, idx) => {
+                            const left = `${((Number(e.t) || 0) / maxT) * 100}%`;
 
-                        return (
-                            <div
-                                key={idx}
-                                className="absolute top-4 -translate-x-1/2"
-                                style={{ left, cursor: "pointer" }}
-                                onClick={() =>
-                                    onSelectEvent?.({
-                                        title: "Segment Boundary",
-                                        note: "Plane 2 segment-boundary evidence.",
-                                        fields: {
-                                            t: (Number(e.t) || 0).toFixed(2),
-                                            divergence: (Number(e.divergence) || 0).toFixed(2),
-                                            events: safeArray(e.events),
-                                        },
-                                    })
-                                }
-                            >
-                                <div className="mx-auto h-10 w-px bg-foreground/70" />
-                                <div className="mt-2 rounded-xl border bg-background px-2 py-1 text-[10px] shadow-sm">
-                                    <div className="font-medium">t={(Number(e.t) || 0).toFixed(2)}</div>
-                                    <div className="text-muted-foreground">
-                                        div {(Number(e.divergence) || 0).toFixed(2)}
+                            return (
+                                <div
+                                    key={idx}
+                                    className="absolute top-4 -translate-x-1/2"
+                                    style={{ left, cursor: "pointer" }}
+                                    onClick={() =>
+                                        onSelectEvent?.({
+                                            title: "Segment Boundary",
+                                            note: "Plane 2 segment-boundary evidence.",
+                                            fields: {
+                                                t: (Number(e.t) || 0).toFixed(2),
+                                                divergence: (Number(e.divergence) || 0).toFixed(2),
+                                                events: safeArray(e.events),
+                                            },
+                                        })
+                                    }
+                                >
+                                    <div className="mx-auto h-10 w-px bg-foreground/70" />
+                                    <div className="mt-2 rounded-xl border bg-background px-2 py-1 text-[10px] shadow-sm">
+                                        <div className="font-medium">t={Number(e.t || 0).toFixed(2)}</div>
+                                        <div className="text-muted-foreground">
+                                            div {Number(e.divergence || 0).toFixed(2)}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        );
-                    })}
-                </div>
+                            );
+                        })}
 
-                <div className="mt-3 flex flex-wrap gap-2">
-                    {rows
-                        .flatMap((e) => safeArray(e.events))
-                        .slice(0, 8)
-                        .map((ev, idx) => (
-                            <Badge key={`${ev}-${idx}`} variant="outline" className="rounded-xl">
-                                {ev}
-                            </Badge>
-                        ))}
-                </div>
+                        <div className="mt-3 flex flex-wrap gap-2">
+                            {rows
+                                .flatMap((e) => safeArray(e.events))
+                                .slice(0, 8)
+                                .map((ev, idx) => (
+                                    <Badge key={`${ev}-${idx}`} variant="outline" className="rounded-xl">
+                                        {ev}
+                                    </Badge>
+                                ))}
+                        </div>
+                    </div>
                 )}
             </CardContent>
         </Card>
@@ -666,22 +666,22 @@ function SegmentTimeline({ events, onSelectEvent }) {
 
 const C1_DECISION_COLORS = {
     allow: { border: "#166534", background: "#052e16", badge: "#16a34a", text: "#dcfce7" },
-    deny:  { border: "#7f1d1d", background: "#2a0a0a", badge: "#dc2626", text: "#fee2e2" },
+    deny: { border: "#7f1d1d", background: "#2a0a0a", badge: "#dc2626", text: "#fee2e2" },
     _default: { border: "#1e3a5f", background: "#0a1628", badge: "#334155", text: "#cbd5e1" },
 };
 
 const C1_STATUS_COLORS = {
-    promoted:  "#16a34a",
+    promoted: "#16a34a",
     contested: "#f59e0b",
-    narrowed:  "#3b82f6",
+    narrowed: "#3b82f6",
     suspended: "#dc2626",
-    deferred:  "#94a3b8",
-    _default:  "#64748b",
+    deferred: "#94a3b8",
+    _default: "#64748b",
 };
 
 const C1_PRESSURE_COLORS = {
-    none:     "#16a34a",
-    weak:     "#f59e0b",
+    none: "#16a34a",
+    weak: "#f59e0b",
     material: "#dc2626",
     _default: "#64748b",
 };
