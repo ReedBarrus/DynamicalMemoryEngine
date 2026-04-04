@@ -440,5 +440,273 @@ This keeps the surface aligned with the current developmental order instead of t
 
 The Operator Legibility surface should be introduced inside the existing main app shell as a bounded primary operator mode, retained alongside current secondary demo/replay/review modes until it proves materially better at making the active object path causally legible without increasing authority or pane sprawl.
 
-## Operator Audit and Review Questions
+---
+
+## Operator legibility audit and review block
+
+This section defines the bounded operator-audit block for the Operator Legibility surface.
+
+It is a supporting read-side audit addendum.
+
+It does **not**:
+- override the Master Constitution,
+- override the Workflow Contract,
+- replace the Active Law Kernel,
+- replace the Declared vs Mechanized Audit,
+- replace the Mechanization Closure Gate,
+- or create a new authority layer.
+
+Its purpose is narrower:
+- evaluate whether the Operator Legibility surface is actually making the active object path more causally legible,
+- detect display richness that outruns operator understanding,
+- detect compression-bloat and seam blur,
+- and preserve honest status visibility while the primary operator surface is being developed.
+
+This section should remain small and practical.
+
+### Why this section exists
+
+A system may be lawful while still failing operator legibility.
+
+In that condition:
+- structural support may exist,
+- runtime seams may be bounded,
+- replay/reconstruction/retention posture may be real,
+- and yet the operator still cannot tell what object is active, how it was produced, what it is allowed to claim, or what should happen next.
+
+This creates a real development risk:
+- theory reconstruction replaces direct audit,
+- rich surfaces begin to feel stronger than the mechanism beneath them,
+- object identity blurs across the read/runtime boundary,
+- and the operator starts projecting “system wrong” when the more precise issue is “system not yet legible.”
+
+This audit block exists to prevent that drift.
+
+### Core audit rule
+
+The Operator Legibility surface is successful only when it improves the operator’s ability to track one bounded object path through the current Door One seam without requiring heavy theory reconstruction, silent overclaim, or visual seam fusion.
+
+If the surface becomes richer without becoming clearer, it has not yet passed the audit.
+
+### Audit 1 — Operator legibility audit
+
+#### Bounded question
+
+Can Reed look at the active Operator surface and correctly narrate the current bounded object path without rebuilding the architecture from memory?
+
+#### Audit questions
+
+1. What object is active right now?
+2. Where did it come from?
+3. What transform produced the next visible object?
+4. What support tier or support status is visible?
+5. What is source-available versus retained-only?
+6. What can this object legally claim?
+7. What is the next lawful action from here?
+
+#### Failure signal
+
+If these questions cannot be answered from the surface itself, the surface is still too opaque for primary operator use.
+
+### Audit 2 — Object-path continuity audit
+
+#### Bounded question
+
+Does the surface make the causal path across active Door One objects visible enough that identity continuity and downgrade posture can be followed directly?
+
+#### Audit target path
+
+The primary object path should remain visually and semantically distinguishable across:
+
+- source object
+- spectral state object
+- retained signature object
+- replay object
+- reconstruction object
+- interpretation overlay
+- review/request gate
+
+#### Audit questions
+
+1. Can the operator see where one object ends and the next begins?
+2. Can the operator tell which objects are structural and which are interpretive?
+3. Can the operator tell which objects are support-bearing and which are review-facing?
+4. Can the operator tell when the same bounded object is preserved versus narrowed, downgraded, or split?
+
+#### Failure signal
+
+If multiple distinct object classes blur into one display story, the surface is preserving visual convenience at the cost of lawful identity clarity.
+
+This audit should remain aligned with Structural Identity Law. :contentReference[oaicite:0]{index=0}
+
+### Audit 3 — Status-honesty audit
+
+#### Bounded question
+
+Is each visible object or feature being presented at the right status level?
+
+#### Status vocabulary
+
+Use the declared-vs-mechanized and closure-gate posture directly:
+
+- declared
+- displayed
+- partially_mechanized
+- mechanized
+
+Where relevant, visible object states may also include:
+
+- available
+- retained
+- replayable
+- reconstructable
+- insufficient_support
+- review_ready
+- candidate_only
+
+#### Audit questions
+
+1. Is this feature only declared?
+2. Is it merely displayed?
+3. Is it partially mechanized?
+4. Is it actually mechanized at the declared seam?
+5. Is the UI language stronger than the current seam support justifies?
+
+#### Failure signal
+
+If a visible surface feels more complete, authoritative, or reconstructive than the backend actually supports, the surface has failed status honesty.
+
+This audit should remain aligned with the Declared vs Mechanized Audit and the Mechanization Closure Gate. 
+
+### Audit 4 — Compression-bloat audit
+
+#### Bounded question
+
+Is the Operator surface preserving real new distinctions, or merely restating nearby structure in richer visual form?
+
+#### Audit questions
+
+1. What new bounded distinction does this new pane, overlay, badge, or object preserve?
+2. What existing surface already preserves that distinction?
+3. Is this addition increasing capability, or only increasing repetition?
+4. Is this addition improving accountability, or only making the app feel denser?
+5. Is this a real new object, or a restatement of a nearby one?
+
+#### Preferred actions when bloat is detected
+
+- reduce
+- merge
+- narrow
+- relink instead of restating
+- downgrade to reference-only posture
+- defer until a real distinction appears
+
+#### Failure signal
+
+If a new surface increases apparent richness without increasing bounded understanding, auditability, or support visibility, it is compression-bloat and should not remain primary.
+
+This keeps the legibility surface aligned with the compression-audit posture in the Door One developmental line. :contentReference[oaicite:2]{index=2}
+
+### Audit 5 — Seam-boundary audit
+
+#### Bounded question
+
+Is the surface still representing one bounded operator seam, or has it silently mixed multiple seams into one convenience layer?
+
+#### Audit questions
+
+1. Is this still one bounded operator-legibility seam?
+2. Has runtime meaning been fused with read-side interpretation?
+3. Has replay been fused with reconstruction?
+4. Has retention been fused with authority posture?
+5. Has review/request preparation been fused with fulfillment or promotion?
+
+#### Failure signal
+
+If the surface requires multiple real seams to be interpreted as one object, it has likely crossed from legibility aid into seam fusion.
+
+If that happens, prefer:
+- split
+- narrow
+- relabel
+- or gate more clearly
+
+This audit should remain aligned with the Packet Workflow Chain’s one-seam / one-closure-target rule. :contentReference[oaicite:3]{index=3}
+
+### Audit 6 — Review-boundary audit
+
+#### Bounded question
+
+Does the surface preserve a clear downstream gate between operator understanding and authority-adjacent preparation?
+
+#### Audit questions
+
+1. Is request/review/candidate posture visually fenced from the primary structural path?
+2. Is prepared request still clearly distinct from fulfilled review?
+3. Is candidate posture still clearly distinct from canon?
+4. Is the downstream review gate presented as a request path rather than an authority path?
+
+#### Failure signal
+
+If the operator view makes review preparation feel like authority attainment, the downstream gate is not clear enough.
+
+This audit should remain below canon and below consultation fulfillment posture. 
+
+### Recommended review cadence
+
+Run this operator audit block:
+
+- after each meaningful Operator-surface packet,
+- after any new object-path visualization change,
+- after any new replay/reconstruction/retention UI change,
+- and before making the Operator surface the unquestioned default shell landing mode.
+
+### Minimal audit summary template
+
+Use the following summary when reviewing the Operator surface:
+
+```text
+Operator Legibility Audit — [surface/version]
+
+Bounded question
+[what exact operator understanding this surface is supposed to provide]
+
+What is now clearly visible
+- ...
+- ...
+
+What remains blurred
+- ...
+- ...
+
+Status honesty check
+- declared / displayed / partial / mechanized issues:
+- ...
+
+Compression-bloat check
+- new distinctions preserved:
+- duplicate/restated surfaces:
+- ...
+
+Seam-boundary check
+- still one bounded seam? yes / no
+- if no, where does fusion appear?
+
+Review-boundary check
+- request/review/candidate fence clear? yes / no
+- notes:
+- ...
+
+Operator outcome
+- accept
+- revise
+- narrow
+- defer
+- escalate
+
+What is now true
+- ...
+
+What is still not claimed
+- ...
 
