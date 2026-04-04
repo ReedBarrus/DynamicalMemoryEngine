@@ -76,3 +76,18 @@ Escalate instead of silently redesigning when you hit:
 - seam overmixing
 - unclear boundary authority
 - inability to complete the task honestly within current constraints
+
+## Stop-and-ask rules
+
+Stop and ask the user before:
+- any destructive operation
+- deleting or mass-renaming files
+- editing root governance or constitutional docs unless explicitly in scope
+- package installs or broad dependency changes
+- running broad commands that write to many files
+- changing git state (commit, push, force-push, branch deletion) unless explicitly requested
+- widening packet scope beyond the named seam
+- acting on ambiguous architectural conflicts
+
+If unexpected unrelated repo changes are detected, stop and ask how to proceed.
+If the requested task cannot be completed honestly within current packet scope, stop and surface the conflict instead of widening scope silently.
