@@ -444,6 +444,31 @@ eq(
     wbSingle.runtime?.audit?.skipped_windows?.length ?? 0,
     "B10: audit skipped_windows mapped from runtime audit"
 );
+eq(
+    modelSingle.runtime_evidence.artifact_counts.m1s,
+    wbSingle.runtime?.artifacts?.m1s?.length ?? 0,
+    "B11: merged-state count mapped from runtime artifacts"
+);
+eq(
+    modelSingle.runtime_evidence.total_re_entries,
+    wbSingle.runtime?.substrate?.transition_report?.total_re_entries ?? 0,
+    "B12: total_re_entries mapped from transition report"
+);
+eq(
+    modelSingle.runtime_evidence.segment_boundary_events,
+    wbSingle.runtime?.substrate?.segment_transitions?.length ?? 0,
+    "B13: segment boundary count mapped from segment transitions"
+);
+ok(
+    modelSingle.runtime_evidence.segment_event_types &&
+    typeof modelSingle.runtime_evidence.segment_event_types === "object",
+    "B14: segment event types summary present"
+);
+ok(
+    modelSingle.runtime_evidence.anomaly_type_counts &&
+    typeof modelSingle.runtime_evidence.anomaly_type_counts === "object",
+    "B15: anomaly type summary present"
+);
 
 section("C. Browser HUD projection surface");
 

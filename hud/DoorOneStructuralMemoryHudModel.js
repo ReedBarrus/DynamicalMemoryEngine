@@ -28,6 +28,73 @@ function resolveNeighborhoodIdentity(entry, idx, tr = {}) {
     );
 }
 
+function safeNum(value) {
+    return Number.isFinite(value) ? value : 0;
+}
+
+function incrementCount(counts, key) {
+    const normalizedKey = key ?? "unspecified";
+    counts[normalizedKey] = (counts[normalizedKey] ?? 0) + 1;
+}
+
+function countEventTypes(rows) {
+    const counts = {};
+    for (const row of safeArray(rows)) {
+        for (const eventType of safeArray(row?.detected_event_types ?? row?.events)) {
+            incrementCount(counts, eventType);
+        }
+    }
+    return counts;
+}
+
+function countAnomalyTypes(rows) {
+    const counts = {};
+    for (const row of safeArray(rows)) {
+        const eventTypes = safeArray(row?.detected_event_types);
+        if (eventTypes.length > 0) {
+            for (const eventType of eventTypes) incrementCount(counts, eventType);
+            continue;
+        }
+
+        incrementCount(
+            counts,
+            firstDefined(
+                row?.anomaly_type,
+                row?.report_type,
+                row?.kind,
+                row?.novelty_type,
+                row?.event_type
+            )
+        );
+    }
+    return counts;
+}
+
+function dominantNeighborhoodSummary(neighborhoods) {
+    const ranked = [...safeArray(neighborhoods)].sort((a, b) => {
+        const frameDelta = safeNum(b?.dwellFrames) - safeNum(a?.dwellFrames);
+        if (frameDelta !== 0) return frameDelta;
+
+        const reentryDelta = safeNum(b?.reEntries) - safeNum(a?.reEntries);
+        if (reentryDelta !== 0) return reentryDelta;
+
+        return String(a?.id ?? "").localeCompare(String(b?.id ?? ""));
+    });
+
+    return ranked[0] ?? null;
+}
+
+function dominantTransitionSummary(transitions) {
+    const ranked = [...safeArray(transitions)].sort((a, b) => {
+        const countDelta = safeNum(b?.count) - safeNum(a?.count);
+        if (countDelta !== 0) return countDelta;
+
+        return `${a?.from ?? ""}->${a?.to ?? ""}`.localeCompare(`${b?.from ?? ""}->${b?.to ?? ""}`);
+    });
+
+    return ranked[0] ?? null;
+}
+
 function buildSourceProfileNote(meta = {}) {
     const parts = [];
     if (meta?.seed !== undefined && meta?.seed !== null) parts.push(`seed ${meta.seed}`);
@@ -56,6 +123,8 @@ export function workbenchToStructuralHudModel(workbench, crossRunReport = null) 
     const readiness = workbench?.promotion_readiness?.report?.readiness_summary ?? {};
     const trajectory = workbench?.interpretation?.trajectory ?? {};
     const sourceMeta = workbench?.runtime?.artifacts?.a1?.meta ?? {};
+    const runtimeArtifacts = workbench?.runtime?.artifacts ?? {};
+    const anomalyReports = safeArray(runtimeArtifacts?.anomaly_reports);
 
     const dwell = Array.isArray(tr.neighborhood_dwell)
         ? tr.neighborhood_dwell
@@ -124,6 +193,39 @@ export function workbenchToStructuralHudModel(workbench, crossRunReport = null) 
         count: Number(t.count ?? 0) || 0,
         share: totalTransitions > 0 ? (Number(t.count ?? 0) || 0) / totalTransitions : 0,
     }));
+
+    const dominantNeighborhood = dominantNeighborhoodSummary(neighborhoods);
+    const dominantTransition = dominantTransitionSummary(transitions);
+    const segmentEventTypes = countEventTypes(segTransitions);
+    const anomalyTypeCounts = countAnomalyTypes(anomalyReports);
+    const dominantDwellShare =
+        Number(
+            trajectory?.neighborhood_character?.evidence?.dominant_dwell_share ??
+            0
+        ) || 0;
+    const currentNeighborhoodId =
+        tr.current_neighborhood_id ??
+        tr.current_neighborhood_label ??
+        neighborhoods.find((n) => n.current)?.id ??
+        null;
+    const currentDwellCount =
+        Number(
+            tr.current_dwell_count ??
+            trajectory?.neighborhood_character?.evidence?.current_dwell_count ??
+            0
+        ) || 0;
+    const currentDwellDurationSec =
+        Number(
+            tr.current_dwell_duration_sec ??
+            trajectory?.neighborhood_character?.evidence?.current_dwell_duration_sec ??
+            0
+        ) || 0;
+    const totalReEntries =
+        Number(
+            tr.total_re_entries ??
+            trajectory?.neighborhood_character?.evidence?.total_re_entries ??
+            0
+        ) || 0;
 
     return {
         source_mode: workbench?.scope?.cross_run_context?.available ? "session" : "single_run",
@@ -207,17 +309,35 @@ export function workbenchToStructuralHudModel(workbench, crossRunReport = null) 
 
         runtime_evidence: {
             artifact_counts: {
-                h1s: Number(workbench?.runtime?.artifacts?.h1s?.length ?? 0) || 0,
-                anomaly_reports:
-                    Number(workbench?.runtime?.artifacts?.anomaly_reports?.length ?? 0) || 0,
+                h1s: Number(runtimeArtifacts?.h1s?.length ?? 0) || 0,
+                m1s: Number(runtimeArtifacts?.m1s?.length ?? 0) || 0,
+                anomaly_reports: Number(anomalyReports?.length ?? 0) || 0,
                 basin_sets:
-                    Number(workbench?.runtime?.artifacts?.basin_sets?.length ?? 0) || 0,
-                has_query: Boolean(workbench?.runtime?.artifacts?.q),
+                    Number(runtimeArtifacts?.basin_sets?.length ?? 0) || 0,
+                has_query: Boolean(runtimeArtifacts?.q),
             },
             trajectory_frames:
                 Number(workbench?.runtime?.substrate?.trajectory_frames ?? 0) || 0,
             transition_count:
                 Number(workbench?.runtime?.substrate?.transition_report?.total_transitions ?? 0) || 0,
+            total_re_entries: totalReEntries,
+            current_neighborhood_id: currentNeighborhoodId,
+            current_dwell_count: currentDwellCount,
+            current_dwell_duration_sec: currentDwellDurationSec,
+            dominant_dwell_share: dominantDwellShare,
+            dominant_neighborhood_id: dominantNeighborhood?.id ?? null,
+            dominant_neighborhood_frames: safeNum(dominantNeighborhood?.dwellFrames),
+            dominant_transition:
+                dominantTransition
+                    ? {
+                        from: dominantTransition.from,
+                        to: dominantTransition.to,
+                        count: safeNum(dominantTransition.count),
+                    }
+                    : null,
+            segment_boundary_events: segTransitions.length,
+            segment_event_types: segmentEventTypes,
+            anomaly_type_counts: anomalyTypeCounts,
         },
 
         audit: {

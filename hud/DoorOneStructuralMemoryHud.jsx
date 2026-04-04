@@ -291,6 +291,68 @@ function LabelBadge({ label }) {
     );
 }
 
+function formatPercent(value) {
+    const numeric = Number(value ?? 0);
+    return `${Math.round(numeric * 100)}%`;
+}
+
+function buildBoundedNeighborhoodDetail(data) {
+    return {
+        title: "Evidence Detail - Bounded neighborhood availability",
+        note: "No structural-neighborhood evidence is available for the current run context.",
+        fields: {
+            detail_status: "bounded_insufficient",
+            neighborhoods_observed: data?.neighborhoods?.length ?? 0,
+            transitions_observed: data?.transitions?.length ?? 0,
+            segment_boundary_events: data?.runtime_evidence?.segment_boundary_events ?? 0,
+            current_neighborhood_id: data?.runtime_evidence?.current_neighborhood_id,
+        },
+    };
+}
+
+function buildNeighborhoodDetail(neighborhood, data) {
+    if (!neighborhood) {
+        return buildBoundedNeighborhoodDetail(data);
+    }
+
+    return {
+        title: `Runtime Evidence - Neighborhood ${shortId(neighborhood.id)}`,
+        note: "Plane 2 structural-neighborhood evidence. Read-side only.",
+        fields: {
+            projected_id: neighborhood.id,
+            current: neighborhood.current,
+            dwell_frames: neighborhood.dwellFrames,
+            dwell_sec: neighborhood.dwellSec,
+            re_entries: neighborhood.reEntries,
+            activity: Number(neighborhood.activity || 0).toFixed(3),
+            total_re_entries: data?.runtime_evidence?.total_re_entries ?? 0,
+            dominant_dwell_share: formatPercent(data?.runtime_evidence?.dominant_dwell_share ?? 0),
+            current_neighborhood_id: data?.runtime_evidence?.current_neighborhood_id,
+            raw_neighborhood_label: neighborhood.evidence?.neighborhood_label,
+            raw_label: neighborhood.evidence?.label,
+            raw_neighborhood_name: neighborhood.evidence?.neighborhood_name,
+            raw_name: neighborhood.evidence?.name,
+            raw_neighborhood_id: neighborhood.evidence?.neighborhood_id,
+            raw_basin_id: neighborhood.evidence?.basin_id,
+            raw_id: neighborhood.evidence?.id,
+        },
+    };
+}
+
+function buildFocusedNeighborhoodDetail(data, focusId) {
+    const neighborhoods = safeArray(data?.neighborhoods);
+    if (neighborhoods.length === 0) {
+        return buildBoundedNeighborhoodDetail(data);
+    }
+
+    const focused =
+        neighborhoods.find((n) => n.id === focusId) ??
+        neighborhoods.find((n) => n.current) ??
+        neighborhoods[0];
+
+    return buildNeighborhoodDetail(focused, data);
+}
+
 function NeighborhoodField({ neighborhoods, transitions, focusId }) {
     const nodes = useMemo(() => {
         const items = safeArray(neighborhoods);
@@ -310,6 +372,7 @@ function NeighborhoodField({ neighborhoods, transitions, focusId }) {
     }, [neighborhoods]);
 
     const activeNodeId = focusId ?? nodes.find((n) => n.current)?.id ?? null;
+    const hasNeighborhoods = nodes.length > 0;
 
     return (
         <Card className="rounded-2xl shadow-sm">
@@ -320,6 +383,21 @@ function NeighborhoodField({ neighborhoods, transitions, focusId }) {
                 </CardTitle>
             </CardHeader>
             <CardContent>
+                {!hasNeighborhoods ? (
+                    <div
+                        style={{
+                            border: "1px dashed #334155",
+                            borderRadius: "18px",
+                            padding: "16px",
+                            background: "#0b1020",
+                            color: "#94a3b8",
+                            fontSize: "13px",
+                        }}
+                    >
+                        No neighborhood evidence is available for the active run context. This pane
+                        stays bounded until runtime support exists.
+                    </div>
+                ) : (
                 <div
                     style={{
                         aspectRatio: "1 / 1",
@@ -407,6 +485,7 @@ function NeighborhoodField({ neighborhoods, transitions, focusId }) {
                         })}
                     </svg>
                 </div>
+                )}
             </CardContent>
         </Card>
     );
@@ -517,6 +596,11 @@ function SegmentTimeline({ events, onSelectEvent }) {
                 </CardTitle>
             </CardHeader>
             <CardContent>
+                {rows.length === 0 ? (
+                    <div style={{ fontSize: "13px", color: "#94a3b8" }}>
+                        No segment-boundary evidence is available for the active run context.
+                    </div>
+                ) : (
                 <div className="relative h-28 rounded-2xl border bg-muted/30">
                     <div className="absolute left-3 right-3 top-1/2 h-px -translate-y-1/2 bg-border" />
 
@@ -562,6 +646,7 @@ function SegmentTimeline({ events, onSelectEvent }) {
                             </Badge>
                         ))}
                 </div>
+                )}
             </CardContent>
         </Card>
     );
@@ -787,11 +872,40 @@ export default function DoorOneStructuralMemoryHUD({
     const [filter, setFilter] = useState("");
     const [focusMode, setFocusMode] = useState("current");
     const [selectedDetail, setSelectedDetail] = useState(null);
+    const activeContextSignature = useMemo(
+        () =>
+            JSON.stringify({
+                stream_id: data?.provenance?.stream_id ?? null,
+                source_id: data?.provenance?.source_id ?? null,
+                source_profile_note: data?.provenance?.source_profile_note ?? null,
+                states: data?.run_health?.states ?? 0,
+                basins: data?.run_health?.basins ?? 0,
+                segments: data?.run_health?.segments ?? 0,
+                transition_count: data?.runtime_evidence?.transition_count ?? 0,
+                total_re_entries: data?.runtime_evidence?.total_re_entries ?? 0,
+                current_neighborhood_id: data?.runtime_evidence?.current_neighborhood_id ?? null,
+                dominant_neighborhood_id: data?.runtime_evidence?.dominant_neighborhood_id ?? null,
+                segment_boundary_events: data?.runtime_evidence?.segment_boundary_events ?? 0,
+            }),
+        [
+            data?.provenance?.stream_id,
+            data?.provenance?.source_id,
+            data?.provenance?.source_profile_note,
+            data?.run_health?.states,
+            data?.run_health?.basins,
+            data?.run_health?.segments,
+            data?.runtime_evidence?.transition_count,
+            data?.runtime_evidence?.total_re_entries,
+            data?.runtime_evidence?.current_neighborhood_id,
+            data?.runtime_evidence?.dominant_neighborhood_id,
+            data?.runtime_evidence?.segment_boundary_events,
+        ]
+    );
     useEffect(() => {
         setFilter("");
         setFocusMode("current");
         setSelectedDetail(null);
-    }, [data?.provenance?.stream_id]);
+    }, [activeContextSignature]);
     useEffect(() => {
         if (!filter) return;
 
@@ -815,6 +929,11 @@ export default function DoorOneStructuralMemoryHUD({
         }
         return null;
     }, [data.neighborhoods, focusMode]);
+    const autoDetail = useMemo(
+        () => buildFocusedNeighborhoodDetail(data, focusId),
+        [data, focusId]
+    );
+    const detailPanelDetail = selectedDetail ?? autoDetail;
 
     return (
         <div
@@ -1066,6 +1185,8 @@ export default function DoorOneStructuralMemoryHUD({
                                         states: data.run_health.states,
                                         trajectory_frames: data.runtime_evidence.trajectory_frames,
                                         h1s: data.runtime_evidence.artifact_counts.h1s,
+                                        m1s: data.runtime_evidence.artifact_counts.m1s,
+                                        current_neighborhood_id: data.runtime_evidence.current_neighborhood_id,
                                     },
                                 })
                             }
@@ -1083,6 +1204,9 @@ export default function DoorOneStructuralMemoryHUD({
                                     fields: {
                                         basins: data.run_health.basins,
                                         basin_sets: data.runtime_evidence.artifact_counts.basin_sets,
+                                        total_re_entries: data.runtime_evidence.total_re_entries,
+                                        dominant_neighborhood_id: data.runtime_evidence.dominant_neighborhood_id,
+                                        dominant_dwell_share: formatPercent(data.runtime_evidence.dominant_dwell_share),
                                     },
                                 })
                             }
@@ -1100,6 +1224,11 @@ export default function DoorOneStructuralMemoryHUD({
                                     fields: {
                                         segments: data.run_health.segments,
                                         segment_boundary_events: data.segmentTransitions.length,
+                                        transition_count: data.runtime_evidence.transition_count,
+                                        segment_event_types: Object.keys(data.runtime_evidence.segment_event_types ?? {}).length
+                                            ? Object.entries(data.runtime_evidence.segment_event_types)
+                                                .map(([eventType, count]) => `${eventType}:${count}`)
+                                            : [],
                                     },
                                 })
                             }
@@ -1141,7 +1270,7 @@ export default function DoorOneStructuralMemoryHUD({
                     <div
                         style={{
                             display: "grid",
-                            gridTemplateColumns: "1fr 1fr 1fr 1fr",
+                            gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
                             gap: "12px",
                         }}
                     >
@@ -1178,6 +1307,54 @@ export default function DoorOneStructuralMemoryHUD({
                             </div>
                             <div className="mt-2 text-2xl font-semibold">
                                 {data.audit.consensus_receipts}
+                            </div>
+                        </div>
+
+                        <div className="rounded-2xl border p-3">
+                            <div className="text-xs uppercase tracking-wide text-muted-foreground">
+                                M1 artifacts
+                            </div>
+                            <div className="mt-2 text-2xl font-semibold">
+                                {data.runtime_evidence.artifact_counts.m1s}
+                            </div>
+                        </div>
+
+                        <div className="rounded-2xl border p-3">
+                            <div className="text-xs uppercase tracking-wide text-muted-foreground">
+                                Re-entry count
+                            </div>
+                            <div className="mt-2 text-2xl font-semibold">
+                                {data.runtime_evidence.total_re_entries}
+                            </div>
+                        </div>
+
+                        <div className="rounded-2xl border p-3">
+                            <div className="text-xs uppercase tracking-wide text-muted-foreground">
+                                Current neighborhood
+                            </div>
+                            <div className="mt-2 text-lg font-semibold break-all">
+                                {data.runtime_evidence.current_neighborhood_id
+                                    ? shortId(data.runtime_evidence.current_neighborhood_id)
+                                    : "bounded"}
+                            </div>
+                            <div className="mt-1 text-xs text-muted-foreground break-all">
+                                {data.runtime_evidence.current_neighborhood_id ?? "No current neighborhood observed"}
+                            </div>
+                        </div>
+
+                        <div className="rounded-2xl border p-3">
+                            <div className="text-xs uppercase tracking-wide text-muted-foreground">
+                                Boundary events
+                            </div>
+                            <div className="mt-2 text-2xl font-semibold">
+                                {data.runtime_evidence.segment_boundary_events}
+                            </div>
+                            <div className="mt-1 text-xs text-muted-foreground">
+                                {Object.keys(data.runtime_evidence.segment_event_types ?? {}).length
+                                    ? Object.entries(data.runtime_evidence.segment_event_types)
+                                        .map(([eventType, count]) => `${eventType}:${count}`)
+                                        .join(" · ")
+                                    : "No boundary event types observed"}
                             </div>
                         </div>
                     </div>
@@ -1242,7 +1419,7 @@ export default function DoorOneStructuralMemoryHUD({
                             </div>
                         </CardContent>
                     </Card>
-                    <EvidenceDetailPanel detail={selectedDetail} />
+                    <EvidenceDetailPanel detail={detailPanelDetail} />
                 </div>
 
                 <div
@@ -1305,6 +1482,12 @@ export default function DoorOneStructuralMemoryHUD({
                             <CardTitle className="text-base">Neighborhood Table</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-2">
+                            {data.neighborhoods.length === 0 ? (
+                                <div style={{ fontSize: "13px", color: "#94a3b8" }}>
+                                    No neighborhood evidence is available for the active run context.
+                                    Detail remains bounded until runtime support exists.
+                                </div>
+                            ) : null}
                             {data.neighborhoods.map((n) => (
                                 <div
                                     key={n.id}

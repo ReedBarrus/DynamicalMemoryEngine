@@ -439,3 +439,6 @@ This keeps the surface aligned with the current developmental order instead of t
 ### One-line placement summary
 
 The Operator Legibility surface should be introduced inside the existing main app shell as a bounded primary operator mode, retained alongside current secondary demo/replay/review modes until it proves materially better at making the active object path causally legible without increasing authority or pane sprawl.
+
+## Operator Audit and Review Questions
+
