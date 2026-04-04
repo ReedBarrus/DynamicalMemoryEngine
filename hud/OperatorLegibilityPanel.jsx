@@ -1,0 +1,390 @@
+import { buildOperatorLegibilityModel } from "./operatorLegibilityModel.js";
+
+const C = {
+    bg: "#0e1117",
+    surface: "#161b27",
+    surfaceHigh: "#1c2333",
+    rule: "#1f2d45",
+    ruleLight: "#263449",
+    amber: "#f59e0b",
+    amberDim: "#92610a",
+    amberFaint: "#2a1e06",
+    blue: "#3b82f6",
+    blueFaint: "#0c1a3a",
+    green: "#22c55e",
+    greenFaint: "#052e16",
+    text: "#e2e8f0",
+    textMid: "#94a3b8",
+    textDim: "#475569",
+    mono: "'IBM Plex Mono', 'Cascadia Code', monospace",
+    sans: "'DM Sans', 'Inter', system-ui, sans-serif",
+};
+
+function tone(status) {
+    if (
+        status === "mechanized" ||
+        status === "available" ||
+        status === "retained" ||
+        status === "replayable" ||
+        status === "reconstructable"
+    ) {
+        return { fg: C.green, bg: C.greenFaint, border: C.green };
+    }
+    if (
+        status === "awaiting_run" ||
+        status === "candidate_only" ||
+        status === "coarse_runtime_support" ||
+        status === "bounded_runtime_support" ||
+        status === "partial_runtime_differentiation" ||
+        status === "available_if_requested" ||
+        status === "trace_available_if_requested"
+    ) {
+        return { fg: C.amber, bg: C.amberFaint, border: C.amberDim };
+    }
+    return { fg: C.blue, bg: C.blueFaint, border: C.blue };
+}
+
+function Badge({ children, status }) {
+    const t = tone(status);
+    return (
+        <span
+            style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                padding: "4px 8px",
+                borderRadius: 999,
+                border: `1px solid ${t.border}`,
+                background: t.bg,
+                color: t.fg,
+                fontFamily: C.mono,
+                fontSize: 10,
+                letterSpacing: "0.06em",
+                textTransform: "uppercase",
+                whiteSpace: "nowrap",
+            }}
+        >
+            {children}
+        </span>
+    );
+}
+
+function Label({ children, style }) {
+    return (
+        <div
+            style={{
+                fontFamily: C.mono,
+                fontSize: 10,
+                textTransform: "uppercase",
+                letterSpacing: "0.12em",
+                color: C.textDim,
+                ...style,
+            }}
+        >
+            {children}
+        </div>
+    );
+}
+
+function AnswerRow({ label, value }) {
+    return (
+        <div
+            style={{
+                display: "grid",
+                gridTemplateColumns: "110px minmax(0, 1fr)",
+                gap: 10,
+                alignItems: "start",
+            }}
+        >
+            <div
+                style={{
+                    fontFamily: C.mono,
+                    fontSize: 10,
+                    color: C.textDim,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.08em",
+                }}
+            >
+                {label}
+            </div>
+            <div
+                style={{
+                    fontFamily: C.sans,
+                    fontSize: 13,
+                    color: C.textMid,
+                    lineHeight: 1.45,
+                }}
+            >
+                {value}
+            </div>
+        </div>
+    );
+}
+
+function ObjectCard({ title, status, objectName, producedBy, dependsOn, currentStatus, legalClaim, nextAction }) {
+    return (
+        <div
+            style={{
+                border: `1px solid ${C.ruleLight}`,
+                borderRadius: 12,
+                background: C.surfaceHigh,
+                padding: 14,
+                display: "flex",
+                flexDirection: "column",
+                gap: 12,
+                minWidth: 260,
+            }}
+        >
+            <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "start" }}>
+                <div>
+                    <Label style={{ marginBottom: 6 }}>{title}</Label>
+                    <div style={{ fontFamily: C.sans, fontSize: 18, color: C.text, lineHeight: 1.2 }}>
+                        {objectName}
+                    </div>
+                </div>
+                <Badge status={status}>{status}</Badge>
+            </div>
+
+            <AnswerRow label="what object am I" value={objectName} />
+            <AnswerRow label="how produced" value={producedBy} />
+            <AnswerRow label="depends on" value={dependsOn} />
+            <AnswerRow label="current status" value={currentStatus} />
+            <AnswerRow label="legal claim" value={legalClaim} />
+            <AnswerRow label="what next" value={nextAction} />
+        </div>
+    );
+}
+
+function StageCard({ stage }) {
+    if (Array.isArray(stage.objects)) {
+        return (
+            <div
+                style={{
+                    border: `1px solid ${C.rule}`,
+                    borderRadius: 14,
+                    background: C.surface,
+                    padding: 16,
+                    minWidth: 570,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 14,
+                }}
+            >
+                <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center" }}>
+                    <div>
+                        <Label style={{ marginBottom: 6 }}>stage</Label>
+                        <div style={{ fontFamily: C.sans, fontSize: 22, color: C.text }}>{stage.title}</div>
+                    </div>
+                    <Badge status={stage.status}>{stage.status}</Badge>
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+                    {stage.objects.map((obj) => (
+                        <ObjectCard key={obj.id} {...obj} />
+                    ))}
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div
+            style={{
+                border: `1px solid ${C.rule}`,
+                borderRadius: 14,
+                background: C.surface,
+                padding: 16,
+                minWidth: 320,
+                display: "flex",
+                flexDirection: "column",
+                gap: 14,
+            }}
+        >
+            <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center" }}>
+                <div>
+                    <Label style={{ marginBottom: 6 }}>stage</Label>
+                    <div style={{ fontFamily: C.sans, fontSize: 22, color: C.text }}>{stage.title}</div>
+                </div>
+                <Badge status={stage.status}>{stage.status}</Badge>
+            </div>
+            <AnswerRow label="what object am I" value={stage.objectName} />
+            <AnswerRow label="how produced" value={stage.producedBy} />
+            <AnswerRow label="depends on" value={stage.dependsOn} />
+            <AnswerRow label="current status" value={stage.currentStatus} />
+            <AnswerRow label="legal claim" value={stage.legalClaim} />
+            <AnswerRow label="what next" value={stage.nextAction} />
+        </div>
+    );
+}
+
+function StageArrow() {
+    return (
+        <div
+            aria-hidden="true"
+            style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: C.textDim,
+                fontFamily: C.mono,
+                fontSize: 18,
+                minWidth: 24,
+            }}
+        >
+            ->
+        </div>
+    );
+}
+
+export default function OperatorLegibilityPanel({ shellState }) {
+    const model = buildOperatorLegibilityModel(shellState);
+
+    return (
+        <div
+            style={{
+                minHeight: "100%",
+                background: C.bg,
+                padding: "18px 18px 24px",
+                display: "flex",
+                flexDirection: "column",
+                gap: 18,
+            }}
+        >
+            <div
+                style={{
+                    border: `1px solid ${C.rule}`,
+                    borderRadius: 14,
+                    background: C.surface,
+                    padding: 16,
+                    display: "grid",
+                    gridTemplateColumns: "minmax(0, 1.2fr) minmax(0, 1fr)",
+                    gap: 14,
+                }}
+            >
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                    <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+                        <Label>operator mode</Label>
+                        <Badge status={model.hasActiveResult ? "available" : "awaiting_run"}>
+                            {model.hasActiveResult ? "active path visible" : "awaiting active run"}
+                        </Badge>
+                    </div>
+                    <div style={{ fontFamily: C.sans, fontSize: 24, color: C.text, lineHeight: 1.2 }}>
+                        One bounded Door One object path, rendered for operator audit.
+                    </div>
+                    <div style={{ fontFamily: C.sans, fontSize: 14, color: C.textMid, lineHeight: 1.5 }}>
+                        Source basis, structural anchor, retained support, replay and reconstruction posture,
+                        interpretation overlay, and downstream review gate remain distinct and read-side.
+                    </div>
+                </div>
+
+                <div
+                    style={{
+                        border: `1px solid ${C.ruleLight}`,
+                        borderRadius: 12,
+                        background: C.surfaceHigh,
+                        padding: 14,
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 10,
+                    }}
+                >
+                    <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+                        <Label>source basis</Label>
+                        <Badge status={model.hasActiveResult ? "available" : "awaiting_run"}>
+                            {model.sourceBasis.sourceFamily}
+                        </Badge>
+                        <Badge status={model.evidenceDepth.code}>{model.evidenceDepth.label}</Badge>
+                    </div>
+                    <AnswerRow
+                        label="active run"
+                        value={model.sourceBasis.runLabel ?? "No active run is present in the shell yet."}
+                    />
+                    <AnswerRow
+                        label="source id"
+                        value={model.sourceBasis.sourceId ?? "No active source id yet."}
+                    />
+                    <AnswerRow
+                        label="stream"
+                        value={model.sourceBasis.streamId ?? "No active stream id yet."}
+                    />
+                    <AnswerRow
+                        label="profile"
+                        value={model.sourceBasis.sourceProfile}
+                    />
+                    <AnswerRow
+                        label="evidence depth"
+                        value={model.evidenceDepth.note}
+                    />
+                </div>
+            </div>
+
+            <div
+                style={{
+                    border: `1px solid ${C.rule}`,
+                    borderRadius: 14,
+                    background: C.surface,
+                    padding: "14px 16px",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 10,
+                }}
+            >
+                <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+                    <Label>causal strip</Label>
+                    <div style={{ fontFamily: C.mono, fontSize: 10, color: C.textDim }}>
+                        Source -> Spectral State -> Retained Signature -> Replay / Reconstruction -> Interpretation Overlay -> Review Gate
+                    </div>
+                </div>
+                <div style={{ fontFamily: C.sans, fontSize: 14, color: C.textMid, lineHeight: 1.5 }}>
+                    Each stage answers the same six operator questions at a glance without collapsing replay,
+                    reconstruction, retention, interpretation, and review into one vague story.
+                </div>
+            </div>
+
+            <div
+                style={{
+                    display: "flex",
+                    gap: 14,
+                    overflowX: "auto",
+                    paddingBottom: 6,
+                    alignItems: "stretch",
+                }}
+            >
+                {model.stages.map((stage, idx) => (
+                    <div key={stage.id} style={{ display: "flex", gap: 14, alignItems: "stretch" }}>
+                        <StageCard stage={stage} />
+                        {idx < model.stages.length - 1 ? <StageArrow /> : null}
+                    </div>
+                ))}
+            </div>
+
+            <div
+                style={{
+                    border: `1px solid ${C.rule}`,
+                    borderRadius: 14,
+                    background: C.surface,
+                    padding: 16,
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    gap: 14,
+                }}
+            >
+                <div>
+                    <Label style={{ marginBottom: 8 }}>operator audit block</Label>
+                    <div style={{ fontFamily: C.sans, fontSize: 14, color: C.textMid, lineHeight: 1.55 }}>
+                        Ask this surface: what object is active, where it came from, what transform produced
+                        the next object, what remains source-available versus retained-only, what can legally
+                        be claimed, and what can happen next.
+                    </div>
+                </div>
+                <div>
+                    <Label style={{ marginBottom: 8 }}>non-claims</Label>
+                    <div style={{ fontFamily: C.sans, fontSize: 14, color: C.textMid, lineHeight: 1.55 }}>
+                        Read-side only. Not authority. Replay is not fused with reconstruction. Prepared request
+                        is not fulfilled review. Current synthetic preset evidence can remain coarse at top-line
+                        runtime counters and should be read that way.
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}

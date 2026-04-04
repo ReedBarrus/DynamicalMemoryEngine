@@ -54,10 +54,11 @@ if (appSrc) {
     ok(appSrc.includes("MetaLayerObjectExecutionShell"), "B1: execution shell composed");
     ok(appSrc.includes("MetaLayerConsultationDemo"), "B2: public demo composed");
     ok(appSrc.includes("DoorOneStructuralMemoryHUD"), "B3: lab HUD composed");
-    ok(appSrc.includes("projectBoth"), "B4: tandem adapter used");
-    ok(appSrc.includes("presentation posture") || appSrc.includes("NOT truth conditions"), "B5: mode switching posture declared");
-    ok(appSrc.includes("composed environment"), "B6: composed-environment note preserved");
-    ok(appSrc.includes("not authority") || appSrc.includes("Not authority"), "B7: not-authority note preserved");
+    ok(appSrc.includes("OperatorLegibilityPanel"), "B4: operator panel composed");
+    ok(appSrc.includes("projectBoth"), "B5: tandem adapter used");
+    ok(appSrc.includes("presentation posture") || appSrc.includes("NOT truth conditions"), "B6: mode switching posture declared");
+    ok(appSrc.includes("composed environment"), "B7: composed-environment note preserved");
+    ok(appSrc.includes("not authority") || appSrc.includes("Not authority"), "B8: not-authority note preserved");
 }
 
 section("C. State threading uses authoritative shell export");
@@ -88,18 +89,20 @@ if (shellSrc) {
 
 section("E. Mode separation does not relocate authority");
 if (appSrc) {
-    ok(appSrc.includes("Execution Surface"), "E1: execution pane remains labeled operational");
-    ok(appSrc.includes("Inspection Surface"), "E2: lab inspection pane remains labeled read-side");
-    ok(appSrc.includes("Demo Surface"), "E3: demo pane remains labeled read-side");
-    ok(!appSrc.includes("handleRun"), "E4: app layer does not own run controls");
-    ok(!appSrc.includes("DropZone"), "E5: app layer does not pull intake controls out of shell");
+    ok(appSrc.includes('id: "operator"'), "E1: operator mode is available in the app shell");
+    ok(appSrc.includes("Execution Surface"), "E2: execution pane remains labeled operational");
+    ok(appSrc.includes("Inspection Surface"), "E3: lab inspection pane remains labeled read-side");
+    ok(appSrc.includes("Demo Surface"), "E4: demo pane remains labeled read-side");
+    ok(appSrc.includes("Operator Surface"), "E5: operator pane remains labeled read-side");
+    ok(!appSrc.includes("handleRun"), "E6: app layer does not own run controls");
+    ok(!appSrc.includes("DropZone"), "E7: app layer does not pull intake controls out of shell");
 }
 if (demoSrc) {
-    ok(!demoSrc.includes("handleRun") && !demoSrc.includes("onRun"), "E6: demo surface has no run controls");
-    ok(demoSrc.includes("read-side only") || demoSrc.includes("Not authority"), "E7: demo keeps read-side posture");
+    ok(!demoSrc.includes("handleRun") && !demoSrc.includes("onRun"), "E8: demo surface has no run controls");
+    ok(demoSrc.includes("read-side only") || demoSrc.includes("Not authority"), "E9: demo keeps read-side posture");
 }
 if (hudSrc) {
-    ok(!hudSrc.includes("handleRun"), "E8: lab HUD has no run controls");
+    ok(!hudSrc.includes("handleRun"), "E10: lab HUD has no run controls");
 }
 
 section("F. Tandem and ordering posture remain bounded");

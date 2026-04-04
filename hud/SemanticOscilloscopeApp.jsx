@@ -16,8 +16,9 @@
 //   - The demo surface remains read-side and calmer.
 //
 // Modes:
-//   lab  — execution shell primary + lab HUD + tandem summary
-//   demo — demo surface primary + collapsed execution + tandem summary
+//   operator — execution shell + operator-facing causal object path
+//   lab      — execution shell primary + lab HUD + tandem summary
+//   demo     — demo surface primary + collapsed execution + tandem summary
 //
 // State threading:
 //   execution shell → (onStateChange callback) → app state
@@ -33,6 +34,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import MetaLayerObjectExecutionShell from "./MetaLayerObjectExecutionShell.jsx";
 import MetaLayerConsultationDemo from "./MetaLayerConsultationDemo.jsx";
 import DoorOneStructuralMemoryHUD from "./DoorOneStructuralMemoryHud.jsx";
+import OperatorLegibilityPanel from "./OperatorLegibilityPanel.jsx";
 import { projectBoth } from "./adapters/tandemAdapter.js";
 
 // ─── Colors (matches shell palette) ──────────────────────────────────────────
@@ -57,6 +59,7 @@ const C = {
 };
 
 const MODES = [
+    { id: "operator", label: "Operator", note: "primary object path legibility" },
     { id: "lab", label: "Lab", note: "execution + inspection" },
     { id: "demo", label: "Demo", note: "public / external posture" },
 ];
@@ -182,6 +185,12 @@ function DemoPane({ liveShellState }) {
     );
 }
 
+function OperatorPane({ shellState }) {
+    return (
+        <OperatorLegibilityPanel shellState={shellState} />
+    );
+}
+
 // ─── Main App Component ───────────────────────────────────────────────────────
 export default function SemanticOscilloscopeApp() {
     const [mode, setMode] = useState("lab");
@@ -242,7 +251,9 @@ export default function SemanticOscilloscopeApp() {
                     display: "grid",
                     gridTemplateColumns: mode === "lab"
                         ? "minmax(400px, 55fr) minmax(320px, 45fr)"
-                        : "minmax(240px, 28fr) minmax(400px, 72fr)",
+                        : mode === "operator"
+                            ? "minmax(340px, 34fr) minmax(560px, 66fr)"
+                            : "minmax(240px, 28fr) minmax(400px, 72fr)",
                     minHeight: 0,
                 }}
             >
@@ -267,7 +278,9 @@ export default function SemanticOscilloscopeApp() {
                             letterSpacing: "0.12em",
                         }}
                     >
-                        {mode === "lab"
+                        {mode === "operator"
+                            ? "Execution Surface · operational · source intake · run control · operator context owner"
+                            : mode === "lab"
                             ? "Execution Surface · operational · source intake · run control"
                             : "Execution · secondary in demo mode"}
                     </div>
@@ -291,13 +304,25 @@ export default function SemanticOscilloscopeApp() {
                             letterSpacing: "0.12em",
                         }}
                     >
-                        {mode === "lab"
+                        {mode === "operator"
+                            ? "Operator Surface · read-side · causal object path · not authority"
+                            : mode === "lab"
                             ? "Inspection Surface · read-side · workbench-native · not authority"
                             : "Demo Surface · read-side · calmer · public posture · not authority"}
                     </div>
 
                     <AnimatePresence mode="wait">
-                        {mode === "lab" ? (
+                        {mode === "operator" ? (
+                            <motion.div
+                                key="operator-pane"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 0.2 }}
+                            >
+                                <OperatorPane shellState={shellState} />
+                            </motion.div>
+                        ) : mode === "lab" ? (
                             <motion.div
                                 key="lab-pane"
                                 initial={{ opacity: 0 }}
