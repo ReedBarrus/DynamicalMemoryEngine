@@ -4,6 +4,7 @@ import { shortId, workbenchToStructuralHudModel } from "./DoorOneStructuralMemor
 import {
     deriveOperatorThresholdPosture,
     deriveOperatorFidelityPosture,
+    deriveOperatorWeakStateDiscipline,
 } from "./replayThresholdFidelityPosture.js";
 
 function safeArray(value) {
@@ -252,31 +253,40 @@ function notPreservedReconstructionPosture(replay) {
 function replayStatusChips(replay) {
     if (!replay) return [];
     const threshold = deriveOperatorThresholdPosture(replay);
+    const discipline = deriveOperatorWeakStateDiscipline(replay);
     const chips = [
         tierChip(replay),
         threshold.classCode,
+        ["review_required", "retained_tier_insufficient", "replay_not_justified", "reconstructable_only"].includes(discipline.nextActionCode)
+            ? discipline.nextActionCode
+            : null,
         replay.request_status ?? null,
         replay.replay_fidelity_record_v0?.mechanization_status ?? null,
     ].filter(Boolean);
-    return chips.slice(0, 4);
+    return chips.slice(0, 5);
 }
 
 function reconstructionStatusChips(replay) {
     if (!replay) return [];
     const threshold = deriveOperatorThresholdPosture(replay);
     const fidelity = deriveOperatorFidelityPosture(replay);
+    const discipline = deriveOperatorWeakStateDiscipline(replay);
     const chips = [
         tierChip(replay),
         threshold.classCode,
         fidelity.classCode,
+        ["review_required", "retained_tier_insufficient", "replay_not_justified", "reconstructable_only"].includes(discipline.nextActionCode)
+            ? discipline.nextActionCode
+            : null,
         replay.reconstruction_status ?? null,
     ].filter(Boolean);
-    return chips.slice(0, 4);
+    return chips.slice(0, 5);
 }
 
 function replayAuditFacts(replay) {
     const threshold = deriveOperatorThresholdPosture(replay);
     const fidelity = deriveOperatorFidelityPosture(replay);
+    const discipline = deriveOperatorWeakStateDiscipline(replay);
     if (!replay) {
         return [
             ["legitimacy", "awaiting explicit replay request"],
@@ -291,6 +301,8 @@ function replayAuditFacts(replay) {
             ["threshold posture", "not yet active"],
             ["fidelity class", fidelity.classLabel],
             ["fidelity meaning", fidelity.note],
+            ["discipline boundary", discipline.boundaryNote],
+            ["next-action posture", `${discipline.nextActionLabel} | ${discipline.nextActionNote}`],
             ["downgrade / failure", "not yet active"],
         ];
     }
@@ -308,6 +320,8 @@ function replayAuditFacts(replay) {
         ["threshold posture", thresholdOutcomeLabel(replay)],
         ["fidelity class", fidelity.classLabel],
         ["fidelity meaning", fidelity.note],
+        ["discipline boundary", discipline.boundaryNote],
+        ["next-action posture", `${discipline.nextActionLabel} | ${discipline.nextActionNote}`],
         ["downgrade / failure", downgradeFailureLabel(replay)],
     ];
 }
@@ -315,6 +329,7 @@ function replayAuditFacts(replay) {
 function reconstructionAuditFacts(replay) {
     const threshold = deriveOperatorThresholdPosture(replay);
     const fidelity = deriveOperatorFidelityPosture(replay);
+    const discipline = deriveOperatorWeakStateDiscipline(replay);
     if (!replay) {
         return [
             ["legitimacy", "awaiting explicit replay request"],
@@ -329,6 +344,8 @@ function reconstructionAuditFacts(replay) {
             ["fidelity meaning", fidelity.note],
             ["fidelity posture", "not yet active"],
             ["trace depth", "not yet active"],
+            ["discipline boundary", discipline.boundaryNote],
+            ["next-action posture", `${discipline.nextActionLabel} | ${discipline.nextActionNote}`],
             ["downgrade / failure", "not yet active"],
         ];
     }
@@ -346,6 +363,8 @@ function reconstructionAuditFacts(replay) {
         ["fidelity meaning", fidelity.note],
         ["fidelity posture", replay?.replay_fidelity_record_v0?.fidelity_posture ?? replay?.fidelity_posture ?? "not declared"],
         ["trace depth", `${safeArray(replay?.reconstruction_trace).length} trace steps`],
+        ["discipline boundary", discipline.boundaryNote],
+        ["next-action posture", `${discipline.nextActionLabel} | ${discipline.nextActionNote}`],
         ["downgrade / failure", downgradeFailureLabel(replay)],
     ];
 }
@@ -522,6 +541,7 @@ function buildRetainedStage({ hasActiveResult, workbench, hudModel }) {
 }
 
 function buildReplayObject({ hasActiveResult, replay }) {
+    const discipline = deriveOperatorWeakStateDiscipline(replay);
     return {
         id: "replay",
         title: "Replay",
@@ -543,7 +563,7 @@ function buildReplayObject({ hasActiveResult, replay }) {
             ? replay.allowed_use ?? "Bounded replay inspection only."
             : "Replay remains lens-bound support only and is not fused with reconstruction.",
         nextAction: replay
-            ? "Inspect downgrade, fidelity, and support basis before treating replay as stronger than bounded support."
+            ? discipline.nextActionNote
             : hasActiveResult ? "Prepare replay from the active run when needed." : "Run a source before requesting replay.",
         auditFacts: replayAuditFacts(replay),
         postureChips: replayStatusChips(replay),
@@ -554,6 +574,7 @@ function buildReplayObject({ hasActiveResult, replay }) {
 }
 
 function buildReconstructionObject({ hasActiveResult, replay }) {
+    const discipline = deriveOperatorWeakStateDiscipline(replay);
     const fidelity = replay?.replay_fidelity_record_v0 ?? null;
     return {
         id: "reconstruction",
@@ -580,9 +601,7 @@ function buildReconstructionObject({ hasActiveResult, replay }) {
             ? "Support-trace reconstruction only. Explicitly not raw restoration or source equivalence."
             : "Reconstruction remains distinct from replay and is not implicitly active.",
         nextAction: replay
-            ? (replay.failure_posture
-                ? "Honor explicit failure or downgrade posture."
-                : "Compare reconstruction posture against retained support and interpretation.")
+            ? discipline.nextActionNote
             : hasActiveResult ? "Request replay to activate the reconstruction seam." : "Run a source before reconstruction is possible.",
         auditFacts: reconstructionAuditFacts(replay),
         postureChips: reconstructionStatusChips(replay),

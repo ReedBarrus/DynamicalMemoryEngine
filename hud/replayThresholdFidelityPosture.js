@@ -28,6 +28,16 @@ function mechanizationStatus(replay) {
         ?? (replay?.request_status === "failed" || replay?.reconstruction_status === "failed" ? "failed" : "");
 }
 
+function thresholdSnapshot(replay = null) {
+    return {
+        tierUsed: tierNumber(replay),
+        thresholdOutcome: rawThresholdOutcome(replay),
+        downgrade: rawDowngradePosture(replay),
+        failure: rawFailurePosture(replay),
+        mechanization: mechanizationStatus(replay),
+    };
+}
+
 export function deriveOperatorThresholdPosture(replay = null) {
     if (!replay) {
         return {
@@ -39,11 +49,13 @@ export function deriveOperatorThresholdPosture(replay = null) {
         };
     }
 
-    const tierUsed = tierNumber(replay);
-    const thresholdOutcome = rawThresholdOutcome(replay);
-    const downgrade = rawDowngradePosture(replay);
-    const failure = rawFailurePosture(replay);
-    const mechanization = mechanizationStatus(replay);
+    const {
+        tierUsed,
+        thresholdOutcome,
+        downgrade,
+        failure,
+        mechanization,
+    } = thresholdSnapshot(replay);
 
     if (replay?.request_status === "failed" || replay?.reconstruction_status === "failed" || mechanization === "failed") {
         return {
@@ -180,5 +192,96 @@ export function deriveOperatorFidelityPosture(replay = null) {
         classLabel: "unresolved support-trace",
         rawFidelity,
         note: "Support-trace quality remains unresolved at the current seam; unresolved is distinct from degraded and insufficient.",
+    };
+}
+
+export function deriveOperatorWeakStateDiscipline(replay = null) {
+    const threshold = deriveOperatorThresholdPosture(replay);
+    const { downgrade } = thresholdSnapshot(replay);
+
+    if (!replay) {
+        return {
+            stateCode: "awaiting_request",
+            stateLabel: "awaiting request",
+            nextActionCode: "prepare_replay_request",
+            nextActionLabel: "prepare replay request",
+            boundaryNote: "No replay or reconstruction object is active yet, so no weak-state discipline can be claimed beyond awaiting an explicit request.",
+            nextActionNote: "Prepare replay from the active run before reading any threshold or fidelity posture.",
+        };
+    }
+
+    if (threshold.classCode === "failed") {
+        return {
+            stateCode: "failed",
+            stateLabel: "explicit failure",
+            nextActionCode: "review_required",
+            nextActionLabel: "review required",
+            boundaryNote: "Failure is explicit local failure. Do not read it as weakened replay success or decorative comfort.",
+            nextActionNote: "Inspect the failure posture and missing support path before retrying or treating the object as replayable.",
+        };
+    }
+
+    if (threshold.classCode === "degraded") {
+        return {
+            stateCode: "degraded",
+            stateLabel: "degraded support",
+            nextActionCode: "reconstructable_only",
+            nextActionLabel: "reconstructable only",
+            boundaryNote: "Some support survives, but replay continuity is degraded. Degraded remains weaker than conserved or narrowed and distinct from insufficiency.",
+            nextActionNote: "Treat the object as bounded support-trace reconstruction only unless stronger replay support is restored.",
+        };
+    }
+
+    if (threshold.classCode === "insufficient") {
+        if (downgrade === "retained_tier_insufficient") {
+            return {
+                stateCode: "insufficient",
+                stateLabel: "retained-tier insufficiency",
+                nextActionCode: "retained_tier_insufficient",
+                nextActionLabel: "retained tier insufficient",
+                boundaryNote: "Insufficiency means surviving support is bounded below lawful replay legitimacy for the declared retained tier. It is not almost replayable.",
+                nextActionNote: "Step down the retained tier or remain at bounded retained support without treating this as legitimate replay continuity.",
+            };
+        }
+
+        return {
+            stateCode: "insufficient",
+            stateLabel: "replay not justified",
+            nextActionCode: "replay_not_justified",
+            nextActionLabel: "replay not justified",
+            boundaryNote: "Replay is not justified from the currently surviving support basis. Insufficiency is bounded absence, not a weak success.",
+            nextActionNote: "Treat the object as retained support only or restore stronger live support before claiming replay legitimacy.",
+        };
+    }
+
+    if (threshold.classCode === "unresolved") {
+        return {
+            stateCode: "unresolved",
+            stateLabel: "support unresolved",
+            nextActionCode: "review_required",
+            nextActionLabel: "review required",
+            boundaryNote: "Unresolved means the support question remains open at this seam. It is not degraded support and not weak success.",
+            nextActionNote: "Review missing context or evidence before reading this object as replayable, degraded, or sufficient.",
+        };
+    }
+
+    if (threshold.classCode === "narrowed") {
+        return {
+            stateCode: "narrowed",
+            stateLabel: "narrowed retained replay",
+            nextActionCode: "bounded_lineage_replay",
+            nextActionLabel: "bounded lineage replay",
+            boundaryNote: "Support survives in a narrower retained lineage form. Narrowed remains bounded and non-equivalent to live replay.",
+            nextActionNote: "Use receipt-backed lineage replay within the declared tier and keep non-equivalence explicit.",
+        };
+    }
+
+    return {
+        stateCode: "conserved",
+        stateLabel: "conserved live replay",
+        nextActionCode: "bounded_replay_available",
+        nextActionLabel: "bounded replay available",
+        boundaryNote: "This is the strongest support posture at the active seam, but it remains bounded replay support rather than restoration or truth.",
+        nextActionNote: "Inspect replay and reconstruction within the declared lens without treating conserved support as raw restoration.",
     };
 }

@@ -11,6 +11,9 @@ const C = {
     amberFaint: "#2a1e06",
     blue: "#3b82f6",
     blueFaint: "#0c1a3a",
+    slate: "#94a3b8",
+    slateDim: "#475569",
+    slateFaint: "#111827",
     green: "#22c55e",
     greenFaint: "#052e16",
     red: "#ef4444",
@@ -48,19 +51,27 @@ function tone(status) {
         status === "tier_2_plus_insufficient" ||
         status === "insufficient" ||
         status === "insufficient_support_trace" ||
-        status === "unresolved" ||
-        status === "unresolved_support_trace" ||
-        status === "degraded" ||
-        status === "degraded_support_trace"
+        status === "retained_tier_insufficient" ||
+        status === "replay_not_justified"
     ) {
         return { fg: C.amber, bg: C.amberFaint, border: C.amberDim };
     }
     if (
         status === "tier_1_receipt" ||
+        status === "degraded" ||
+        status === "degraded_support_trace" ||
+        status === "reconstructable_only" ||
         status === "narrowed" ||
         status === "narrowed_support_trace"
     ) {
         return { fg: C.blue, bg: C.blueFaint, border: C.blue };
+    }
+    if (
+        status === "unresolved" ||
+        status === "unresolved_support_trace" ||
+        status === "review_required"
+    ) {
+        return { fg: C.slate, bg: C.slateFaint, border: C.slateDim };
     }
     if (status === "failed") {
         return { fg: C.red, bg: C.redFaint, border: C.red };
@@ -261,6 +272,7 @@ function StageCard({ stage }) {
                     Tier 0 live support, Tier 1 receipt lineage, and Tier 2+ insufficiency are not equivalent.
                     Preserved does not mean equivalent.
                     Conserved, narrowed, degraded, insufficient, unresolved, and failed are separate bounded postures.
+                    Failure is not weak success. Insufficiency is not almost replayable. Unresolved is not degraded.
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
                     {stage.objects.map((obj) => (
@@ -467,7 +479,8 @@ export default function OperatorLegibilityPanel({ shellState }) {
                         Read-side only. Not authority. Replay is not fused with reconstruction. Prepared request
                         is not fulfilled review. Replay is not raw restoration. Reconstruction is not source
                         equivalence. Preserved does not mean equivalent. Current synthetic preset evidence can
-                        remain coarse at top-line runtime counters and should be read that way.
+                        remain coarse at top-line runtime counters and should be read that way. Failure remains
+                        explicit failure. Insufficiency remains bounded insufficiency.
                     </div>
                 </div>
             </div>
