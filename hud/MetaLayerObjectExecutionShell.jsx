@@ -1073,6 +1073,7 @@ export default function MetaLayerObjectExecutionShell({ onStateChange = null } =
     const [workbench, setWorkbench] = useState(null);
     const [runId, setRunId] = useState(null);
     const [runCount, setRunCount] = useState(0);
+    const [runHistory, setRunHistory] = useState([]);
     const [requestLog, setRequestLog] = useState([]);
     const [replayLog, setReplayLog] = useState([]);
     const [activeSourceFamilyLabel, setActiveSourceFamilyLabel] = useState("unspecified");
@@ -1132,6 +1133,16 @@ export default function MetaLayerObjectExecutionShell({ onStateChange = null } =
                 setRunResult(result);
                 setWorkbench(wb);
                 setActiveSourceFamilyLabel(selectedSourceFamilyLabel);
+                setRunHistory((history) => [
+                    {
+                        runId: id,
+                        runLabel: result.run_label,
+                        runResult: result,
+                        workbench: wb,
+                        sourceFamilyLabel: selectedSourceFamilyLabel,
+                    },
+                    ...history.filter((entry) => entry?.runLabel !== result.run_label),
+                ].slice(0, 8));
                 console.log("DME runResult", result);
                 console.log("DME workbench", wb);
                 setRunStatus("complete");
@@ -1188,10 +1199,11 @@ export default function MetaLayerObjectExecutionShell({ onStateChange = null } =
         workbench,
         requestLog,
         replayLog,
+        runHistory,
         sourceFamilyLabel: activeSourceFamilyLabel,
         runStatus,
         runError,
-    }), [runId, runResult, workbench, requestLog, replayLog, activeSourceFamilyLabel, runStatus, runError]);
+    }), [runId, runResult, workbench, requestLog, replayLog, runHistory, activeSourceFamilyLabel, runStatus, runError]);
     const sourceFamilyLabel = activeShellState.sourceFamilyLabel;
 
     // Tandem projection — shared read-side model for HUD and demo

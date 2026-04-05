@@ -718,3 +718,223 @@ Mechanization = enforcement logic and operationalization
 Together they form a closed loop:
 
 Identity defines the target → Threshold defines the boundary → Mechanization enforces both
+
+---
+
+## Structural constraint vs semantic constraint
+
+This section clarifies a distinction that becomes load-bearing as DME moves deeper into replay, retention, recurrence, cross-session continuity, and cross-family coherence work.
+
+It is a supporting clarification section.
+
+It does **not**:
+- override the Master Constitution,
+- replace the Declared vs Mechanized Audit,
+- replace the Deterministic Invariance Threshold,
+- replace the Distortion Audit Protocol,
+- or create a new authority layer.
+
+Its purpose is narrower:
+- clarify what kind of constraint may actually preserve structural identity,
+- clarify what kind of constraint may only describe or summarize it,
+- prevent semantic coherence from being mistaken for preserved support,
+- and keep later continuity, coherence-surface, and interpretive work from silently carrying stronger identity claims than the structural layer justifies.
+
+### Why this clarification is needed
+
+As DME develops, it becomes increasingly possible to derive useful summaries, alignments, overlays, correspondences, or coherence surfaces from retained and replayable structure.
+
+Those derived surfaces may become:
+- intuitive,
+- legible,
+- compressive,
+- and operationally useful.
+
+But usefulness does not by itself make them preservation-bearing.
+
+Without an explicit distinction here, a serious drift risk appears:
+
+- semantic summaries may begin to carry continuity claims that belong only to structural support,
+- interpretive alignment may begin to masquerade as identity preservation,
+- or cross-session / cross-family coherence may begin to feel stronger than the surviving support actually justifies.
+
+This section exists to prevent that drift.
+
+### Core rule
+
+**Structural identity in DME may be preserved only by structural constraint with sufficient surviving support and mechanized basis. Semantic constraint may describe, summarize, align, compare, or expose structure, but it must not by itself carry identity, replay legitimacy, reconstruction legitimacy, or memory-bearing status.**
+
+One-line form:
+
+**Structural constraint may preserve; semantic constraint may interpret.**
+
+### Structural constraint
+
+For the purposes of this note, structural constraint means constraint that remains anchored to actual surviving support and a real mechanized basis.
+
+Examples may include, where relevant:
+
+- retained invariants
+- bounded support traces
+- lineage-preserving structure
+- declared lens and tier constraints
+- quantitative thresholded continuity bounds
+- replay and reconstruction support conditions
+- real transform-domain relationships
+- retained structural signatures
+- mechanized identity-support conditions
+
+Structural constraint is the layer that may lawfully carry:
+
+- bounded identity continuity
+- replay legitimacy
+- reconstruction legitimacy
+- memory-support posture
+- and later memory-bearing claims if separately justified
+
+Structural constraint is therefore preservation-bearing.
+
+### Semantic constraint
+
+For the purposes of this note, semantic constraint means a derived or interpretive layer that helps describe, navigate, compare, summarize, or expose relationships among structural objects without itself being the surviving support basis.
+
+Examples may include:
+
+- labels
+- summaries
+- interpretive regime names
+- coherence overlays
+- cross-family correspondence descriptions
+- qualitative clustering names
+- derived relationship narratives
+- user-facing simplifications
+- semantic navigation handles
+
+Semantic constraint may be:
+
+- useful
+- compact
+- operationally meaningful
+- and important for legibility
+
+But semantic constraint is not automatically preservation-bearing.
+
+Semantic constraint is therefore interpretive unless separately backed by structural support.
+
+### Preservation-bearing vs interpretive
+
+The governing distinction is:
+
+#### Structural constraint may preserve when:
+- the same bounded question remains answerable,
+- the same declared constraints remain active,
+- enough support survives,
+- a real mechanized basis exists,
+- and distortion has not crossed the threshold where later interpretation would be misled.
+
+#### Semantic constraint may interpret when:
+- it helps the operator understand,
+- compare,
+- align,
+- summarize,
+- or navigate structural objects,
+
+but it must remain explicitly below the structural basis that actually justifies the continuity claim.
+
+### What semantic constraint must not carry by itself
+
+Semantic constraint must not be the sole carrier of:
+
+- structural identity preservation
+- replay legitimacy
+- reconstruction legitimacy
+- retained-tier sufficiency
+- memory-bearing classification
+- canon-candidate trust uplift
+- cross-session identity continuity
+- cross-family identity fusion
+
+If any of those claims depend only on the semantic layer, the claim is too strong.
+
+### Cross-session and recurrence rule
+
+This distinction becomes especially important under recurrence and cross-session continuity.
+
+Repeated recurrence may strengthen the system’s ability to detect, refine, or accumulate structural constraint.
+
+That is lawful only when the accumulation remains anchored to structural support.
+
+The system must not silently convert:
+
+- repeated semantic resemblance
+- repeated usefulness
+- repeated naming stability
+- or repeated interpretive coherence
+
+into structural identity preservation.
+
+Recurrence may strengthen constraint only when the retained support basis and declared constraints still justify that strengthening.
+
+### Cross-family correspondence rule
+
+Distinct source families may later produce useful correspondence or coherence surfaces.
+
+Those surfaces may be real derived objects.
+
+But they must not collapse source-family identity, provenance, or support conditions.
+
+Therefore:
+
+- correspondence is not identity
+- coherence is not fusion
+- alignment is not replay equivalence
+- shared interpretation is not shared structural basis
+
+A cross-family coherence surface may become a lawful derived object.
+It must still remain below the structural supports from which it was derived.
+
+### Audit rule
+
+When evaluating whether a claim is being carried lawfully, ask:
+
+1. What exact structural support survives here?
+2. What declared constraints remain active?
+3. What mechanized basis exists?
+4. What part of this claim is being carried by structural support?
+5. What part is only being carried by semantic summary or interpretation?
+
+If the semantic layer is doing the preservation work, the claim is overstated.
+
+### Removal test
+
+Use the following practical test:
+
+**If removing the semantic layer destroys the system’s ability to justify identity, replay legitimacy, reconstruction legitimacy, or memory-preservation posture, then those claims were not structurally grounded strongly enough.**
+
+This is a practical anti-drift rule.
+
+Semantic aids may improve access.
+They must not secretly replace support.
+
+### Relation to later interpretive surfaces
+
+Future interpretive layers, coherence surfaces, or operator-facing continuity surfaces may still be valuable and lawful.
+
+But they must remain explicitly:
+
+- derived
+- non-authoritative
+- support-referencing
+- and structurally subordinate
+
+Their role is to expose or help navigate structure.
+
+Their role is not to become the structure they expose.
+
+### One-line review question
+
+**Is this continuity or memory-related claim still carried by surviving structural support and mechanized basis, or has semantic coherence begun carrying more of the claim than the structure itself can honestly justify?**
+
+### One-line summary
+
+**In DME, structural constraint may preserve identity and memory-support posture when surviving support and mechanized basis remain sufficient; semantic constraint may interpret, summarize, and align that structure, but it must not by itself carry preservation claims.**

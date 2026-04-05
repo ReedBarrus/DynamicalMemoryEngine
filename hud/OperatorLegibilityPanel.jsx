@@ -332,6 +332,60 @@ function StageArrow() {
     );
 }
 
+function ComparisonCaseCard({ label, item }) {
+    if (!item) {
+        return (
+            <div
+                style={{
+                    border: `1px solid ${C.ruleLight}`,
+                    borderRadius: 12,
+                    background: C.surfaceHigh,
+                    padding: 14,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 10,
+                }}
+            >
+                <div style={{ display: "flex", justifyContent: "space-between", gap: 8, alignItems: "center" }}>
+                    <Label>{label}</Label>
+                    <Badge status="awaiting_run">not in session</Badge>
+                </div>
+                <div style={{ fontFamily: C.sans, fontSize: 14, color: C.textMid, lineHeight: 1.5 }}>
+                    No bounded comparison case of this source basis is currently present in session-backed history.
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div
+            style={{
+                border: `1px solid ${C.ruleLight}`,
+                borderRadius: 12,
+                background: C.surfaceHigh,
+                padding: 14,
+                display: "flex",
+                flexDirection: "column",
+                gap: 10,
+            }}
+        >
+            <div style={{ display: "flex", justifyContent: "space-between", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+                <Label>{label}</Label>
+                <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                    <Badge status="available">{item.sourceFamilyLabel}</Badge>
+                    <Badge status={item.evidenceDepth.code}>{item.evidenceDepth.label}</Badge>
+                </div>
+            </div>
+            <AnswerRow label="run" value={item.runLabel ?? "unknown"} />
+            <AnswerRow label="profile" value={item.sourceProfile} />
+            <AnswerRow label="runtime counts" value={`H1 ${item.counts.h1} | M1 ${item.counts.m1} | anomalies ${item.counts.anomalies}`} />
+            <AnswerRow label="replay" value={`${item.replayStatus} | ${item.replayThresholdClass}`} />
+            <AnswerRow label="reconstruction" value={`${item.reconstructionStatus} | ${item.reconstructionFidelityClass}`} />
+            <AnswerRow label="support basis" value={item.supportBasis} />
+        </div>
+    );
+}
+
 export default function OperatorLegibilityPanel({ shellState }) {
     const model = buildOperatorLegibilityModel(shellState);
 
@@ -413,6 +467,46 @@ export default function OperatorLegibilityPanel({ shellState }) {
                     />
                 </div>
             </div>
+
+            {model.sourceComparison && (
+                <div
+                    style={{
+                        border: `1px solid ${C.rule}`,
+                        borderRadius: 14,
+                        background: C.surface,
+                        padding: 16,
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 12,
+                    }}
+                >
+                    <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+                        <Label>source-basis comparison</Label>
+                        <Badge status="available">synthetic vs recorded</Badge>
+                    </div>
+                    <div style={{ fontFamily: C.sans, fontSize: 14, color: C.textMid, lineHeight: 1.5 }}>
+                        Compare one bounded synthetic case and one bounded recorded case without flattening richer and coarser replay posture into one generic maturity story.
+                    </div>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+                        <ComparisonCaseCard label="synthetic case" item={model.sourceComparison.synthetic} />
+                        <ComparisonCaseCard label="recorded case" item={model.sourceComparison.recorded} />
+                    </div>
+                    <div
+                        style={{
+                            padding: "10px 12px",
+                            borderRadius: 10,
+                            border: `1px solid ${C.ruleLight}`,
+                            background: C.surfaceHigh,
+                            fontFamily: C.sans,
+                            fontSize: 13,
+                            color: C.textMid,
+                            lineHeight: 1.5,
+                        }}
+                    >
+                        {model.sourceComparison.summary}
+                    </div>
+                </div>
+            )}
 
             <div
                 style={{
