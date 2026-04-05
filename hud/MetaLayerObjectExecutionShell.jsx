@@ -530,8 +530,8 @@ function RegistrySourcePanel({
             {selectedSourceRecord && (
                 <div style={{
                     display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    gap: 10,
+                    gridTemplateColumns: "minmax(240px, 0.9fr) minmax(400px, 1.6fr)",
+                    gap: 16,
                     alignItems: "start",
                 }}>
                     <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
@@ -548,14 +548,22 @@ function RegistrySourcePanel({
                             ["channels", selectedSourceRecord.channels ?? "pending"],
                             ["duration", selectedSourceRecord.duration_s ? `${selectedSourceRecord.duration_s}s` : "pending"],
                         ].map(([key, value]) => (
-                            <div key={key} style={{ display: "grid", gridTemplateColumns: "88px 1fr", gap: 6 }}>
+                            <div key={key} style={{ display: "grid", gridTemplateColumns: "96px 1fr", gap: 8 }}>
                                 <Label style={{ fontSize: 9 }}>{key}</Label>
                                 <Mono style={{ fontSize: 10, color: C.textDim }}>{value}</Mono>
                             </div>
                         ))}
                     </div>
 
-                    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                    <div style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 10,
+                        padding: "10px 12px",
+                        borderRadius: 6,
+                        border: `1px solid ${C.rule}`,
+                        background: C.surfaceHigh,
+                    }}>
                         <div>
                             <Label style={{ marginBottom: 4 }}>source family</Label>
                             <input
@@ -597,13 +605,14 @@ function RegistrySourcePanel({
                             <textarea
                                 value={selectedSourceRecord.notes ?? ""}
                                 onChange={e => onUpdateMetadata({ notes: e.target.value })}
-                                rows={4}
+                                rows={6}
                                 style={{
                                     width: "100%",
+                                    minHeight: 132,
                                     padding: "8px 10px",
                                     borderRadius: 6,
                                     border: `1px solid ${C.ruleLight}`,
-                                    background: C.surfaceHigh,
+                                    background: C.surface,
                                     color: C.text,
                                     fontFamily: C.mono,
                                     fontSize: 12,
@@ -649,7 +658,14 @@ function ControlRegion({ selectedFamily, onSelectFamily, preset, onSelectPreset,
                 <Label style={{ color: C.amber, letterSpacing: "0.16em" }}>A — Control / Orchestration</Label>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr auto", gap: 12, alignItems: "end" }}>
+            <div style={{
+                display: "grid",
+                gridTemplateColumns: isRegistryFamily
+                    ? "minmax(220px, 260px) minmax(540px, 1fr) auto"
+                    : "1fr 1fr auto",
+                gap: 12,
+                alignItems: "end",
+            }}>
                 {/* Source family */}
                 <div>
                     <Label style={{ marginBottom: 6 }}>source family</Label>
