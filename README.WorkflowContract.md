@@ -436,7 +436,7 @@ Architect reviewer:
 
 ---
 
-## B. Engineer Implementation Return Packet
+## B. Engineer (Codex) Implementation Return Packet
 
 ### Purpose
 
