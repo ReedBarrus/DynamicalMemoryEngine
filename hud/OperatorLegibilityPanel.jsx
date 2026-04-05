@@ -232,7 +232,7 @@ function ObjectCard({
                         gap: 8,
                     }}
                 >
-                    <Label style={{ color: C.amber }}>operator replay audit</Label>
+                    <Label style={{ color: C.amber }}>operator object audit</Label>
                     {auditFacts.map(([label, value]) => (
                         <AnswerRow key={label} label={label} value={value} />
                     ))}
@@ -288,6 +288,7 @@ function StageCard({ stage }) {
                     and mechanized basis.
                     Memory-bearing status is support-grounded, not semantic or conversational.
                     Reminting is distinct from direct preservation. Compression convenience is not continuity proof.
+                    Object handles aid tracking, but they are not full identity by themselves.
                     Tier 0 live support, Tier 1 receipt lineage, and Tier 2+ insufficiency are not equivalent.
                     Preserved does not mean equivalent.
                     Conserved, narrowed, degraded, insufficient, unresolved, and failed are separate bounded postures.
@@ -640,7 +641,8 @@ export default function OperatorLegibilityPanel({ shellState }) {
                         explicit failure. Insufficiency remains bounded insufficiency. Semantic summaries remain
                         interpretive and do not carry preservation by themselves. Semantic usefulness does not
                         make an object memory-bearing. Compression convenience does not prove direct preservation.
-                        Reminting must not silently read as direct retention.
+                        Reminting must not silently read as direct retention. One handle does not stand in for
+                        full structural identity.
                     </div>
                 </div>
             </div>
