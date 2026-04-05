@@ -507,3 +507,428 @@ Does the current system make retained structural support visibly operative in th
 12. One-line summary
 
 The Realtime Continuity Audit Gate defines the first bounded proof target for DME as a memory substrate below agency: a live or advancing continuity-and-change surface where retained structural support becomes visibly active in present signal reading while remaining honest about support, status, and non-claims.
+
+
+---
+####################################################################################################################################################################################################################################################################################################################################################################################################################################################################################
+## Suggested target stream families for realtime continuity and retention testing
+
+This section defines a bounded set of recommended input-stream families for testing realtime continuity, change detection, recurrence, retention, compression behavior, and support-tier identity posture.
+
+It is a supporting audit-design addendum.
+
+It does **not**:
+- define source-family ontology,
+- prove cross-family memory equivalence,
+- replace source-family-specific ingest semantics,
+- or claim that all target streams are equally mature or equally meaningful.
+
+Its purpose is narrower:
+- provide a practical testing spectrum,
+- help select inputs that stress different aspects of the substrate,
+- and support lawful evaluation of continuity, drift, rupture, recurrence, retention, and reconstruction across increasingly difficult stream conditions.
+
+This section is intentionally practical.
+
+### Why this section exists
+
+Realtime continuity testing needs more than one kind of signal.
+
+If all tests use:
+- overly clean inputs,
+- overly self-shaped inputs,
+- or one narrow source family behavior,
+
+then the substrate can appear more coherent or more memory-supportive than it really is.
+
+The goal is therefore to test across a spectrum from:
+
+- highly ordered / recurrence-friendly streams
+to
+- disruptive / chaotic / weakly repeatable streams
+
+so the system can be evaluated under:
+
+- clean recurrence
+- partial recurrence
+- drift
+- rupture
+- noise
+- and support degradation
+
+### Core rule
+
+**A target stream is useful for this audit track when it makes one or more of the following structurally visible: continuity, drift, rupture, recurrence, retention loss, reconstruction strength, or support-tier transition.**
+
+The purpose is not to find streams that “look cool.”
+The purpose is to find streams that reveal structural behavior honestly.
+
+### Testing-spectrum rule
+
+The target stream set should include a practical spectrum from:
+
+1. highly ordered / highly recurrence-supportive streams
+2. moderately variable but still identity-supportive streams
+3. mixed and partially chaotic streams
+4. highly disruptive or weakly memory-supportive streams
+
+This spectrum helps the operator observe:
+
+- what kinds of streams preserve strong retained support
+- what kinds degrade quickly under compression
+- what kinds support recurrence-driven constraint tightening
+- and where continuity claims should weaken or break
+
+---
+
+## 1. Recommended current target families (audio / synthetic)
+
+### Tier A — Highly ordered / recurrence-supportive
+
+These streams are useful for establishing clean baseline behavior.
+
+#### A1. Pure sine tone
+Use:
+- one stable frequency
+- stable amplitude
+- long bounded duration
+
+Useful for:
+- continuity holding
+- cross-window stability
+- clean spectral-state formation
+- baseline retained-signature behavior
+
+What it reveals:
+- the simplest high-order recurrence-supportive structure
+- minimal drift under ideal conditions
+
+#### A2. Multi-tone harmonic stack
+Use:
+- 2–5 simultaneous stable tones
+- fixed amplitude and phase posture where possible
+
+Useful for:
+- multi-band identity
+- compression under richer but still lawful structure
+- replay vs reconstruction distinction across more than one band
+
+What it reveals:
+- whether retained support preserves structured relationships, not only single-band persistence
+
+#### A3. Repeating synthetic pulse train
+Use:
+- repeated impulse / pulse pattern
+- stable temporal spacing
+
+Useful for:
+- recurrence detection
+- rupture visibility when spacing changes
+- temporal periodicity support
+
+What it reveals:
+- continuity across repeated temporal structure
+
+### Tier B — Moderately variable / identity-supportive
+
+These streams introduce lawful complexity without becoming fully chaotic.
+
+#### B1. Human speech — repeated same phrase
+Use:
+- the same speaker
+- repeating the same short phrase several times
+- small natural variation across repetitions
+
+Useful for:
+- recurrence with drift
+- support-tier testing under realistic human variation
+- recurrence-driven constraint tightening
+
+What it reveals:
+- whether the substrate can preserve structured recurrence without requiring exact identity
+
+#### B2. Human speech — altered phrase family
+Use:
+- same phrase
+- slight variation
+- rupture phrase
+- return to original phrase
+
+Useful for:
+- continuity vs drift
+- rupture
+- recurrence / reappearance
+
+What it reveals:
+- whether the system can distinguish “same,” “near,” “different,” and “returned”
+
+#### B3. Sustained vocal tone with intentional modulation
+Use:
+- hummed vowel
+- slight pitch shift
+- amplitude change
+- breath/noise variation
+
+Useful for:
+- frequency drift
+- amplitude drift
+- support degradation
+- retained-signature robustness under controlled change
+
+What it reveals:
+- whether invariants and local change remain distinguishable
+
+### Tier C — Mixed / partially chaotic
+
+These streams increase disruption while preserving enough structure to remain informative.
+
+#### C1. Speech in mild environmental noise
+Use:
+- repeated phrase with fan, room noise, or similar background layer
+
+Useful for:
+- support survival under contamination
+- reconstruction weakness
+- continuity confidence degradation
+
+What it reveals:
+- when retained support remains useful
+- when noise begins to consume identity support
+
+#### C2. Two-speaker alternation
+Use:
+- alternating speakers
+- same phrase or related phrases
+
+Useful for:
+- rupture and source-family similarity tension
+- identity boundary stress
+- support-tier weakening across similar-but-not-same structures
+
+What it reveals:
+- whether recurrence is being overclaimed from broad resemblance
+
+#### C3. Synthetic drift stream
+Use:
+- one stable pattern gradually changing in frequency, amplitude, or pulse timing
+
+Useful for:
+- continuity weakening
+- distortion threshold observation
+- support-tier transition tracking
+
+What it reveals:
+- where drift remains lawful continuity versus where it becomes break
+
+### Tier D — Disruptive / weakly memory-supportive
+
+These streams are useful for falsification and anti-overclaim testing.
+
+#### D1. Broadband noise
+Use:
+- white noise
+- pink noise
+- band-limited noise variants
+
+Useful for:
+- novelty / rupture
+- false continuity detection
+- weak retained support
+
+What it reveals:
+- whether the system hallucinates structure where support is weak
+
+#### D2. Abrupt family switch
+Use:
+- speech → silence → tone → noise
+or
+- tone → speech → percussion-like transient sequence
+
+Useful for:
+- rupture detection
+- seam honesty
+- support disjunction
+
+What it reveals:
+- whether major structural breaks remain visible
+
+#### D3. Low-recurrence synthetic irregular stream
+Use:
+- randomized pulses
+- variable intervals
+- variable amplitude
+- limited repeating pattern
+
+Useful for:
+- weak recurrence
+- compression stress
+- “memory not actually supported” detection
+
+What it reveals:
+- where the substrate should weaken claims rather than preserve them
+
+---
+
+## 2. Recommended use by test purpose
+
+### For continuity holding
+Prefer:
+- pure sine
+- harmonic stack
+- repeated phrase
+- pulse train
+
+### For drift
+Prefer:
+- synthetic drift stream
+- sustained vocal modulation
+- phrase with small variation
+
+### For rupture
+Prefer:
+- abrupt family switch
+- unrelated phrase insertion
+- noise interruption
+
+### For recurrence
+Prefer:
+- pulse train
+- repeated phrase
+- pattern A → pattern B → pattern A return
+
+### For retention/compression stress
+Prefer:
+- harmonic stack
+- repeated phrase
+- noisy speech
+- synthetic drift stream
+
+### For false continuity / anti-overclaim
+Prefer:
+- broadband noise
+- two-speaker alternation
+- abrupt family switch
+- low-recurrence irregular synthetic stream
+
+---
+
+## 3. Suggested support-tier targeting posture
+
+The target stream family should also be used to observe how streams move across retention/support tiers.
+
+### Strong support candidates
+Likely examples:
+- pure tones
+- harmonic stacks
+- strongly repeated phrases
+- stable pulse trains
+
+Use these for:
+- upper support-tier and recurrence-strength testing
+
+### Mid-support candidates
+Likely examples:
+- repeated speech with variation
+- synthetic drift
+- vocal tone with modulation
+- mild-noise speech
+
+Use these for:
+- degraded-but-still-meaningful support posture
+
+### Weak-support candidates
+Likely examples:
+- heavy noise
+- irregular synthetic streams
+- abrupt family switches
+- speaker alternation with weak shared structure
+
+Use these for:
+- downgrade posture
+- insufficient_support visibility
+- anti-overclaim checks
+
+### Practical rule
+
+A stream is not “bad” just because it yields weak support.
+
+Weak-support streams are required to prove:
+- downgrade honesty
+- rupture visibility
+- and the absence of fake continuity.
+
+---
+
+## 4. Suggested phased testing order
+
+The preferred first-pass order is:
+
+### Phase 1 — Ordered baselines
+- pure sine
+- harmonic stack
+- pulse train
+
+### Phase 2 — Human recurrence
+- repeated same phrase
+- phrase variation
+- vocal modulation
+
+### Phase 3 — Drift and contamination
+- synthetic drift
+- noisy speech
+- mild interruption patterns
+
+### Phase 4 — Disruption and falsification
+- broadband noise
+- abrupt family switch
+- irregular low-recurrence stream
+
+This order helps the operator learn the substrate from:
+- strongest continuity
+to
+- weakest support
+
+without beginning in chaos.
+
+---
+
+## 5. Future target families after source-family expansion
+
+Later, once ingest expands beyond current audio emphasis, future target families may include:
+
+- CSV time-series telemetry
+- event-stream JSON traces
+- sensor logs
+- multichannel environmental telemetry
+- behavioral interaction traces
+- mixed family coherence comparisons
+
+These should not be treated as immediate equivalents to audio testing.
+
+The audio/synthetic set remains the current bounded proving ground.
+
+---
+
+## 6. Recommended operator review questions for target-stream selection
+
+Before selecting a test stream, ask:
+
+1. What structural behavior is this stream supposed to reveal?
+2. Is the stream too clean to falsify anything?
+3. Is the stream too chaotic to teach anything yet?
+4. Does this stream help test continuity, drift, rupture, recurrence, or support degradation?
+5. What support-tier posture is this stream likely to stress?
+
+If the stream does not help answer one of those questions, it is not yet a strong audit target.
+
+---
+
+## 7. One-line review question
+
+**Does this target stream family help reveal where continuity holds, where it weakens, where it breaks, and how retained support survives or degrades across the current bounded substrate?**
+
+---
+
+## 8. One-line summary
+
+**The target-stream spectrum for realtime continuity testing should range from highly ordered recurrence-supportive audio and synthetic streams to disruptive weak-support streams so DME can be tested honestly for continuity, drift, rupture, recurrence, retention strength, and support-tier downgrade without inflating what counts as memory.**

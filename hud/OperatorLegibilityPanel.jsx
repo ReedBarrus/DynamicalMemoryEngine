@@ -33,6 +33,7 @@ function tone(status) {
         status === "replayable" ||
         status === "reconstructable" ||
         status === "tier_0_live" ||
+        status === "identity_conserved" ||
         status === "conserved" ||
         status === "conserved_support_trace"
     ) {
@@ -52,12 +53,14 @@ function tone(status) {
         status === "insufficient" ||
         status === "insufficient_support_trace" ||
         status === "retained_tier_insufficient" ||
-        status === "replay_not_justified"
+        status === "replay_not_justified" ||
+        status === "identity_degraded"
     ) {
         return { fg: C.amber, bg: C.amberFaint, border: C.amberDim };
     }
     if (
         status === "tier_1_receipt" ||
+        status === "identity_narrowed" ||
         status === "degraded" ||
         status === "degraded_support_trace" ||
         status === "reconstructable_only" ||
@@ -67,13 +70,14 @@ function tone(status) {
         return { fg: C.blue, bg: C.blueFaint, border: C.blue };
     }
     if (
+        status === "identity_unresolved" ||
         status === "unresolved" ||
         status === "unresolved_support_trace" ||
         status === "review_required"
     ) {
         return { fg: C.slate, bg: C.slateFaint, border: C.slateDim };
     }
-    if (status === "failed") {
+    if (status === "failed" || status === "identity_broken") {
         return { fg: C.red, bg: C.redFaint, border: C.red };
     }
     return { fg: C.blue, bg: C.blueFaint, border: C.blue };
@@ -269,10 +273,13 @@ function StageCard({ stage }) {
                 <div style={{ fontFamily: C.sans, fontSize: 14, color: C.textMid, lineHeight: 1.5 }}>
                     Replay and Reconstruction remain distinct bounded objects. Source-available versus retained-only basis,
                     fidelity posture, threshold posture, downgrade posture, and failure posture stay explicit here.
+                    Structural identity remains grounded in bounded question, declared constraints, support survival,
+                    and mechanized basis.
                     Tier 0 live support, Tier 1 receipt lineage, and Tier 2+ insufficiency are not equivalent.
                     Preserved does not mean equivalent.
                     Conserved, narrowed, degraded, insufficient, unresolved, and failed are separate bounded postures.
                     Failure is not weak success. Insufficiency is not almost replayable. Unresolved is not degraded.
+                    Displayed coherence is not preserved identity.
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
                     {stage.objects.map((obj) => (
@@ -574,7 +581,8 @@ export default function OperatorLegibilityPanel({ shellState }) {
                         is not fulfilled review. Replay is not raw restoration. Reconstruction is not source
                         equivalence. Preserved does not mean equivalent. Current synthetic preset evidence can
                         remain coarse at top-line runtime counters and should be read that way. Failure remains
-                        explicit failure. Insufficiency remains bounded insufficiency.
+                        explicit failure. Insufficiency remains bounded insufficiency. Semantic summaries remain
+                        interpretive and do not carry preservation by themselves.
                     </div>
                 </div>
             </div>

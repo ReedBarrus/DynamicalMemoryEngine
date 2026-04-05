@@ -6,6 +6,7 @@ import {
     deriveOperatorFidelityPosture,
     deriveOperatorWeakStateDiscipline,
 } from "./replayThresholdFidelityPosture.js";
+import { deriveStructuralIdentityPosture } from "./structuralIdentityPosture.js";
 
 function safeArray(value) {
     return Array.isArray(value) ? value : [];
@@ -254,8 +255,10 @@ function replayStatusChips(replay) {
     if (!replay) return [];
     const threshold = deriveOperatorThresholdPosture(replay);
     const discipline = deriveOperatorWeakStateDiscipline(replay);
+    const identity = deriveStructuralIdentityPosture(replay, { objectKind: "replay" });
     const chips = [
         tierChip(replay),
+        identity.chipCode,
         threshold.classCode,
         ["review_required", "retained_tier_insufficient", "replay_not_justified", "reconstructable_only"].includes(discipline.nextActionCode)
             ? discipline.nextActionCode
@@ -263,7 +266,7 @@ function replayStatusChips(replay) {
         replay.request_status ?? null,
         replay.replay_fidelity_record_v0?.mechanization_status ?? null,
     ].filter(Boolean);
-    return chips.slice(0, 5);
+    return chips.slice(0, 6);
 }
 
 function reconstructionStatusChips(replay) {
@@ -271,8 +274,10 @@ function reconstructionStatusChips(replay) {
     const threshold = deriveOperatorThresholdPosture(replay);
     const fidelity = deriveOperatorFidelityPosture(replay);
     const discipline = deriveOperatorWeakStateDiscipline(replay);
+    const identity = deriveStructuralIdentityPosture(replay, { objectKind: "reconstruction" });
     const chips = [
         tierChip(replay),
+        identity.chipCode,
         threshold.classCode,
         fidelity.classCode,
         ["review_required", "retained_tier_insufficient", "replay_not_justified", "reconstructable_only"].includes(discipline.nextActionCode)
@@ -280,16 +285,23 @@ function reconstructionStatusChips(replay) {
             : null,
         replay.reconstruction_status ?? null,
     ].filter(Boolean);
-    return chips.slice(0, 5);
+    return chips.slice(0, 6);
 }
 
 function replayAuditFacts(replay) {
     const threshold = deriveOperatorThresholdPosture(replay);
     const fidelity = deriveOperatorFidelityPosture(replay);
     const discipline = deriveOperatorWeakStateDiscipline(replay);
+    const identity = deriveStructuralIdentityPosture(replay, { objectKind: "replay" });
     if (!replay) {
         return [
             ["legitimacy", "awaiting explicit replay request"],
+            ["structural identity", identity.outcomeLabel],
+            ["bounded question", identity.boundedQuestion],
+            ["declared constraints", identity.declaredConstraints],
+            ["support survival", identity.supportSurvival],
+            ["mechanized basis", identity.mechanizedBasis],
+            ["lawful next posture", identity.lawfulNextPosture],
             ["basis mode", "awaiting explicit replay request"],
             ["retained tier", "not yet declared in an active replay object"],
             ["preserved", "explicit request boundary only"],
@@ -301,6 +313,7 @@ function replayAuditFacts(replay) {
             ["threshold posture", "not yet active"],
             ["fidelity class", fidelity.classLabel],
             ["fidelity meaning", fidelity.note],
+            ["semantic boundary", identity.semanticBoundary],
             ["discipline boundary", discipline.boundaryNote],
             ["next-action posture", `${discipline.nextActionLabel} | ${discipline.nextActionNote}`],
             ["downgrade / failure", "not yet active"],
@@ -309,6 +322,12 @@ function replayAuditFacts(replay) {
 
     return [
         ["legitimacy", replayLegitimacyLabel(replay)],
+        ["structural identity", identity.outcomeLabel],
+        ["bounded question", identity.boundedQuestion],
+        ["declared constraints", identity.declaredConstraints],
+        ["support survival", identity.supportSurvival],
+        ["mechanized basis", identity.mechanizedBasis],
+        ["lawful next posture", identity.lawfulNextPosture],
         ["basis mode", basisModeLabel(replay)],
         ["retained tier", tierLabel(replay)],
         ["preserved", summarizeList(preservedReplayPosture(replay))],
@@ -320,6 +339,7 @@ function replayAuditFacts(replay) {
         ["threshold posture", thresholdOutcomeLabel(replay)],
         ["fidelity class", fidelity.classLabel],
         ["fidelity meaning", fidelity.note],
+        ["semantic boundary", identity.semanticBoundary],
         ["discipline boundary", discipline.boundaryNote],
         ["next-action posture", `${discipline.nextActionLabel} | ${discipline.nextActionNote}`],
         ["downgrade / failure", downgradeFailureLabel(replay)],
@@ -330,9 +350,16 @@ function reconstructionAuditFacts(replay) {
     const threshold = deriveOperatorThresholdPosture(replay);
     const fidelity = deriveOperatorFidelityPosture(replay);
     const discipline = deriveOperatorWeakStateDiscipline(replay);
+    const identity = deriveStructuralIdentityPosture(replay, { objectKind: "reconstruction" });
     if (!replay) {
         return [
             ["legitimacy", "awaiting explicit replay request"],
+            ["structural identity", identity.outcomeLabel],
+            ["bounded question", identity.boundedQuestion],
+            ["declared constraints", identity.declaredConstraints],
+            ["support survival", identity.supportSurvival],
+            ["mechanized basis", identity.mechanizedBasis],
+            ["lawful next posture", identity.lawfulNextPosture],
             ["basis mode", "awaiting explicit replay request"],
             ["retained tier", "not yet declared in an active replay object"],
             ["preserved", "explicit backend boundary only"],
@@ -344,6 +371,7 @@ function reconstructionAuditFacts(replay) {
             ["fidelity meaning", fidelity.note],
             ["fidelity posture", "not yet active"],
             ["trace depth", "not yet active"],
+            ["semantic boundary", identity.semanticBoundary],
             ["discipline boundary", discipline.boundaryNote],
             ["next-action posture", `${discipline.nextActionLabel} | ${discipline.nextActionNote}`],
             ["downgrade / failure", "not yet active"],
@@ -352,6 +380,12 @@ function reconstructionAuditFacts(replay) {
 
     return [
         ["legitimacy", reconstructionLegitimacyLabel(replay)],
+        ["structural identity", identity.outcomeLabel],
+        ["bounded question", identity.boundedQuestion],
+        ["declared constraints", identity.declaredConstraints],
+        ["support survival", identity.supportSurvival],
+        ["mechanized basis", identity.mechanizedBasis],
+        ["lawful next posture", identity.lawfulNextPosture],
         ["basis mode", basisModeLabel(replay)],
         ["retained tier", tierLabel(replay)],
         ["preserved", summarizeList(preservedReconstructionPosture(replay))],
@@ -363,6 +397,7 @@ function reconstructionAuditFacts(replay) {
         ["fidelity meaning", fidelity.note],
         ["fidelity posture", replay?.replay_fidelity_record_v0?.fidelity_posture ?? replay?.fidelity_posture ?? "not declared"],
         ["trace depth", `${safeArray(replay?.reconstruction_trace).length} trace steps`],
+        ["semantic boundary", identity.semanticBoundary],
         ["discipline boundary", discipline.boundaryNote],
         ["next-action posture", `${discipline.nextActionLabel} | ${discipline.nextActionNote}`],
         ["downgrade / failure", downgradeFailureLabel(replay)],
