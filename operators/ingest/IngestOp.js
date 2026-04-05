@@ -262,8 +262,9 @@ export class IngestOp {
             }
         }
 
-        const valueMin = values.length ? Math.min(...values) : null;
-        const valueMax = values.length ? Math.max(...values) : null;
+        const { min: valueMin, max: valueMax } = values.length
+            ? finiteMinMax(values)
+            : { min: null, max: null };
         const valueMean = values.length ? mean(values) : null;
         const valueRms = values.length ? rms(values) : null;
 
@@ -357,6 +358,28 @@ function normalizeFsNominal(x) {
     if (Number.isFinite(x) && x > 0) return String(x);
     if (typeof x === "string" && x.trim() !== "") return x.trim();
     return null;
+}
+
+/**
+ * Compute extrema without spreading large arrays into Math.min/Math.max,
+ * which can overflow the JS call stack on long staged traces.
+ *
+ * @param {number[]} xs
+ * @returns {{ min: number|null, max: number|null }}
+ */
+function finiteMinMax(xs) {
+    if (!Array.isArray(xs) || xs.length === 0) {
+        return { min: null, max: null };
+    }
+
+    let min = xs[0];
+    let max = xs[0];
+    for (let i = 1; i < xs.length; i++) {
+        const x = xs[i];
+        if (x < min) min = x;
+        if (x > max) max = x;
+    }
+    return { min, max };
 }
 
 /** @param {number[]} xs */

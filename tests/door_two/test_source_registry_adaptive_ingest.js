@@ -282,6 +282,9 @@ section("F. shell exposes the source registry lane without per-file rewiring");
     includes(shellSrc, "stage / add source", "F7: shell exposes bounded staging UI");
     includes(shellSrc, "setSourceRegistry((records) => upsertSourceRecord(records, record))", "F8: shell registers new sources without adding per-file branches");
     includes(shellSrc, "runImportedPipeline(registryPayload, id)", "F9: registered sources reuse the existing imported ingest path");
+    includes(shellSrc, 'minmax(220px, 260px) minmax(540px, 1fr) auto', "F10: registry family widens the shell input column");
+    includes(shellSrc, 'minmax(240px, 0.9fr) minmax(400px, 1.6fr)', "F11: registry edit area uses a roomier two-pane split");
+    includes(shellSrc, "minHeight: 132", "F12: notes field gets a taller minimum edit area");
 }
 
 finish();
