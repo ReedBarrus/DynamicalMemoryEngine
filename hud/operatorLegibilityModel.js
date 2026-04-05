@@ -10,6 +10,7 @@ import { deriveStructuralIdentityPosture } from "./structuralIdentityPosture.js"
 import { deriveMemorySupportClassification } from "./memorySupportClassification.js";
 import { deriveCompressionRemintingAccountability } from "./compressionRemintingAccountability.js";
 import { deriveBoundedObjectTracking } from "./boundedObjectTracking.js";
+import { deriveWeakStateAccounting } from "./weakStateAccounting.js";
 
 function safeArray(value) {
     return Array.isArray(value) ? value : [];
@@ -43,6 +44,19 @@ function trackingAuditFacts(tracking) {
         ["closure / accountability", tracking.closureState],
         ["neighboring objects", tracking.neighboringObjects],
         ["address boundary", tracking.addressBoundary],
+    ];
+}
+
+function weakStateAuditFacts(weakState) {
+    return [
+        ["dominant weak-state", weakState.dominantClassLabel],
+        ["source-path condition", weakState.sourcePathCondition],
+        ["representation condition", weakState.representationCondition],
+        ["claim-status condition", weakState.claimStatusCondition],
+        ["continuity condition", weakState.continuityCondition],
+        ["recurrence condition", weakState.recurrenceCondition],
+        ["weak-state next posture", weakState.lawfulNextPosture],
+        ["weak-state boundary", weakState.boundaryNote],
     ];
 }
 
@@ -274,7 +288,9 @@ function replayStatusChips(replay) {
     const identity = deriveStructuralIdentityPosture(replay, { objectKind: "replay" });
     const memoryClass = deriveMemorySupportClassification({ objectKind: "replay", replay });
     const accountability = deriveCompressionRemintingAccountability({ objectKind: "replay", replay });
+    const weakState = deriveWeakStateAccounting({ objectKind: "replay", replay });
     const chips = [
+        weakState.chipCode,
         accountability.chipCode,
         memoryClass.chipCode,
         tierChip(replay),
@@ -286,7 +302,7 @@ function replayStatusChips(replay) {
         replay.request_status ?? null,
         replay.replay_fidelity_record_v0?.mechanization_status ?? null,
     ].filter(Boolean);
-    return chips.slice(0, 7);
+    return [...new Set(chips)].slice(0, 8);
 }
 
 function reconstructionStatusChips(replay) {
@@ -297,7 +313,9 @@ function reconstructionStatusChips(replay) {
     const identity = deriveStructuralIdentityPosture(replay, { objectKind: "reconstruction" });
     const memoryClass = deriveMemorySupportClassification({ objectKind: "reconstruction", replay });
     const accountability = deriveCompressionRemintingAccountability({ objectKind: "reconstruction", replay });
+    const weakState = deriveWeakStateAccounting({ objectKind: "reconstruction", replay });
     const chips = [
+        weakState.chipCode,
         accountability.chipCode,
         memoryClass.chipCode,
         tierChip(replay),
@@ -309,21 +327,38 @@ function reconstructionStatusChips(replay) {
             : null,
         replay.reconstruction_status ?? null,
     ].filter(Boolean);
-    return chips.slice(0, 7);
+    return [...new Set(chips)].slice(0, 8);
 }
 
-function replayAuditFacts(replay) {
+function replayAuditFacts(replay, context = {}) {
     const threshold = deriveOperatorThresholdPosture(replay);
     const fidelity = deriveOperatorFidelityPosture(replay);
     const discipline = deriveOperatorWeakStateDiscipline(replay);
     const identity = deriveStructuralIdentityPosture(replay, { objectKind: "replay" });
     const memoryClass = deriveMemorySupportClassification({ objectKind: "replay", replay });
     const accountability = deriveCompressionRemintingAccountability({ objectKind: "replay", replay });
-    const tracking = deriveBoundedObjectTracking({ objectKind: "replay", replay });
+    const tracking = deriveBoundedObjectTracking({
+        objectKind: "replay",
+        hasActiveResult: context.hasActiveResult,
+        sourceFamilyLabel: context.sourceFamilyLabel,
+        runResult: context.runResult,
+        workbench: context.workbench,
+        replay,
+    });
+    const weakState = deriveWeakStateAccounting({
+        objectKind: "replay",
+        hasActiveResult: context.hasActiveResult,
+        sourceFamilyLabel: context.sourceFamilyLabel,
+        runResult: context.runResult,
+        workbench: context.workbench,
+        hudModel: context.hudModel,
+        replay,
+    });
     if (!replay) {
         return [
             ["legitimacy", "awaiting explicit replay request"],
             ...trackingAuditFacts(tracking),
+            ...weakStateAuditFacts(weakState),
             ["memory / support class", memoryClass.classLabel],
             ["classification basis", memoryClass.classificationBasis],
             ["compression / reminting posture", accountability.classLabel],
@@ -362,6 +397,7 @@ function replayAuditFacts(replay) {
     return [
         ["legitimacy", replayLegitimacyLabel(replay)],
         ...trackingAuditFacts(tracking),
+        ...weakStateAuditFacts(weakState),
         ["memory / support class", memoryClass.classLabel],
         ["classification basis", memoryClass.classificationBasis],
         ["compression / reminting posture", accountability.classLabel],
@@ -397,18 +433,35 @@ function replayAuditFacts(replay) {
     ];
 }
 
-function reconstructionAuditFacts(replay) {
+function reconstructionAuditFacts(replay, context = {}) {
     const threshold = deriveOperatorThresholdPosture(replay);
     const fidelity = deriveOperatorFidelityPosture(replay);
     const discipline = deriveOperatorWeakStateDiscipline(replay);
     const identity = deriveStructuralIdentityPosture(replay, { objectKind: "reconstruction" });
     const memoryClass = deriveMemorySupportClassification({ objectKind: "reconstruction", replay });
     const accountability = deriveCompressionRemintingAccountability({ objectKind: "reconstruction", replay });
-    const tracking = deriveBoundedObjectTracking({ objectKind: "reconstruction", replay });
+    const tracking = deriveBoundedObjectTracking({
+        objectKind: "reconstruction",
+        hasActiveResult: context.hasActiveResult,
+        sourceFamilyLabel: context.sourceFamilyLabel,
+        runResult: context.runResult,
+        workbench: context.workbench,
+        replay,
+    });
+    const weakState = deriveWeakStateAccounting({
+        objectKind: "reconstruction",
+        hasActiveResult: context.hasActiveResult,
+        sourceFamilyLabel: context.sourceFamilyLabel,
+        runResult: context.runResult,
+        workbench: context.workbench,
+        hudModel: context.hudModel,
+        replay,
+    });
     if (!replay) {
         return [
             ["legitimacy", "awaiting explicit replay request"],
             ...trackingAuditFacts(tracking),
+            ...weakStateAuditFacts(weakState),
             ["memory / support class", memoryClass.classLabel],
             ["classification basis", memoryClass.classificationBasis],
             ["compression / reminting posture", accountability.classLabel],
@@ -447,6 +500,7 @@ function reconstructionAuditFacts(replay) {
     return [
         ["legitimacy", reconstructionLegitimacyLabel(replay)],
         ...trackingAuditFacts(tracking),
+        ...weakStateAuditFacts(weakState),
         ["memory / support class", memoryClass.classLabel],
         ["classification basis", memoryClass.classificationBasis],
         ["compression / reminting posture", accountability.classLabel],
@@ -546,12 +600,21 @@ function deriveEvidenceDepthPosture({ hasActiveResult, sourceFamilyLabel, runRes
 function buildSourceStage({ hasActiveResult, sourceFamilyLabel, runResult, workbench }) {
     const a1 = runResult?.artifacts?.a1 ?? workbench?.runtime?.artifacts?.a1 ?? {};
     const streamId = workbench?.scope?.stream_id ?? a1?.stream_id ?? null;
+    const hudModel = hasActiveResult ? workbenchToStructuralHudModel(workbench) : null;
     const tracking = deriveBoundedObjectTracking({
         objectKind: "source",
         hasActiveResult,
         sourceFamilyLabel,
         runResult,
         workbench,
+    });
+    const weakState = deriveWeakStateAccounting({
+        objectKind: "source",
+        hasActiveResult,
+        sourceFamilyLabel,
+        runResult,
+        workbench,
+        hudModel,
     });
     return {
         id: "source",
@@ -583,8 +646,12 @@ function buildSourceStage({ hasActiveResult, sourceFamilyLabel, runResult, workb
         nextAction: hasActiveResult
             ? "Inspect the spectral state derived from this source window and declared shell lens."
             : "Run a source through the execution shell.",
-        auditFacts: trackingAuditFacts(tracking),
-        postureNote: tracking.addressBoundary,
+        auditFacts: [
+            ...trackingAuditFacts(tracking),
+            ...weakStateAuditFacts(weakState),
+        ],
+        postureChips: [weakState.chipCode].filter(Boolean),
+        postureNote: `${tracking.addressBoundary} ${weakState.note}`,
     };
 }
 
@@ -597,6 +664,14 @@ function buildSpectralStage({ hasActiveResult, sourceFamilyLabel, runResult, wor
         sourceFamilyLabel,
         runResult,
         workbench,
+    });
+    const weakState = deriveWeakStateAccounting({
+        objectKind: "spectral_state",
+        hasActiveResult,
+        sourceFamilyLabel,
+        runResult,
+        workbench,
+        hudModel,
     });
     return {
         id: "spectral_state",
@@ -628,8 +703,12 @@ function buildSpectralStage({ hasActiveResult, sourceFamilyLabel, runResult, wor
         nextAction: hasActiveResult
             ? "Follow the retained signature and runtime evidence derived from these structural states."
             : "Run a source to create spectral state.",
-        auditFacts: trackingAuditFacts(tracking),
-        postureNote: tracking.addressBoundary,
+        auditFacts: [
+            ...trackingAuditFacts(tracking),
+            ...weakStateAuditFacts(weakState),
+        ],
+        postureChips: [weakState.chipCode].filter(Boolean),
+        postureNote: `${tracking.addressBoundary} ${weakState.note}`,
     };
 }
 
@@ -651,6 +730,14 @@ function buildRetainedStage({ hasActiveResult, sourceFamilyLabel, runResult, wor
         sourceFamilyLabel,
         runResult,
         workbench,
+    });
+    const weakState = deriveWeakStateAccounting({
+        objectKind: "retained_signature",
+        hasActiveResult,
+        sourceFamilyLabel,
+        runResult,
+        workbench,
+        hudModel,
     });
     const supportBasis = summarizeSupportBasis(hudModel ? [
         hudModel.runtime_evidence?.artifact_counts?.m1s > 0 ? "merged_state_evidence" : null,
@@ -687,6 +774,7 @@ function buildRetainedStage({ hasActiveResult, sourceFamilyLabel, runResult, wor
             : "Run a source and produce retained states.",
         auditFacts: [
             ...trackingAuditFacts(tracking),
+            ...weakStateAuditFacts(weakState),
             ["memory / support class", memoryClass.classLabel],
             ["classification basis", memoryClass.classificationBasis],
             ["compression / reminting posture", accountability.classLabel],
@@ -699,12 +787,12 @@ function buildRetainedStage({ hasActiveResult, sourceFamilyLabel, runResult, wor
             ["accountability boundary", accountability.note],
             ["classification boundary", memoryClass.semanticBoundary],
         ],
-        postureChips: [accountability.chipCode, memoryClass.chipCode].filter(Boolean),
-        postureNote: `${tracking.addressBoundary} ${accountability.note} ${memoryClass.note}`,
+        postureChips: [weakState.chipCode, accountability.chipCode, memoryClass.chipCode].filter(Boolean),
+        postureNote: `${tracking.addressBoundary} ${weakState.note} ${accountability.note} ${memoryClass.note}`,
     };
 }
 
-function buildReplayObject({ hasActiveResult, sourceFamilyLabel, runResult, workbench, replay }) {
+function buildReplayObject({ hasActiveResult, sourceFamilyLabel, runResult, workbench, hudModel, replay }) {
     const discipline = deriveOperatorWeakStateDiscipline(replay);
     const tracking = deriveBoundedObjectTracking({
         objectKind: "replay",
@@ -712,6 +800,15 @@ function buildReplayObject({ hasActiveResult, sourceFamilyLabel, runResult, work
         sourceFamilyLabel,
         runResult,
         workbench,
+        replay,
+    });
+    const weakState = deriveWeakStateAccounting({
+        objectKind: "replay",
+        hasActiveResult,
+        sourceFamilyLabel,
+        runResult,
+        workbench,
+        hudModel,
         replay,
     });
     return {
@@ -737,15 +834,21 @@ function buildReplayObject({ hasActiveResult, sourceFamilyLabel, runResult, work
         nextAction: replay
             ? discipline.nextActionNote
             : hasActiveResult ? "Prepare replay from the active run when needed." : "Run a source before requesting replay.",
-        auditFacts: replayAuditFacts(replay),
+        auditFacts: replayAuditFacts(replay, {
+            hasActiveResult,
+            sourceFamilyLabel,
+            runResult,
+            workbench,
+            hudModel,
+        }),
         postureChips: replayStatusChips(replay),
         postureNote: replay
-            ? `${tracking.addressBoundary} Replay is bounded re-exposure under the declared lens. Not raw restoration, not truth, not canon.`
+            ? `${tracking.addressBoundary} ${weakState.note} Replay is bounded re-exposure under the declared lens. Not raw restoration, not truth, not canon.`
             : "Replay stays inactive until explicitly requested from the current bounded object path.",
     };
 }
 
-function buildReconstructionObject({ hasActiveResult, sourceFamilyLabel, runResult, workbench, replay }) {
+function buildReconstructionObject({ hasActiveResult, sourceFamilyLabel, runResult, workbench, hudModel, replay }) {
     const discipline = deriveOperatorWeakStateDiscipline(replay);
     const fidelity = replay?.replay_fidelity_record_v0 ?? null;
     const tracking = deriveBoundedObjectTracking({
@@ -754,6 +857,15 @@ function buildReconstructionObject({ hasActiveResult, sourceFamilyLabel, runResu
         sourceFamilyLabel,
         runResult,
         workbench,
+        replay,
+    });
+    const weakState = deriveWeakStateAccounting({
+        objectKind: "reconstruction",
+        hasActiveResult,
+        sourceFamilyLabel,
+        runResult,
+        workbench,
+        hudModel,
         replay,
     });
     return {
@@ -783,10 +895,16 @@ function buildReconstructionObject({ hasActiveResult, sourceFamilyLabel, runResu
         nextAction: replay
             ? discipline.nextActionNote
             : hasActiveResult ? "Request replay to activate the reconstruction seam." : "Run a source before reconstruction is possible.",
-        auditFacts: reconstructionAuditFacts(replay),
+        auditFacts: reconstructionAuditFacts(replay, {
+            hasActiveResult,
+            sourceFamilyLabel,
+            runResult,
+            workbench,
+            hudModel,
+        }),
         postureChips: reconstructionStatusChips(replay),
         postureNote: replay
-            ? `${tracking.addressBoundary} Reconstruction stays support-trace bounded. It does not imply source equivalence or operator reversal.`
+            ? `${tracking.addressBoundary} ${weakState.note} Reconstruction stays support-trace bounded. It does not imply source equivalence or operator reversal.`
             : "Reconstruction remains inactive until replay invokes the backend support-trace seam.",
     };
 }
@@ -1040,6 +1158,7 @@ export function buildOperatorLegibilityModel(shellState = {}) {
                         sourceFamilyLabel: shellState?.sourceFamilyLabel ?? "unspecified",
                         runResult,
                         workbench,
+                        hudModel,
                         replay,
                     }),
                     buildReconstructionObject({
@@ -1047,6 +1166,7 @@ export function buildOperatorLegibilityModel(shellState = {}) {
                         sourceFamilyLabel: shellState?.sourceFamilyLabel ?? "unspecified",
                         runResult,
                         workbench,
+                        hudModel,
                         replay,
                     }),
                 ],

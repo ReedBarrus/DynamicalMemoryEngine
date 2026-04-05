@@ -45,6 +45,8 @@ function tone(status) {
     if (
         status === "awaiting_run" ||
         status === "candidate_only" ||
+        status === "noise" ||
+        status === "distortion" ||
         status === "coarse_runtime_support" ||
         status === "bounded_runtime_support" ||
         status === "partial_runtime_differentiation" ||
@@ -64,6 +66,7 @@ function tone(status) {
     }
     if (
         status === "tier_1_receipt" ||
+        status === "recurrence" ||
         status === "identity_narrowed" ||
         status === "memory_supporting" ||
         status === "degraded" ||
@@ -78,6 +81,7 @@ function tone(status) {
         status === "replay_support_only" ||
         status === "review_only" ||
         status === "reminted" ||
+        status === "uncertainty" ||
         status === "identity_unresolved" ||
         status === "unresolved" ||
         status === "unresolved_support_trace" ||
@@ -88,7 +92,7 @@ function tone(status) {
     if (status === "reconstructed") {
         return { fg: C.blue, bg: C.blueFaint, border: C.blue };
     }
-    if (status === "failed" || status === "identity_broken") {
+    if (status === "failed" || status === "identity_broken" || status === "rupture") {
         return { fg: C.red, bg: C.redFaint, border: C.red };
     }
     return { fg: C.blue, bg: C.blueFaint, border: C.blue };
@@ -292,9 +296,11 @@ function StageCard({ stage }) {
                     Tier 0 live support, Tier 1 receipt lineage, and Tier 2+ insufficiency are not equivalent.
                     Preserved does not mean equivalent.
                     Conserved, narrowed, degraded, insufficient, unresolved, and failed are separate bounded postures.
+                    Noise, distortion, uncertainty, insufficiency, degradation, rupture, and recurrence are separate bounded accounting classes.
                     Semantic usefulness does not make an object memory-bearing.
                     Failure is not weak success. Insufficiency is not almost replayable. Unresolved is not degraded.
                     Displayed coherence is not preserved identity.
+                    This surface uses a weak-state lattice, not a global confidence score.
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
                     {stage.objects.map((obj) => (
@@ -642,7 +648,8 @@ export default function OperatorLegibilityPanel({ shellState }) {
                         interpretive and do not carry preservation by themselves. Semantic usefulness does not
                         make an object memory-bearing. Compression convenience does not prove direct preservation.
                         Reminting must not silently read as direct retention. One handle does not stand in for
-                        full structural identity.
+                        full structural identity. Noise is not uncertainty. Distortion is not insufficiency.
+                        This panel does not collapse weak states into one confidence score.
                     </div>
                 </div>
             </div>

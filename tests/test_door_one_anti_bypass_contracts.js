@@ -273,11 +273,13 @@ function makeRawInput({
     modality = "voltage",
     units = "arb",
 } = {}) {
+    const streamId = `stream:${source_id}:${seed}`;
     const { signal } = makeTestSignal({
         durationSec,
         fs,
         seed,
         noiseStd,
+        stream_id: streamId,
         source_id,
         channel,
         modality,

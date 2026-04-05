@@ -228,11 +228,13 @@ const CONSENSUS_POLICY = {
 };
 
 function makeRawInput({ seed = 7, noiseStd = 0.01, source_id = "exec.probe" } = {}) {
+    const streamId = `stream:${source_id}:${seed}`;
     const { signal } = makeTestSignal({
         durationSec: 4,
         fs: 8,
         seed,
         noiseStd,
+        stream_id: streamId,
         source_id,
         channel: "ch0",
         modality: "voltage",
@@ -258,11 +260,13 @@ function makeSamplerReadySignal({
     durationSec = 10,
     fs = 256,
 } = {}) {
+    const streamId = `stream:${source_id}:${seed}`;
     const { signal } = makeTestSignal({
         durationSec,
         fs,
         seed,
         noiseStd,
+        stream_id: streamId,
         source_id,
         channel: "ch0",
         modality: "voltage",

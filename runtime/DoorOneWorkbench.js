@@ -131,6 +131,7 @@ export class DoorOneWorkbench {
                 "Door One runtime, interpretation, cross-run, readiness, dossier, and consensus review surfaces only; integration view, not canon",
             scope: {
                 stream_id: result?.artifacts?.a1?.stream_id ?? null,
+                source_id: result?.artifacts?.a1?.source_id ?? null,
                 segment_ids: Array.isArray(result?.substrate?.segment_ids)
                     ? [...result.substrate.segment_ids]
                     : [],

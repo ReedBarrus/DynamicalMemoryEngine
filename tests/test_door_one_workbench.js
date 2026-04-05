@@ -367,14 +367,15 @@ ok(Array.isArray(wbSingle.notes), "A12: notes array present");
 
 section("B. Single-run mode");
 eq(wbSingle.scope.stream_id, runA?.artifacts?.a1?.stream_id ?? null, "B1: scope.stream_id sourced from A1");
-deepEq(wbSingle.scope.segment_ids, runA?.substrate?.segment_ids ?? [], "B2: scope.segment_ids preserved");
-eq(wbSingle.scope.cross_run_context.available, false, "B3: single-run cross_run_context.available=false");
-eq(wbSingle.scope.cross_run_context.run_count, 0, "B4: single-run cross_run_context.run_count=0");
-eq(wbSingle.cross_run.available, false, "B5: single-run cross_run.available=false");
-eq(wbSingle.cross_run.report, null, "B6: single-run cross_run.report=null");
-ok(wbSingle.promotion_readiness.report && typeof wbSingle.promotion_readiness.report === "object", "B7: promotion readiness derived");
-ok(wbSingle.canon_candidate.dossier && typeof wbSingle.canon_candidate.dossier === "object", "B8: canon candidate dossier derived");
-eq(wbSingle.consensus_review.review, null, "B9: no epochContext -> consensus_review.review=null");
+eq(wbSingle.scope.source_id, runA?.artifacts?.a1?.source_id ?? null, "B2: scope.source_id sourced from A1");
+deepEq(wbSingle.scope.segment_ids, runA?.substrate?.segment_ids ?? [], "B3: scope.segment_ids preserved");
+eq(wbSingle.scope.cross_run_context.available, false, "B4: single-run cross_run_context.available=false");
+eq(wbSingle.scope.cross_run_context.run_count, 0, "B5: single-run cross_run_context.run_count=0");
+eq(wbSingle.cross_run.available, false, "B6: single-run cross_run.available=false");
+eq(wbSingle.cross_run.report, null, "B7: single-run cross_run.report=null");
+ok(wbSingle.promotion_readiness.report && typeof wbSingle.promotion_readiness.report === "object", "B8: promotion readiness derived");
+ok(wbSingle.canon_candidate.dossier && typeof wbSingle.canon_candidate.dossier === "object", "B9: canon candidate dossier derived");
+eq(wbSingle.consensus_review.review, null, "B10: no epochContext -> consensus_review.review=null");
 
 section("C. Cross-run mode");
 eq(wbCross.scope.cross_run_context.available, true, "C1: cross-run scope.available=true");
