@@ -932,3 +932,123 @@ If the stream does not help answer one of those questions, it is not yet a stron
 ## 8. One-line summary
 
 **The target-stream spectrum for realtime continuity testing should range from highly ordered recurrence-supportive audio and synthetic streams to disruptive weak-support streams so DME can be tested honestly for continuity, drift, rupture, recurrence, retention strength, and support-tier downgrade without inflating what counts as memory.**
+
+---
+
+## Target stream audit matrix
+
+This section provides a compact operator-facing matrix for selecting target streams by the kind of structural behavior they are most useful for stressing.
+
+It is a practical audit-selection aid.
+
+It does **not**:
+- replace the fuller target-stream descriptions,
+- define hard numeric scoring,
+- or claim that a stream family is “good” or “bad” in absolute terms.
+
+Its purpose is narrower:
+- make stream selection faster,
+- reduce ad hoc test choice,
+- and help the operator choose streams based on the structural behavior being tested.
+
+### Matrix legend
+
+Use the following shorthand:
+
+- `high` — especially useful for this behavior
+- `medium` — useful but not primary
+- `low` — limited use for this behavior
+- `anti` — especially useful for falsification / anti-overclaim pressure
+
+### Matrix
+
+| Target stream family | Continuity holding | Drift | Rupture | Recurrence | Support-tier stress | Replay / reconstruction distinction | Notes |
+|---|---|---:|---:|---:|---:|---:|---|
+| Pure sine tone | high | low | low | high | low | medium | Best clean baseline for continuity and cross-window stability |
+| Harmonic stack | high | medium | low | high | medium | high | Strong for multi-band identity and compression behavior |
+| Pulse train | high | medium | medium | high | medium | medium | Good temporal recurrence and spacing-change stress |
+| Repeated same phrase | high | medium | low | high | high | high | Strongest human-relevant recurrence baseline |
+| Phrase variation family | medium | high | high | high | high | high | Best for same / near / different / returned distinctions |
+| Sustained vocal modulation | medium | high | medium | medium | high | medium | Good for frequency / amplitude drift and support weakening |
+| Speech in mild noise | medium | medium | medium | medium | high | high | Good contamination / retained-support honesty test |
+| Two-speaker alternation | low | medium | high | medium | high | medium | Strong anti-overclaim and identity-boundary stressor |
+| Synthetic drift stream | medium | high | medium | medium | high | medium | Good for gradual threshold-crossing behavior |
+| Broadband noise | low | low | high | low | anti | low | Best falsifier for fake continuity and weak-support honesty |
+| Abrupt family switch | low | low | high | low | anti | medium | Strong rupture and seam-honesty test |
+| Irregular low-recurrence synthetic stream | low | medium | high | low | anti | medium | Useful where continuity should weaken or fail |
+
+### How to use the matrix
+
+#### If the goal is continuity baselining
+Prefer:
+- pure sine tone
+- harmonic stack
+- repeated same phrase
+- pulse train
+
+#### If the goal is drift visibility
+Prefer:
+- phrase variation family
+- sustained vocal modulation
+- synthetic drift stream
+
+#### If the goal is rupture honesty
+Prefer:
+- abrupt family switch
+- broadband noise
+- two-speaker alternation
+- phrase variation family
+
+#### If the goal is recurrence / reappearance
+Prefer:
+- pulse train
+- repeated same phrase
+- phrase variation family
+
+#### If the goal is support-tier stress
+Prefer:
+- repeated same phrase
+- phrase variation family
+- sustained vocal modulation
+- speech in mild noise
+- synthetic drift stream
+
+#### If the goal is anti-overclaim / falsification
+Prefer:
+- broadband noise
+- abrupt family switch
+- irregular low-recurrence synthetic stream
+- two-speaker alternation
+
+### Suggested first bounded test ladder
+
+If only a small first ladder is needed, use:
+
+1. pure sine tone
+2. harmonic stack
+3. repeated same phrase
+4. phrase variation family
+5. speech in mild noise
+6. abrupt family switch
+7. broadband noise
+
+This ladder moves from:
+- strongest continuity support
+to
+- strongest anti-overclaim pressure
+
+### Practical selection rule
+
+When choosing the next test stream, prefer the stream that most clearly stresses the active uncertainty.
+
+Examples:
+
+- if continuity itself is unclear, choose a highly ordered stream
+- if support degradation is unclear, choose a mildly contaminated or modulated stream
+- if overclaim risk is unclear, choose a rupture-heavy or low-recurrence stream
+
+Do not choose streams only because they are interesting or aesthetically rich.
+
+### One-line matrix summary
+
+**Use ordered streams to learn the substrate, variable streams to test drift, and disruptive streams to prove downgrade honesty and anti-overclaim discipline.**
