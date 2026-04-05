@@ -38,6 +38,14 @@ import {
     RECORDED_SOURCE_FIXTURES,
     loadRecordedSourcePayload,
 } from "./recordedSourceFixtures.js";
+import {
+    buildInitialSourceRegistry,
+    buildStagedSourceRecord,
+    updateSourceRecordMetadata,
+    upsertSourceRecord,
+    sourceRecordFamilyLabel,
+    resolveRegisteredSourcePayload,
+} from "./sourceRegistry.js";
 import ReplayRegion from "./ReplayRegion.jsx";
 import {
     buildConsultationRequest,
@@ -136,6 +144,14 @@ const SOURCE_FAMILIES = [
         description: "Deterministic multi-segment signal with novelty, frequency shift, dropout, and burst-return phases.",
         wired: true,
         badge: "wired",
+    },
+    {
+        id: "source_registry",
+        label: "Source Registry / Adaptive Ingest",
+        description: "Stage selected files into bounded source records, edit metadata explicitly, and run them through the same lawful ingest path.",
+        wired: true,
+        badge: "wired",
+        isRegistryFamily: true,
     },
     {
         id: "smart_tag_lifecycle",
@@ -457,17 +473,170 @@ function DropZone({ pendingFile, adapterStatus, detectedType, onFileSelect }) {
 }
 
 // ─── Region A: Control / Orchestration ───────────────────────────────────────
+function RegistrySourcePanel({
+    sourceRegistry,
+    selectedSourceId,
+    onSelectSourceId,
+    onStageFile,
+    pendingFile,
+    adapterStatus,
+    selectedSourceRecord,
+    onUpdateMetadata,
+}) {
+    const detectedType = pendingFile ? detectAdapter(pendingFile.name) : null;
+
+    return (
+        <div style={{
+            padding: "10px 12px",
+            borderRadius: 6,
+            border: `1px solid ${C.rule}`,
+            background: C.surface,
+            display: "flex",
+            flexDirection: "column",
+            gap: 10,
+        }}>
+            <div>
+                <Label style={{ marginBottom: 6 }}>registered source</Label>
+                <select
+                    value={selectedSourceId ?? ""}
+                    onChange={e => onSelectSourceId(e.target.value)}
+                    style={{
+                        width: "100%", padding: "8px 10px", borderRadius: 6,
+                        border: `1px solid ${C.ruleLight}`, background: C.surfaceHigh,
+                        color: C.text, fontFamily: C.mono, fontSize: 12, outline: "none",
+                    }}
+                >
+                    {sourceRegistry.map((record) => (
+                        <option key={record.source_id} value={record.source_id}>
+                            {record.operator_label} · {record.source_family}
+                        </option>
+                    ))}
+                </select>
+            </div>
+
+            <div>
+                <Label style={{ marginBottom: 6 }}>stage / add source</Label>
+                <DropZone
+                    pendingFile={pendingFile}
+                    adapterStatus={adapterStatus}
+                    detectedType={detectedType}
+                    onFileSelect={onStageFile}
+                />
+                <div style={{ marginTop: 6, fontFamily: C.mono, fontSize: 10, color: C.textDim }}>
+                    staging creates a source record first; run stays explicit and below authority
+                </div>
+            </div>
+
+            {selectedSourceRecord && (
+                <div style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    gap: 10,
+                    alignItems: "start",
+                }}>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                        <Label>source record</Label>
+                        {[
+                            ["source_id", selectedSourceRecord.source_id],
+                            ["basis", selectedSourceRecord.source_basis],
+                            ["filename", selectedSourceRecord.filename],
+                            ["registry_path", selectedSourceRecord.registry_path],
+                            ["modality", selectedSourceRecord.modality],
+                            ["decode", selectedSourceRecord.decode_posture],
+                            ["readiness", selectedSourceRecord.readiness],
+                            ["sample_rate", selectedSourceRecord.sample_rate_hz ? `${selectedSourceRecord.sample_rate_hz}Hz` : "pending"],
+                            ["channels", selectedSourceRecord.channels ?? "pending"],
+                            ["duration", selectedSourceRecord.duration_s ? `${selectedSourceRecord.duration_s}s` : "pending"],
+                        ].map(([key, value]) => (
+                            <div key={key} style={{ display: "grid", gridTemplateColumns: "88px 1fr", gap: 6 }}>
+                                <Label style={{ fontSize: 9 }}>{key}</Label>
+                                <Mono style={{ fontSize: 10, color: C.textDim }}>{value}</Mono>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                        <div>
+                            <Label style={{ marginBottom: 4 }}>source family</Label>
+                            <input
+                                value={selectedSourceRecord.source_family ?? ""}
+                                onChange={e => onUpdateMetadata({ source_family: e.target.value })}
+                                style={{
+                                    width: "100%",
+                                    padding: "8px 10px",
+                                    borderRadius: 6,
+                                    border: `1px solid ${C.ruleLight}`,
+                                    background: C.surfaceHigh,
+                                    color: C.text,
+                                    fontFamily: C.mono,
+                                    fontSize: 12,
+                                    outline: "none",
+                                }}
+                            />
+                        </div>
+                        <div>
+                            <Label style={{ marginBottom: 4 }}>operator label</Label>
+                            <input
+                                value={selectedSourceRecord.operator_label ?? ""}
+                                onChange={e => onUpdateMetadata({ operator_label: e.target.value })}
+                                style={{
+                                    width: "100%",
+                                    padding: "8px 10px",
+                                    borderRadius: 6,
+                                    border: `1px solid ${C.ruleLight}`,
+                                    background: C.surfaceHigh,
+                                    color: C.text,
+                                    fontFamily: C.mono,
+                                    fontSize: 12,
+                                    outline: "none",
+                                }}
+                            />
+                        </div>
+                        <div>
+                            <Label style={{ marginBottom: 4 }}>notes</Label>
+                            <textarea
+                                value={selectedSourceRecord.notes ?? ""}
+                                onChange={e => onUpdateMetadata({ notes: e.target.value })}
+                                rows={4}
+                                style={{
+                                    width: "100%",
+                                    padding: "8px 10px",
+                                    borderRadius: 6,
+                                    border: `1px solid ${C.ruleLight}`,
+                                    background: C.surfaceHigh,
+                                    color: C.text,
+                                    fontFamily: C.mono,
+                                    fontSize: 12,
+                                    outline: "none",
+                                    resize: "vertical",
+                                }}
+                            />
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+}
+
 function ControlRegion({ selectedFamily, onSelectFamily, preset, onSelectPreset,
     recordedFixturePreset, onSelectRecordedFixturePreset,
-    onRun, onFileSelect, pendingFile, adapterStatus, runStatus }) {
+    onRun, onFileSelect, pendingFile, adapterStatus,
+    sourceRegistry, selectedRegistrySourceId, onSelectRegistrySourceId,
+    onRegistryFileSelect, registryPendingFile, registryAdapterStatus,
+    selectedRegistrySourceRecord, onUpdateRegistryMetadata,
+    runStatus }) {
     const family = SOURCE_FAMILIES.find(f => f.id === selectedFamily);
     const isWired = family?.wired ?? false;
     const isFile = family?.isFileFamily ?? false;
+    const isRegistryFamily = family?.isRegistryFamily ?? false;
     const isRecordedFixtureFamily = family?.isRecordedFixtureFamily ?? false;
     const running = runStatus === "running";
 
     // For file family: run is ready only when we have a validated payload
-    const canRun = isFile
+    const canRun = isRegistryFamily
+        ? (!!selectedRegistrySourceRecord && selectedRegistrySourceRecord.readiness !== "unsupported" && !running)
+        : isFile
         ? (adapterStatus?.ok === true && !running)
         : (isWired && !running);
 
@@ -511,13 +680,26 @@ function ControlRegion({ selectedFamily, onSelectFamily, preset, onSelectPreset,
                     <Label style={{ marginBottom: 6 }}>
                         {isFile
                             ? "file / object input"
+                            : isRegistryFamily
+                                ? "registered source object"
                             : isRecordedFixtureFamily
                                 ? "recorded source fixture"
                                 : isWired
                                     ? "signal preset"
                                     : "object / input"}
                     </Label>
-                    {isFile ? (
+                    {isRegistryFamily ? (
+                        <RegistrySourcePanel
+                            sourceRegistry={sourceRegistry}
+                            selectedSourceId={selectedRegistrySourceId}
+                            onSelectSourceId={onSelectRegistrySourceId}
+                            onStageFile={onRegistryFileSelect}
+                            pendingFile={registryPendingFile}
+                            adapterStatus={registryAdapterStatus}
+                            selectedSourceRecord={selectedRegistrySourceRecord}
+                            onUpdateMetadata={onUpdateRegistryMetadata}
+                        />
+                    ) : isFile ? (
                         <DropZone
                             pendingFile={pendingFile}
                             adapterStatus={adapterStatus}
@@ -584,7 +766,9 @@ function ControlRegion({ selectedFamily, onSelectFamily, preset, onSelectPreset,
             {/* Declared path note */}
             {isWired && !isFile && (
                 <div style={{ marginTop: 10, fontFamily: C.mono, fontSize: 10, color: C.textDim }}>
-                    path: {isRecordedFixtureFamily
+                    path: {isRegistryFamily
+                        ? `${selectedRegistrySourceRecord?.route_label ?? "source_registry"} -> source record -> DoorOneOrchestrator -> CrossRunSession -> DoorOneWorkbench`
+                        : isRecordedFixtureFamily
                         ? "recorded WAV fixture -> fixture loader -> DoorOneOrchestrator -> CrossRunSession -> DoorOneWorkbench"
                         : "makeTestSignal -> DoorOneOrchestrator -> CrossRunSession -> DoorOneWorkbench"}
                 </div>
@@ -1064,6 +1248,7 @@ function TandemStrip({ hud, demo }) {
 // requestLog, replayLog, or sourceFamilyLabel change.
 // The shell remains the state owner — this is read-side export only.
 export default function MetaLayerObjectExecutionShell({ onStateChange = null } = {}) {
+    const initialRegistry = useMemo(() => buildInitialSourceRegistry(), []);
     const [selectedFamily, setSelectedFamily] = useState("synthetic_signal");
     const [presetIdx, setPresetIdx] = useState(0);
     const [recordedFixturePresetIdx, setRecordedFixturePresetIdx] = useState(0);
@@ -1079,14 +1264,27 @@ export default function MetaLayerObjectExecutionShell({ onStateChange = null } =
     const [activeSourceFamilyLabel, setActiveSourceFamilyLabel] = useState("unspecified");
     const [pendingFile, setPendingFile] = useState(null);
     const [adapterStatus, setAdapterStatus] = useState(null);  // { ok, payload?, reasons?, meta }
+    const [sourceRegistry, setSourceRegistry] = useState(initialRegistry);
+    const [selectedRegistrySourceId, setSelectedRegistrySourceId] = useState(initialRegistry[0]?.source_id ?? null);
+    const [registryPendingFile, setRegistryPendingFile] = useState(null);
+    const [registryAdapterStatus, setRegistryAdapterStatus] = useState(null);
+    const [registryPayloadCache, setRegistryPayloadCache] = useState({});
     const sessionRef = useRef(null);
+
+    const selectedRegistrySourceRecord = useMemo(
+        () => sourceRegistry.find((record) => record.source_id === selectedRegistrySourceId) ?? null,
+        [sourceRegistry, selectedRegistrySourceId]
+    );
 
     const handleRun = useCallback(() => {
         const selectedFamilyRecord = SOURCE_FAMILIES.find(f => f.id === selectedFamily);
         const isFile = selectedFamilyRecord?.isFileFamily;
+        const isRegistryFamily = selectedFamilyRecord?.isRegistryFamily;
         const isRecordedFixtureFamily = selectedFamilyRecord?.isRecordedFixtureFamily;
         const selectedRecordedFixture = RECORDED_SOURCE_FIXTURES[recordedFixturePresetIdx] ?? null;
-        const selectedSourceFamilyLabel = isRecordedFixtureFamily
+        const selectedSourceFamilyLabel = isRegistryFamily
+            ? sourceRecordFamilyLabel(selectedRegistrySourceRecord)
+            : isRecordedFixtureFamily
             ? (selectedRecordedFixture?.sourceFamilyLabel ?? "Recorded Source (WAV fixture)")
             : (selectedFamilyRecord?.label ?? selectedFamily);
         const id = `shell.run.${Date.now()}`;
@@ -1105,6 +1303,15 @@ export default function MetaLayerObjectExecutionShell({ onStateChange = null } =
                         throw new Error("No valid adapter payload available — load a file first");
                     }
                     result = runImportedPipeline(adapterStatus.payload, id);
+                } else if (isRegistryFamily) {
+                    if (!selectedRegistrySourceRecord) {
+                        throw new Error("No registered source selected");
+                    }
+                    const registryPayload = await resolveRegisteredSourcePayload(selectedRegistrySourceRecord, {
+                        payloadCache: registryPayloadCache,
+                        runLabel: id,
+                    });
+                    result = runImportedPipeline(registryPayload, id);
                 } else if (isRecordedFixtureFamily) {
                     if (!selectedRecordedFixture) {
                         throw new Error("No recorded source fixture selected");
@@ -1155,7 +1362,14 @@ export default function MetaLayerObjectExecutionShell({ onStateChange = null } =
                 console.error("Shell run error:", err);
             }
         }, 0);
-    }, [presetIdx, recordedFixturePresetIdx, selectedFamily, adapterStatus]);
+    }, [
+        presetIdx,
+        recordedFixturePresetIdx,
+        selectedFamily,
+        adapterStatus,
+        selectedRegistrySourceRecord,
+        registryPayloadCache,
+    ]);
 
     // File selection: run adapter immediately, store result for later run trigger
     const handleFileSelect = useCallback(async (file) => {
@@ -1166,12 +1380,56 @@ export default function MetaLayerObjectExecutionShell({ onStateChange = null } =
         setAdapterStatus(result);
     }, []);
 
+    const handleRegistryFileSelect = useCallback(async (file) => {
+        setRegistryPendingFile(file);
+        setRegistryAdapterStatus(null);
+        if (!file) return;
+
+        const result = await runAdapter(file, {
+            source_id: `SRC:staged:${Date.now()}:${file.name}`,
+        });
+        setRegistryAdapterStatus(result);
+        if (!result?.ok || !result?.payload) return;
+
+        const record = buildStagedSourceRecord(file, result);
+        setSourceRegistry((records) => upsertSourceRecord(records, record));
+        setRegistryPayloadCache((cache) => ({
+            ...cache,
+            [record.source_id]: result.payload,
+        }));
+        setSelectedRegistrySourceId(record.source_id);
+    }, []);
+
+    const handleRegistryMetadataUpdate = useCallback((patch) => {
+        setSourceRegistry((records) => records.map((record) => (
+            record.source_id === selectedRegistrySourceId
+                ? updateSourceRecordMetadata(record, patch)
+                : record
+        )));
+    }, [selectedRegistrySourceId]);
+
+    useEffect(() => {
+        if (sourceRegistry.length === 0) {
+            if (selectedRegistrySourceId !== null) {
+                setSelectedRegistrySourceId(null);
+            }
+            return;
+        }
+        if (!sourceRegistry.some((record) => record.source_id === selectedRegistrySourceId)) {
+            setSelectedRegistrySourceId(sourceRegistry[0].source_id);
+        }
+    }, [sourceRegistry, selectedRegistrySourceId]);
+
     // Family change: clear file state when switching away from file family
     const handleFamilySelect = useCallback((fid) => {
         setSelectedFamily(fid);
         if (fid !== "file_import") {
             setPendingFile(null);
             setAdapterStatus(null);
+        }
+        if (fid !== "source_registry") {
+            setRegistryPendingFile(null);
+            setRegistryAdapterStatus(null);
         }
     }, []);
 
@@ -1263,6 +1521,14 @@ export default function MetaLayerObjectExecutionShell({ onStateChange = null } =
                         onFileSelect={handleFileSelect}
                         pendingFile={pendingFile}
                         adapterStatus={adapterStatus}
+                        sourceRegistry={sourceRegistry}
+                        selectedRegistrySourceId={selectedRegistrySourceId}
+                        onSelectRegistrySourceId={setSelectedRegistrySourceId}
+                        onRegistryFileSelect={handleRegistryFileSelect}
+                        registryPendingFile={registryPendingFile}
+                        registryAdapterStatus={registryAdapterStatus}
+                        selectedRegistrySourceRecord={selectedRegistrySourceRecord}
+                        onUpdateRegistryMetadata={handleRegistryMetadataUpdate}
                         runStatus={runStatus}
                     />
                     <StatusRegion
