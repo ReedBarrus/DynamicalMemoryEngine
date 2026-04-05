@@ -36,6 +36,16 @@ function cloneRecord(record) {
     return record ? { ...record } : record;
 }
 
+function cloneIngestPayload(payload) {
+    if (!payload || typeof payload !== "object") return payload;
+    return {
+        ...payload,
+        timestamps: Array.isArray(payload.timestamps) ? [...payload.timestamps] : payload.timestamps,
+        values: Array.isArray(payload.values) ? [...payload.values] : payload.values,
+        meta: payload.meta && typeof payload.meta === "object" ? { ...payload.meta } : {},
+    };
+}
+
 export function buildSourceFingerprint({
     fixture = null,
     file = null,
@@ -148,7 +158,8 @@ export function sourceRecordFamilyLabel(record) {
 }
 
 export function attachSourceRecordToPayload(payload, sourceRecord, options = {}) {
-    const meta = payload?.meta ?? {};
+    const basePayload = cloneIngestPayload(payload);
+    const meta = basePayload?.meta ?? {};
     const nextMeta = {
         ...meta,
         source_mode: sourceRecord?.source_basis ?? meta.source_mode ?? "imported_source",
@@ -168,9 +179,9 @@ export function attachSourceRecordToPayload(payload, sourceRecord, options = {})
     };
 
     return {
-        ...payload,
-        stream_id: options.stream_id ?? payload?.stream_id,
-        source_id: sourceRecord?.source_id ?? payload?.source_id,
+        ...basePayload,
+        stream_id: options.stream_id ?? basePayload?.stream_id,
+        source_id: sourceRecord?.source_id ?? basePayload?.source_id,
         meta: nextMeta,
     };
 }

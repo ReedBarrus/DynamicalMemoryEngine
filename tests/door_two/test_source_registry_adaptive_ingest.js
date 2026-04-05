@@ -226,19 +226,62 @@ section("D. registered source payload resolves through the real ingest contract"
     ok(Array.isArray(workbench.scope.segment_ids), "D6: workbench assembles from registry-driven ingest");
 }
 
-section("E. shell exposes the source registry lane without per-file rewiring");
+section("E. staged registry payload resolves freshly per run without recursive wrapping");
+{
+    const cachedPayload = {
+        timestamps: [0, 0.25, 0.5, 0.75],
+        values: [0.0, 0.3, -0.2, 0.1],
+        stream_id: "wav.stream.staged",
+        source_id: "SRC:staged:80hz",
+        channel: "ch0_left_or_mono",
+        modality: "audio_sample",
+        clock_policy_id: "clock.file.v1",
+        meta: {
+            adapter: "wav",
+            original_filename: "80hz_Sine.wav",
+            sample_rate_hz: 2400,
+            original_channels: 1,
+            duration_sec: 1.0,
+        },
+    };
+    const sourceRecord = buildStagedSourceRecord(
+        new File(["fake wav"], "80hz_Sine.wav", { type: "audio/wav", lastModified: 54321 }),
+        { ok: true, meta: { adapter: "wav" }, payload: cachedPayload },
+        { source_id: "SRC:staged:80hz" }
+    );
+
+    const first = await resolveRegisteredSourcePayload(sourceRecord, {
+        payloadCache: { [sourceRecord.source_id]: cachedPayload },
+        runLabel: "first",
+    });
+    first.meta.registry_notes = "mutated in first run";
+
+    const second = await resolveRegisteredSourcePayload(sourceRecord, {
+        payloadCache: { [sourceRecord.source_id]: cachedPayload },
+        runLabel: "second",
+    });
+
+    eq(cachedPayload.meta.source_record_id, undefined, "E1: cached payload is not wrapped in place");
+    eq(first === second, false, "E2: each run gets a fresh payload object");
+    eq(first.meta === second.meta, false, "E3: each run gets a fresh meta object");
+    eq(second.meta.registry_notes, "", "E4: first-run mutation does not leak into the next run");
+    eq(second.stream_id, `registry.stream.${sourceRecord.source_id}.second`, "E5: stream id is resolved once per run");
+    eq(second.meta.source_record_id, sourceRecord.source_id, "E6: staged source record id is still attached");
+}
+
+section("F. shell exposes the source registry lane without per-file rewiring");
 {
     const shellSrc = await readFile(path.join(ROOT, "hud/MetaLayerObjectExecutionShell.jsx"), "utf8");
 
-    includes(shellSrc, 'id: "source_registry"', "E1: shell defines a source registry family");
-    includes(shellSrc, "buildInitialSourceRegistry", "E2: shell seeds a registry from helper state");
-    includes(shellSrc, "buildStagedSourceRecord", "E3: shell stages selected files into source records");
-    includes(shellSrc, "resolveRegisteredSourcePayload", "E4: shell resolves runs from registered source objects");
-    includes(shellSrc, "selectedRegistrySourceId", "E5: shell tracks the selected registered source");
-    includes(shellSrc, "source record", "E6: shell exposes source-record fields");
-    includes(shellSrc, "stage / add source", "E7: shell exposes bounded staging UI");
-    includes(shellSrc, "setSourceRegistry((records) => upsertSourceRecord(records, record))", "E8: shell registers new sources without adding per-file branches");
-    includes(shellSrc, "runImportedPipeline(registryPayload, id)", "E9: registered sources reuse the existing imported ingest path");
+    includes(shellSrc, 'id: "source_registry"', "F1: shell defines a source registry family");
+    includes(shellSrc, "buildInitialSourceRegistry", "F2: shell seeds a registry from helper state");
+    includes(shellSrc, "buildStagedSourceRecord", "F3: shell stages selected files into source records");
+    includes(shellSrc, "resolveRegisteredSourcePayload", "F4: shell resolves runs from registered source objects");
+    includes(shellSrc, "selectedRegistrySourceId", "F5: shell tracks the selected registered source");
+    includes(shellSrc, "source record", "F6: shell exposes source-record fields");
+    includes(shellSrc, "stage / add source", "F7: shell exposes bounded staging UI");
+    includes(shellSrc, "setSourceRegistry((records) => upsertSourceRecord(records, record))", "F8: shell registers new sources without adding per-file branches");
+    includes(shellSrc, "runImportedPipeline(registryPayload, id)", "F9: registered sources reuse the existing imported ingest path");
 }
 
 finish();
