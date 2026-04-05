@@ -32,6 +32,7 @@ function tone(status) {
         status === "retained" ||
         status === "replayable" ||
         status === "reconstructable" ||
+        status === "memory_bearing" ||
         status === "tier_0_live" ||
         status === "identity_conserved" ||
         status === "conserved" ||
@@ -52,6 +53,7 @@ function tone(status) {
         status === "tier_2_plus_insufficient" ||
         status === "insufficient" ||
         status === "insufficient_support_trace" ||
+        status === "degraded_residue" ||
         status === "retained_tier_insufficient" ||
         status === "replay_not_justified" ||
         status === "identity_degraded"
@@ -61,6 +63,7 @@ function tone(status) {
     if (
         status === "tier_1_receipt" ||
         status === "identity_narrowed" ||
+        status === "memory_supporting" ||
         status === "degraded" ||
         status === "degraded_support_trace" ||
         status === "reconstructable_only" ||
@@ -70,6 +73,8 @@ function tone(status) {
         return { fg: C.blue, bg: C.blueFaint, border: C.blue };
     }
     if (
+        status === "replay_support_only" ||
+        status === "review_only" ||
         status === "identity_unresolved" ||
         status === "unresolved" ||
         status === "unresolved_support_trace" ||
@@ -275,9 +280,11 @@ function StageCard({ stage }) {
                     fidelity posture, threshold posture, downgrade posture, and failure posture stay explicit here.
                     Structural identity remains grounded in bounded question, declared constraints, support survival,
                     and mechanized basis.
+                    Memory-bearing status is support-grounded, not semantic or conversational.
                     Tier 0 live support, Tier 1 receipt lineage, and Tier 2+ insufficiency are not equivalent.
                     Preserved does not mean equivalent.
                     Conserved, narrowed, degraded, insufficient, unresolved, and failed are separate bounded postures.
+                    Semantic usefulness does not make an object memory-bearing.
                     Failure is not weak success. Insufficiency is not almost replayable. Unresolved is not degraded.
                     Displayed coherence is not preserved identity.
                 </div>
@@ -316,6 +323,48 @@ function StageCard({ stage }) {
             <AnswerRow label="current status" value={stage.currentStatus} />
             <AnswerRow label="legal claim" value={stage.legalClaim} />
             <AnswerRow label="what next" value={stage.nextAction} />
+
+            {stage.postureChips?.length > 0 && (
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                    {stage.postureChips.map((chip) => (
+                        <Badge key={chip} status={chip}>{chip}</Badge>
+                    ))}
+                </div>
+            )}
+
+            {stage.auditFacts?.length > 0 && (
+                <div
+                    style={{
+                        borderTop: `1px solid ${C.rule}`,
+                        paddingTop: 12,
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 8,
+                    }}
+                >
+                    <Label style={{ color: C.amber }}>operator class audit</Label>
+                    {stage.auditFacts.map(([label, value]) => (
+                        <AnswerRow key={label} label={label} value={value} />
+                    ))}
+                </div>
+            )}
+
+            {stage.postureNote && (
+                <div
+                    style={{
+                        padding: "10px 12px",
+                        borderRadius: 10,
+                        border: `1px solid ${C.rule}`,
+                        background: C.surface,
+                        fontFamily: C.sans,
+                        fontSize: 13,
+                        color: C.textMid,
+                        lineHeight: 1.45,
+                    }}
+                >
+                    {stage.postureNote}
+                </div>
+            )}
         </div>
     );
 }
@@ -582,7 +631,8 @@ export default function OperatorLegibilityPanel({ shellState }) {
                         equivalence. Preserved does not mean equivalent. Current synthetic preset evidence can
                         remain coarse at top-line runtime counters and should be read that way. Failure remains
                         explicit failure. Insufficiency remains bounded insufficiency. Semantic summaries remain
-                        interpretive and do not carry preservation by themselves.
+                        interpretive and do not carry preservation by themselves. Semantic usefulness does not
+                        make an object memory-bearing.
                     </div>
                 </div>
             </div>

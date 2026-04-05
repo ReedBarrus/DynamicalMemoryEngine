@@ -7,6 +7,7 @@ import {
     deriveOperatorWeakStateDiscipline,
 } from "./replayThresholdFidelityPosture.js";
 import { deriveStructuralIdentityPosture } from "./structuralIdentityPosture.js";
+import { deriveMemorySupportClassification } from "./memorySupportClassification.js";
 
 function safeArray(value) {
     return Array.isArray(value) ? value : [];
@@ -256,7 +257,9 @@ function replayStatusChips(replay) {
     const threshold = deriveOperatorThresholdPosture(replay);
     const discipline = deriveOperatorWeakStateDiscipline(replay);
     const identity = deriveStructuralIdentityPosture(replay, { objectKind: "replay" });
+    const memoryClass = deriveMemorySupportClassification({ objectKind: "replay", replay });
     const chips = [
+        memoryClass.chipCode,
         tierChip(replay),
         identity.chipCode,
         threshold.classCode,
@@ -266,7 +269,7 @@ function replayStatusChips(replay) {
         replay.request_status ?? null,
         replay.replay_fidelity_record_v0?.mechanization_status ?? null,
     ].filter(Boolean);
-    return chips.slice(0, 6);
+    return chips.slice(0, 7);
 }
 
 function reconstructionStatusChips(replay) {
@@ -275,7 +278,9 @@ function reconstructionStatusChips(replay) {
     const fidelity = deriveOperatorFidelityPosture(replay);
     const discipline = deriveOperatorWeakStateDiscipline(replay);
     const identity = deriveStructuralIdentityPosture(replay, { objectKind: "reconstruction" });
+    const memoryClass = deriveMemorySupportClassification({ objectKind: "reconstruction", replay });
     const chips = [
+        memoryClass.chipCode,
         tierChip(replay),
         identity.chipCode,
         threshold.classCode,
@@ -285,7 +290,7 @@ function reconstructionStatusChips(replay) {
             : null,
         replay.reconstruction_status ?? null,
     ].filter(Boolean);
-    return chips.slice(0, 6);
+    return chips.slice(0, 7);
 }
 
 function replayAuditFacts(replay) {
@@ -293,14 +298,18 @@ function replayAuditFacts(replay) {
     const fidelity = deriveOperatorFidelityPosture(replay);
     const discipline = deriveOperatorWeakStateDiscipline(replay);
     const identity = deriveStructuralIdentityPosture(replay, { objectKind: "replay" });
+    const memoryClass = deriveMemorySupportClassification({ objectKind: "replay", replay });
     if (!replay) {
         return [
             ["legitimacy", "awaiting explicit replay request"],
+            ["memory / support class", memoryClass.classLabel],
+            ["classification basis", memoryClass.classificationBasis],
             ["structural identity", identity.outcomeLabel],
             ["bounded question", identity.boundedQuestion],
             ["declared constraints", identity.declaredConstraints],
             ["support survival", identity.supportSurvival],
             ["mechanized basis", identity.mechanizedBasis],
+            ["memory next posture", memoryClass.lawfulNextPosture],
             ["lawful next posture", identity.lawfulNextPosture],
             ["basis mode", "awaiting explicit replay request"],
             ["retained tier", "not yet declared in an active replay object"],
@@ -313,6 +322,7 @@ function replayAuditFacts(replay) {
             ["threshold posture", "not yet active"],
             ["fidelity class", fidelity.classLabel],
             ["fidelity meaning", fidelity.note],
+            ["classification boundary", memoryClass.semanticBoundary],
             ["semantic boundary", identity.semanticBoundary],
             ["discipline boundary", discipline.boundaryNote],
             ["next-action posture", `${discipline.nextActionLabel} | ${discipline.nextActionNote}`],
@@ -322,11 +332,14 @@ function replayAuditFacts(replay) {
 
     return [
         ["legitimacy", replayLegitimacyLabel(replay)],
+        ["memory / support class", memoryClass.classLabel],
+        ["classification basis", memoryClass.classificationBasis],
         ["structural identity", identity.outcomeLabel],
         ["bounded question", identity.boundedQuestion],
         ["declared constraints", identity.declaredConstraints],
         ["support survival", identity.supportSurvival],
         ["mechanized basis", identity.mechanizedBasis],
+        ["memory next posture", memoryClass.lawfulNextPosture],
         ["lawful next posture", identity.lawfulNextPosture],
         ["basis mode", basisModeLabel(replay)],
         ["retained tier", tierLabel(replay)],
@@ -339,6 +352,7 @@ function replayAuditFacts(replay) {
         ["threshold posture", thresholdOutcomeLabel(replay)],
         ["fidelity class", fidelity.classLabel],
         ["fidelity meaning", fidelity.note],
+        ["classification boundary", memoryClass.semanticBoundary],
         ["semantic boundary", identity.semanticBoundary],
         ["discipline boundary", discipline.boundaryNote],
         ["next-action posture", `${discipline.nextActionLabel} | ${discipline.nextActionNote}`],
@@ -351,14 +365,18 @@ function reconstructionAuditFacts(replay) {
     const fidelity = deriveOperatorFidelityPosture(replay);
     const discipline = deriveOperatorWeakStateDiscipline(replay);
     const identity = deriveStructuralIdentityPosture(replay, { objectKind: "reconstruction" });
+    const memoryClass = deriveMemorySupportClassification({ objectKind: "reconstruction", replay });
     if (!replay) {
         return [
             ["legitimacy", "awaiting explicit replay request"],
+            ["memory / support class", memoryClass.classLabel],
+            ["classification basis", memoryClass.classificationBasis],
             ["structural identity", identity.outcomeLabel],
             ["bounded question", identity.boundedQuestion],
             ["declared constraints", identity.declaredConstraints],
             ["support survival", identity.supportSurvival],
             ["mechanized basis", identity.mechanizedBasis],
+            ["memory next posture", memoryClass.lawfulNextPosture],
             ["lawful next posture", identity.lawfulNextPosture],
             ["basis mode", "awaiting explicit replay request"],
             ["retained tier", "not yet declared in an active replay object"],
@@ -371,6 +389,7 @@ function reconstructionAuditFacts(replay) {
             ["fidelity meaning", fidelity.note],
             ["fidelity posture", "not yet active"],
             ["trace depth", "not yet active"],
+            ["classification boundary", memoryClass.semanticBoundary],
             ["semantic boundary", identity.semanticBoundary],
             ["discipline boundary", discipline.boundaryNote],
             ["next-action posture", `${discipline.nextActionLabel} | ${discipline.nextActionNote}`],
@@ -380,11 +399,14 @@ function reconstructionAuditFacts(replay) {
 
     return [
         ["legitimacy", reconstructionLegitimacyLabel(replay)],
+        ["memory / support class", memoryClass.classLabel],
+        ["classification basis", memoryClass.classificationBasis],
         ["structural identity", identity.outcomeLabel],
         ["bounded question", identity.boundedQuestion],
         ["declared constraints", identity.declaredConstraints],
         ["support survival", identity.supportSurvival],
         ["mechanized basis", identity.mechanizedBasis],
+        ["memory next posture", memoryClass.lawfulNextPosture],
         ["lawful next posture", identity.lawfulNextPosture],
         ["basis mode", basisModeLabel(replay)],
         ["retained tier", tierLabel(replay)],
@@ -397,6 +419,7 @@ function reconstructionAuditFacts(replay) {
         ["fidelity meaning", fidelity.note],
         ["fidelity posture", replay?.replay_fidelity_record_v0?.fidelity_posture ?? replay?.fidelity_posture ?? "not declared"],
         ["trace depth", `${safeArray(replay?.reconstruction_trace).length} trace steps`],
+        ["classification boundary", memoryClass.semanticBoundary],
         ["semantic boundary", identity.semanticBoundary],
         ["discipline boundary", discipline.boundaryNote],
         ["next-action posture", `${discipline.nextActionLabel} | ${discipline.nextActionNote}`],
@@ -539,6 +562,11 @@ function buildSpectralStage({ hasActiveResult, workbench, hudModel }) {
 
 function buildRetainedStage({ hasActiveResult, workbench, hudModel }) {
     const m1Count = Number(workbench?.runtime?.artifacts?.m1s?.length ?? 0) || 0;
+    const memoryClass = deriveMemorySupportClassification({
+        objectKind: "retained_signature",
+        hasActiveResult,
+        workbench,
+    });
     const supportBasis = summarizeSupportBasis(hudModel ? [
         hudModel.runtime_evidence?.artifact_counts?.m1s > 0 ? "merged_state_evidence" : null,
         hudModel.runtime_evidence?.artifact_counts?.h1s > 0 ? "harmonic_state_evidence" : null,
@@ -572,6 +600,14 @@ function buildRetainedStage({ hasActiveResult, workbench, hudModel }) {
         nextAction: hasActiveResult
             ? "Use retained support for bounded replay and reconstruction posture."
             : "Run a source and produce retained states.",
+        auditFacts: [
+            ["memory / support class", memoryClass.classLabel],
+            ["classification basis", memoryClass.classificationBasis],
+            ["memory next posture", memoryClass.lawfulNextPosture],
+            ["classification boundary", memoryClass.semanticBoundary],
+        ],
+        postureChips: [memoryClass.chipCode].filter(Boolean),
+        postureNote: memoryClass.note,
     };
 }
 
@@ -687,6 +723,11 @@ function buildInterpretationStage({ hasActiveResult, workbench }) {
 function buildReviewStage({ hasActiveResult, activeRequest, requestLog, workbench }) {
     const readiness = workbench?.promotion_readiness?.report?.readiness_summary?.overall_readiness ?? "unknown";
     const claimType = workbench?.canon_candidate?.dossier?.candidate_claim?.claim_type ?? "candidate_only";
+    const memoryClass = deriveMemorySupportClassification({
+        objectKind: "review_gate",
+        hasActiveResult,
+        activeRequest,
+    });
     return {
         id: "review_gate",
         title: "Review Gate",
@@ -719,6 +760,14 @@ function buildReviewStage({ hasActiveResult, activeRequest, requestLog, workbenc
                 ? "Export or inspect the prepared request without treating it as resolved review."
                 : "Prepare a consultation or activation-review request if downstream review is needed.")
             : "Run a source before review-facing surfaces can be prepared.",
+        auditFacts: [
+            ["memory / support class", memoryClass.classLabel],
+            ["classification basis", memoryClass.classificationBasis],
+            ["memory next posture", memoryClass.lawfulNextPosture],
+            ["classification boundary", memoryClass.semanticBoundary],
+        ],
+        postureChips: [memoryClass.chipCode].filter(Boolean),
+        postureNote: memoryClass.note,
     };
 }
 
