@@ -9,6 +9,7 @@ import {
 import { deriveStructuralIdentityPosture } from "./structuralIdentityPosture.js";
 import { deriveMemorySupportClassification } from "./memorySupportClassification.js";
 import { deriveCompressionRemintingAccountability } from "./compressionRemintingAccountability.js";
+import { deriveBoundedObjectTracking } from "./boundedObjectTracking.js";
 
 function safeArray(value) {
     return Array.isArray(value) ? value : [];
@@ -30,6 +31,19 @@ function summarizeSupportBasis(supportBasis, fallback = "bounded support only") 
 function summarizeList(items, fallback = "none declared") {
     const values = safeArray(items).filter(Boolean);
     return values.length > 0 ? values.join(", ") : fallback;
+}
+
+function trackingAuditFacts(tracking) {
+    return [
+        ["object handle", tracking.objectHandle],
+        ["object class", tracking.objectClass],
+        ["source basis", tracking.sourceBasis],
+        ["route class", tracking.routeClass],
+        ["support tier", tracking.supportTier],
+        ["closure / accountability", tracking.closureState],
+        ["neighboring objects", tracking.neighboringObjects],
+        ["address boundary", tracking.addressBoundary],
+    ];
 }
 
 function tierLabel(replay) {
@@ -305,9 +319,11 @@ function replayAuditFacts(replay) {
     const identity = deriveStructuralIdentityPosture(replay, { objectKind: "replay" });
     const memoryClass = deriveMemorySupportClassification({ objectKind: "replay", replay });
     const accountability = deriveCompressionRemintingAccountability({ objectKind: "replay", replay });
+    const tracking = deriveBoundedObjectTracking({ objectKind: "replay", replay });
     if (!replay) {
         return [
             ["legitimacy", "awaiting explicit replay request"],
+            ...trackingAuditFacts(tracking),
             ["memory / support class", memoryClass.classLabel],
             ["classification basis", memoryClass.classificationBasis],
             ["compression / reminting posture", accountability.classLabel],
@@ -345,6 +361,7 @@ function replayAuditFacts(replay) {
 
     return [
         ["legitimacy", replayLegitimacyLabel(replay)],
+        ...trackingAuditFacts(tracking),
         ["memory / support class", memoryClass.classLabel],
         ["classification basis", memoryClass.classificationBasis],
         ["compression / reminting posture", accountability.classLabel],
@@ -387,9 +404,11 @@ function reconstructionAuditFacts(replay) {
     const identity = deriveStructuralIdentityPosture(replay, { objectKind: "reconstruction" });
     const memoryClass = deriveMemorySupportClassification({ objectKind: "reconstruction", replay });
     const accountability = deriveCompressionRemintingAccountability({ objectKind: "reconstruction", replay });
+    const tracking = deriveBoundedObjectTracking({ objectKind: "reconstruction", replay });
     if (!replay) {
         return [
             ["legitimacy", "awaiting explicit replay request"],
+            ...trackingAuditFacts(tracking),
             ["memory / support class", memoryClass.classLabel],
             ["classification basis", memoryClass.classificationBasis],
             ["compression / reminting posture", accountability.classLabel],
@@ -427,6 +446,7 @@ function reconstructionAuditFacts(replay) {
 
     return [
         ["legitimacy", reconstructionLegitimacyLabel(replay)],
+        ...trackingAuditFacts(tracking),
         ["memory / support class", memoryClass.classLabel],
         ["classification basis", memoryClass.classificationBasis],
         ["compression / reminting posture", accountability.classLabel],
@@ -526,6 +546,13 @@ function deriveEvidenceDepthPosture({ hasActiveResult, sourceFamilyLabel, runRes
 function buildSourceStage({ hasActiveResult, sourceFamilyLabel, runResult, workbench }) {
     const a1 = runResult?.artifacts?.a1 ?? workbench?.runtime?.artifacts?.a1 ?? {};
     const streamId = workbench?.scope?.stream_id ?? a1?.stream_id ?? null;
+    const tracking = deriveBoundedObjectTracking({
+        objectKind: "source",
+        hasActiveResult,
+        sourceFamilyLabel,
+        runResult,
+        workbench,
+    });
     return {
         id: "source",
         title: "Source",
@@ -556,12 +583,21 @@ function buildSourceStage({ hasActiveResult, sourceFamilyLabel, runResult, workb
         nextAction: hasActiveResult
             ? "Inspect the spectral state derived from this source window and declared shell lens."
             : "Run a source through the execution shell.",
+        auditFacts: trackingAuditFacts(tracking),
+        postureNote: tracking.addressBoundary,
     };
 }
 
-function buildSpectralStage({ hasActiveResult, workbench, hudModel }) {
+function buildSpectralStage({ hasActiveResult, sourceFamilyLabel, runResult, workbench, hudModel }) {
     const h1Count = Number(workbench?.runtime?.artifacts?.h1s?.length ?? 0) || 0;
     const segmentCount = Number(workbench?.runtime?.substrate?.segment_count ?? 0) || 0;
+    const tracking = deriveBoundedObjectTracking({
+        objectKind: "spectral_state",
+        hasActiveResult,
+        sourceFamilyLabel,
+        runResult,
+        workbench,
+    });
     return {
         id: "spectral_state",
         title: "Spectral State",
@@ -592,10 +628,12 @@ function buildSpectralStage({ hasActiveResult, workbench, hudModel }) {
         nextAction: hasActiveResult
             ? "Follow the retained signature and runtime evidence derived from these structural states."
             : "Run a source to create spectral state.",
+        auditFacts: trackingAuditFacts(tracking),
+        postureNote: tracking.addressBoundary,
     };
 }
 
-function buildRetainedStage({ hasActiveResult, workbench, hudModel }) {
+function buildRetainedStage({ hasActiveResult, sourceFamilyLabel, runResult, workbench, hudModel }) {
     const m1Count = Number(workbench?.runtime?.artifacts?.m1s?.length ?? 0) || 0;
     const memoryClass = deriveMemorySupportClassification({
         objectKind: "retained_signature",
@@ -605,6 +643,13 @@ function buildRetainedStage({ hasActiveResult, workbench, hudModel }) {
     const accountability = deriveCompressionRemintingAccountability({
         objectKind: "retained_signature",
         hasActiveResult,
+        workbench,
+    });
+    const tracking = deriveBoundedObjectTracking({
+        objectKind: "retained_signature",
+        hasActiveResult,
+        sourceFamilyLabel,
+        runResult,
         workbench,
     });
     const supportBasis = summarizeSupportBasis(hudModel ? [
@@ -641,6 +686,7 @@ function buildRetainedStage({ hasActiveResult, workbench, hudModel }) {
             ? "Use retained support for bounded replay and reconstruction posture."
             : "Run a source and produce retained states.",
         auditFacts: [
+            ...trackingAuditFacts(tracking),
             ["memory / support class", memoryClass.classLabel],
             ["classification basis", memoryClass.classificationBasis],
             ["compression / reminting posture", accountability.classLabel],
@@ -654,12 +700,20 @@ function buildRetainedStage({ hasActiveResult, workbench, hudModel }) {
             ["classification boundary", memoryClass.semanticBoundary],
         ],
         postureChips: [accountability.chipCode, memoryClass.chipCode].filter(Boolean),
-        postureNote: `${accountability.note} ${memoryClass.note}`,
+        postureNote: `${tracking.addressBoundary} ${accountability.note} ${memoryClass.note}`,
     };
 }
 
-function buildReplayObject({ hasActiveResult, replay }) {
+function buildReplayObject({ hasActiveResult, sourceFamilyLabel, runResult, workbench, replay }) {
     const discipline = deriveOperatorWeakStateDiscipline(replay);
+    const tracking = deriveBoundedObjectTracking({
+        objectKind: "replay",
+        hasActiveResult,
+        sourceFamilyLabel,
+        runResult,
+        workbench,
+        replay,
+    });
     return {
         id: "replay",
         title: "Replay",
@@ -686,14 +740,22 @@ function buildReplayObject({ hasActiveResult, replay }) {
         auditFacts: replayAuditFacts(replay),
         postureChips: replayStatusChips(replay),
         postureNote: replay
-            ? "Replay is bounded re-exposure under the declared lens. Not raw restoration, not truth, not canon."
+            ? `${tracking.addressBoundary} Replay is bounded re-exposure under the declared lens. Not raw restoration, not truth, not canon.`
             : "Replay stays inactive until explicitly requested from the current bounded object path.",
     };
 }
 
-function buildReconstructionObject({ hasActiveResult, replay }) {
+function buildReconstructionObject({ hasActiveResult, sourceFamilyLabel, runResult, workbench, replay }) {
     const discipline = deriveOperatorWeakStateDiscipline(replay);
     const fidelity = replay?.replay_fidelity_record_v0 ?? null;
+    const tracking = deriveBoundedObjectTracking({
+        objectKind: "reconstruction",
+        hasActiveResult,
+        sourceFamilyLabel,
+        runResult,
+        workbench,
+        replay,
+    });
     return {
         id: "reconstruction",
         title: "Reconstruction",
@@ -724,7 +786,7 @@ function buildReconstructionObject({ hasActiveResult, replay }) {
         auditFacts: reconstructionAuditFacts(replay),
         postureChips: reconstructionStatusChips(replay),
         postureNote: replay
-            ? "Reconstruction stays support-trace bounded. It does not imply source equivalence or operator reversal."
+            ? `${tracking.addressBoundary} Reconstruction stays support-trace bounded. It does not imply source equivalence or operator reversal.`
             : "Reconstruction remains inactive until replay invokes the backend support-trace seam.",
     };
 }
@@ -736,8 +798,15 @@ function replayStageStatus({ replay, hasActiveResult }) {
     return "prepared";
 }
 
-function buildInterpretationStage({ hasActiveResult, workbench }) {
+function buildInterpretationStage({ hasActiveResult, sourceFamilyLabel, runResult, workbench }) {
     const trajectory = workbench?.interpretation?.trajectory ?? {};
+    const tracking = deriveBoundedObjectTracking({
+        objectKind: "interpretation_overlay",
+        hasActiveResult,
+        sourceFamilyLabel,
+        runResult,
+        workbench,
+    });
     return {
         id: "interpretation_overlay",
         title: "Interpretation Overlay",
@@ -764,15 +833,25 @@ function buildInterpretationStage({ hasActiveResult, workbench }) {
         nextAction: hasActiveResult
             ? "Use interpretation to orient review, not to overrule structural evidence."
             : "Run a source before interpretation becomes available.",
+        auditFacts: trackingAuditFacts(tracking),
+        postureNote: tracking.addressBoundary,
     };
 }
 
-function buildReviewStage({ hasActiveResult, activeRequest, requestLog, workbench }) {
+function buildReviewStage({ hasActiveResult, sourceFamilyLabel, runResult, activeRequest, requestLog, workbench }) {
     const readiness = workbench?.promotion_readiness?.report?.readiness_summary?.overall_readiness ?? "unknown";
     const claimType = workbench?.canon_candidate?.dossier?.candidate_claim?.claim_type ?? "candidate_only";
     const memoryClass = deriveMemorySupportClassification({
         objectKind: "review_gate",
         hasActiveResult,
+        activeRequest,
+    });
+    const tracking = deriveBoundedObjectTracking({
+        objectKind: "review_gate",
+        hasActiveResult,
+        sourceFamilyLabel,
+        runResult,
+        workbench,
         activeRequest,
     });
     return {
@@ -808,13 +887,14 @@ function buildReviewStage({ hasActiveResult, activeRequest, requestLog, workbenc
                 : "Prepare a consultation or activation-review request if downstream review is needed.")
             : "Run a source before review-facing surfaces can be prepared.",
         auditFacts: [
+            ...trackingAuditFacts(tracking),
             ["memory / support class", memoryClass.classLabel],
             ["classification basis", memoryClass.classificationBasis],
             ["memory next posture", memoryClass.lawfulNextPosture],
             ["classification boundary", memoryClass.semanticBoundary],
         ],
         postureChips: [memoryClass.chipCode].filter(Boolean),
-        postureNote: memoryClass.note,
+        postureNote: `${tracking.addressBoundary} ${memoryClass.note}`,
     };
 }
 
@@ -936,20 +1016,51 @@ export function buildOperatorLegibilityModel(shellState = {}) {
                 runResult,
                 workbench,
             }),
-            buildSpectralStage({ hasActiveResult, workbench, hudModel }),
-            buildRetainedStage({ hasActiveResult, workbench, hudModel }),
+            buildSpectralStage({
+                hasActiveResult,
+                sourceFamilyLabel: shellState?.sourceFamilyLabel ?? "unspecified",
+                runResult,
+                workbench,
+                hudModel,
+            }),
+            buildRetainedStage({
+                hasActiveResult,
+                sourceFamilyLabel: shellState?.sourceFamilyLabel ?? "unspecified",
+                runResult,
+                workbench,
+                hudModel,
+            }),
             {
                 id: "replay_reconstruction",
                 title: "Replay / Reconstruction",
                 status: replayStageStatus({ replay, hasActiveResult }),
                 objects: [
-                    buildReplayObject({ hasActiveResult, replay }),
-                    buildReconstructionObject({ hasActiveResult, replay }),
+                    buildReplayObject({
+                        hasActiveResult,
+                        sourceFamilyLabel: shellState?.sourceFamilyLabel ?? "unspecified",
+                        runResult,
+                        workbench,
+                        replay,
+                    }),
+                    buildReconstructionObject({
+                        hasActiveResult,
+                        sourceFamilyLabel: shellState?.sourceFamilyLabel ?? "unspecified",
+                        runResult,
+                        workbench,
+                        replay,
+                    }),
                 ],
             },
-            buildInterpretationStage({ hasActiveResult, workbench }),
+            buildInterpretationStage({
+                hasActiveResult,
+                sourceFamilyLabel: shellState?.sourceFamilyLabel ?? "unspecified",
+                runResult,
+                workbench,
+            }),
             buildReviewStage({
                 hasActiveResult,
+                sourceFamilyLabel: shellState?.sourceFamilyLabel ?? "unspecified",
+                runResult,
                 activeRequest,
                 requestLog: shellState?.requestLog ?? [],
                 workbench,
