@@ -687,6 +687,92 @@ function buildReviewStage({ hasActiveResult, activeRequest, requestLog, workbenc
     };
 }
 
+function sourceKindLabel(sourceFamilyLabel, runResult) {
+    const family = String(sourceFamilyLabel ?? "").toLowerCase();
+    const sourceId = String(runResult?.artifacts?.a1?.source_id ?? "").toLowerCase();
+    const sourceMode = String(runResult?.artifacts?.a1?.meta?.source_mode ?? "").toLowerCase();
+
+    if (sourceMode === "recorded_source" || family.includes("recorded")) return "recorded";
+    if (family.includes("synthetic") || sourceId.startsWith("synthetic.")) return "synthetic";
+    return "other";
+}
+
+function comparisonScore(caseSummary) {
+    if (!caseSummary) return -1;
+    const counts = caseSummary.counts ?? {};
+    const threshold = caseSummary.replayThresholdClass ?? "";
+    const base = (counts.h1 ?? 0) + (counts.m1 ?? 0) + (counts.anomalies ?? 0);
+    if (threshold === "conserved") return base + 2;
+    if (threshold === "narrowed") return base + 1;
+    return base;
+}
+
+function buildComparisonCase(caseEntry = null) {
+    if (!caseEntry?.runResult?.ok || !caseEntry?.workbench) return null;
+
+    const hudModel = workbenchToStructuralHudModel(caseEntry.workbench);
+    const evidenceDepth = deriveEvidenceDepthPosture({
+        hasActiveResult: true,
+        sourceFamilyLabel: caseEntry.sourceFamilyLabel,
+        runResult: caseEntry.runResult,
+        hudModel,
+    });
+    const replay = caseEntry.replay ?? null;
+    const threshold = deriveOperatorThresholdPosture(replay);
+    const fidelity = deriveOperatorFidelityPosture(replay);
+
+    return {
+        kind: sourceKindLabel(caseEntry.sourceFamilyLabel, caseEntry.runResult),
+        sourceFamilyLabel: caseEntry.sourceFamilyLabel ?? "unspecified",
+        runLabel: caseEntry.runLabel ?? caseEntry.runResult?.run_label ?? null,
+        sourceProfile: sourceProfileNote(caseEntry.runResult),
+        sourceId: caseEntry.runResult?.artifacts?.a1?.source_id ?? null,
+        evidenceDepth,
+        counts: {
+            h1: Number(caseEntry.workbench?.runtime?.artifacts?.h1s?.length ?? 0) || 0,
+            m1: Number(caseEntry.workbench?.runtime?.artifacts?.m1s?.length ?? 0) || 0,
+            anomalies: Number(caseEntry.workbench?.runtime?.artifacts?.anomaly_reports?.length ?? 0) || 0,
+        },
+        replayStatus: replay?.request_status ?? "not_requested",
+        reconstructionStatus: replay?.reconstruction_status ?? "not_requested",
+        replayThresholdClass: replay ? threshold.classLabel : "not requested",
+        reconstructionFidelityClass: replay ? fidelity.classLabel : "not requested",
+        supportBasis: replay
+            ? summarizeSupportBasis(replay?.replay_fidelity_record_v0?.support_basis ?? replay.support_basis)
+            : "replay not yet prepared for this run",
+    };
+}
+
+function buildSourceComparison(sourceComparison = null) {
+    const synthetic = buildComparisonCase(sourceComparison?.synthetic ?? null);
+    const recorded = buildComparisonCase(sourceComparison?.recorded ?? null);
+
+    if (!synthetic && !recorded) return null;
+
+    let summary = "Comparison remains bounded to the currently available synthetic and recorded session cases.";
+    if (synthetic && recorded) {
+        const syntheticScore = comparisonScore(synthetic);
+        const recordedScore = comparisonScore(recorded);
+        if (recordedScore > syntheticScore) {
+            summary = "Recorded case currently preserves richer replay / reconstruction support than the compared synthetic case at this seam. This is a local session comparison, not a global source-family ranking.";
+        } else if (syntheticScore > recordedScore) {
+            summary = "Synthetic case currently preserves richer replay / reconstruction support than the compared recorded case at this seam. This is a local session comparison, not a global source-family ranking.";
+        } else {
+            summary = "Compared synthetic and recorded cases remain close at this seam. Similarity here is bounded to the current compared runs and does not generalize across source families.";
+        }
+    } else if (synthetic) {
+        summary = "Synthetic comparison case is available, but no recorded comparison case is currently present in session-backed history.";
+    } else {
+        summary = "Recorded comparison case is available, but no synthetic comparison case is currently present in session-backed history.";
+    }
+
+    return {
+        synthetic,
+        recorded,
+        summary,
+    };
+}
+
 export function buildOperatorLegibilityModel(shellState = {}) {
     const workbench = shellState?.workbench ?? null;
     const runResult = shellState?.runResult ?? null;
@@ -711,6 +797,7 @@ export function buildOperatorLegibilityModel(shellState = {}) {
             sourceProfile: sourceProfileNote(runResult),
         },
         evidenceDepth,
+        sourceComparison: buildSourceComparison(shellState?.sourceComparison ?? null),
         stages: [
             buildSourceStage({
                 hasActiveResult,
