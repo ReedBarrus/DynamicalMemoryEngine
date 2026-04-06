@@ -168,11 +168,17 @@
  * @property {Object} receipts
  * @property {Object} receipts.merge
  * @property {"authoritative"|"lens"} receipts.merge.merge_mode
+ * @property {string} receipts.merge.input_scope_posture
+ * @property {string} receipts.merge.adjacency_posture
+ * @property {string} receipts.merge.consolidation_support_subset
  * @property {string} receipts.merge.phase_alignment_mode
  * @property {string} receipts.merge.weights_mode
  * @property {string[]} receipts.merge.merged_from
  * @property {number[]} receipts.merge.phase_deltas
  * @property {number|null} receipts.merge.energy_drift_after_merge
+ * @property {string} evidence_posture
+ * @property {string} merge_basis_posture
+ * @property {string[]} explicit_non_claims
  * @property {MergeRecord} merge_record
  * @property {Object} policies
  * @property {Object} provenance
@@ -315,6 +321,7 @@ export class MergeOp {
         const df = base.grid.df;
         const streamId = base.stream_id;
         const segmentId = base.segment_id;
+        const scopeStats = inspectMergeScope(ordered);
 
 
         // 1) Phase align all states into the first state's reference frame
@@ -450,6 +457,20 @@ export class MergeOp {
                 overall: overallConfidence,
                 method: "thresholded_receipts_v1",
             },
+            evidence_posture: "structural_consolidation_evidence",
+            merge_basis_posture: deriveMergeBasisPosture({
+                mergeMode: merge_policy.merge_mode,
+                blockedReason,
+                scopeStats,
+            }),
+            explicit_non_claims: [
+                "not truth",
+                "not canon",
+                "not a same-object verdict",
+                "not a memory claim",
+                "not an identity claim",
+                "not a review verdict",
+            ],
             gates: {
                 // eligible_for_authoritative_merge: true means this M1 satisfies merge-policy
                 // and invariance-bound requirements. It does NOT signal readiness for canon
@@ -462,6 +483,15 @@ export class MergeOp {
             receipts: {
                 merge: {
                     merge_mode: merge_policy.merge_mode,
+                    input_scope_posture: deriveInputScopePosture({
+                        mergeMode: merge_policy.merge_mode,
+                        scopeStats,
+                    }),
+                    adjacency_posture: deriveAdjacencyPosture({
+                        adjacencyRule: merge_policy.adjacency_rule,
+                        scopeStats,
+                    }),
+                    consolidation_support_subset: "structural consolidation, adjacency gating, and support compaction only; same-object, memory, identity, and review meaning deferred at this seam",
                     phase_alignment_mode: merge_policy.phase_alignment_mode,
                     weights_mode: merge_policy.weights_mode,
                     merged_from: ordered.map((s) => s.state_id),
@@ -493,6 +523,57 @@ export class MergeOp {
 
         return { ok: true, artifact };
     }
+}
+
+function inspectMergeScope(states) {
+    const first = states[0];
+    const crossSegment = states.some((s) => s.segment_id !== first.segment_id);
+    const crossPolicy = states.some(
+        (s) =>
+            s.policies?.clock_policy_id !== first.policies?.clock_policy_id ||
+            s.policies?.grid_policy_id !== first.policies?.grid_policy_id ||
+            s.policies?.window_policy_id !== first.policies?.window_policy_id ||
+            s.policies?.transform_policy_id !== first.policies?.transform_policy_id ||
+            s.policies?.compression_policy_id !== first.policies?.compression_policy_id
+    );
+    return { crossSegment, crossPolicy };
+}
+
+function deriveMergeBasisPosture({ mergeMode, blockedReason, scopeStats }) {
+    if (mergeMode === "lens") {
+        if (scopeStats.crossSegment || scopeStats.crossPolicy) {
+            return "lens_basis | cross-boundary structural consolidation only | same-object closure deferred";
+        }
+        return "lens_basis | structural consolidation only | same-object closure deferred";
+    }
+    if (blockedReason === "none") {
+        return "authoritative_basis | strict consolidation bounds satisfied | same-object closure still deferred";
+    }
+    return `authoritative_basis_narrowed | consolidation produced with ${blockedReason} stress | same-object closure deferred`;
+}
+
+function deriveInputScopePosture({ mergeMode, scopeStats }) {
+    if (mergeMode === "lens") {
+        if (scopeStats.crossSegment || scopeStats.crossPolicy) {
+            return "cross_boundary_lens_scope";
+        }
+        return "same_boundary_lens_scope";
+    }
+    return "same_stream_same_segment_same_policy_scope";
+}
+
+function deriveAdjacencyPosture({ adjacencyRule, scopeStats }) {
+    if (adjacencyRule === "time_touching") {
+        return scopeStats.crossSegment
+            ? "time_touching | boundary-crossing adjacency accepted only under lens posture"
+            : "time_touching | local contiguous consolidation";
+    }
+    if (adjacencyRule === "strict_adjacent") {
+        return scopeStats.crossSegment
+            ? "strict_adjacent | boundary-crossing adjacency accepted only under lens posture"
+            : "strict_adjacent | local non-overlap consolidation";
+    }
+    return `${adjacencyRule ?? "unspecified"} | adjacency posture recorded without stronger continuity claim`;
 }
 
 function checkEligibility(states, mergePolicy) {
