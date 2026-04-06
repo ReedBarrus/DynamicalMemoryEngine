@@ -376,6 +376,7 @@ Failure examples:
 * implicit similarity webs,
 * or broad multi-object narrative fusion.
 
+No frame may create implied lateral or semantic graphs unless explicitly supported by the export packet.
 ---
 
 ## 11. Language frame object posture
@@ -455,6 +456,7 @@ Suggested core metrics include:
 These metrics should be computed from the frames and validation results, not from prose impressions alone.
 
 The metrics are experimental quality indicators.
+Metrics are for inspection and pressure-testing only. They do not constitute structural proof or canon readiness.
 
 They are not canon readiness proof by themselves.
 
@@ -675,3 +677,5 @@ Any future revision should therefore be judged first by whether it preserves bou
     "overall_status": "valid"
   }
 }
+
+make legal_claim a required exact string (or allow a small set of approved variants) to make validator enforcement easier
