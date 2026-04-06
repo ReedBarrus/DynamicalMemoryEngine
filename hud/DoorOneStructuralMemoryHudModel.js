@@ -1,3 +1,10 @@
+import {
+    readTrajectoryOverlay,
+    readReadinessReport,
+    readCanonCandidateDossier,
+    readConsensusReview,
+} from "./workbenchLayerReaders.js";
+
 function safeArray(value) {
     return Array.isArray(value) ? value : [];
 }
@@ -120,8 +127,11 @@ export function shortId(id) {
 export function workbenchToStructuralHudModel(workbench, crossRunReport = null) {
     const tr = workbench?.runtime?.substrate?.transition_report ?? {};
     const segTransitions = safeArray(workbench?.runtime?.substrate?.segment_transitions);
-    const readiness = workbench?.promotion_readiness?.report?.readiness_summary ?? {};
-    const trajectory = workbench?.interpretation?.trajectory ?? {};
+    const readinessReport = readReadinessReport(workbench);
+    const readiness = readinessReport?.readiness_summary ?? {};
+    const trajectory = readTrajectoryOverlay(workbench);
+    const canonCandidate = readCanonCandidateDossier(workbench);
+    const consensusReview = readConsensusReview(workbench);
     const sourceMeta = workbench?.runtime?.artifacts?.a1?.meta ?? {};
     const runtimeArtifacts = workbench?.runtime?.artifacts ?? {};
     const anomalyReports = safeArray(runtimeArtifacts?.anomaly_reports);
@@ -349,6 +359,15 @@ export function workbenchToStructuralHudModel(workbench, crossRunReport = null) 
                 Number(workbench?.runtime?.audit?.consensus_receipts?.length ?? 0) || 0,
         },
 
+        layer_sources: {
+            runtime: "workbench.runtime",
+            semantic_overlay: "workbench.semantic_overlay with interpretation aliases as fallback only",
+            readiness_overlay: "workbench.readiness_overlay with compatibility aliases as fallback only",
+            review_overlay: "workbench.review_overlay with compatibility aliases as fallback only",
+            posture_note:
+                "HUD model remains a read-side projection of separated layers. Structural runtime stays primary; semantic, readiness, and review remain downstream.",
+        },
+
         structure: {
             convergence: trajectory?.trajectory_character?.convergence ?? "unknown",
             motion: trajectory?.trajectory_character?.motion ?? "unknown",
@@ -356,7 +375,7 @@ export function workbenchToStructuralHudModel(workbench, crossRunReport = null) 
             recurrence: trajectory?.neighborhood_character?.recurrence_strength ?? "unknown",
             continuity: trajectory?.segment_character?.continuity ?? "unknown",
             transition_selectivity:
-                workbench?.promotion_readiness?.report?.evidence_domains?.transition_selectivity?.label ??
+                readinessReport?.evidence_domains?.transition_selectivity?.label ??
                 "unknown",
         },
 
@@ -364,13 +383,13 @@ export function workbenchToStructuralHudModel(workbench, crossRunReport = null) 
             readiness: readiness?.overall_readiness ?? "unknown",
             confidence: readiness?.confidence ?? "unknown",
             claim:
-                workbench?.canon_candidate?.dossier?.candidate_claim?.claim_type ?? "unknown",
+                canonCandidate?.candidate_claim?.claim_type ?? "unknown",
             consensus:
-                workbench?.consensus_review?.review?.result ?? "not_reviewed",
+                consensusReview?.result ?? "not_reviewed",
             blockers:
-                Number(workbench?.canon_candidate?.dossier?.blockers?.length ?? 0) || 0,
+                Number(canonCandidate?.blockers?.length ?? 0) || 0,
             insufficiencies:
-                Number(workbench?.canon_candidate?.dossier?.insufficiencies?.length ?? 0) || 0,
+                Number(canonCandidate?.insufficiencies?.length ?? 0) || 0,
         },
 
         neighborhoods,

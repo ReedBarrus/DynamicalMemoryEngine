@@ -390,6 +390,10 @@ ok(
     modelSingle.audit && typeof modelSingle.audit === "object",
     "A15: audit section present"
 );
+ok(
+    modelSingle.layer_sources && typeof modelSingle.layer_sources === "object",
+    "A16: layer_sources section present"
+);
 
 
 section("B. Evidence mapping remains observational");
@@ -429,45 +433,57 @@ eq(
     wbSingle.consensus_review?.review?.result ?? "not_reviewed",
     "B7: consensus mapped from bounded review posture"
 );
+ok(
+    modelSingle.layer_sources.semantic_overlay.includes("semantic_overlay"),
+    "B8: semantic overlay source note points to separated bundle"
+);
+ok(
+    modelSingle.layer_sources.readiness_overlay.includes("readiness_overlay"),
+    "B9: readiness source note points to separated bundle"
+);
+ok(
+    modelSingle.layer_sources.review_overlay.includes("review_overlay"),
+    "B10: review source note points to separated bundle"
+);
 eq(
     modelCross.cross_run?.report_type,
     wbCross.cross_run?.report?.report_type,
-    "B8: cross-run report passed through observationally"
+    "B11: cross-run report passed through observationally"
 );
 eq(
     modelSingle.provenance.stream_id,
     wbSingle.scope.stream_id,
-    "B9: provenance stream_id mapped from workbench scope"
+    "B12: provenance stream_id mapped from workbench scope"
 );
 eq(
     modelSingle.audit.skipped_windows,
     wbSingle.runtime?.audit?.skipped_windows?.length ?? 0,
-    "B10: audit skipped_windows mapped from runtime audit"
+    "B13: audit skipped_windows mapped from runtime audit"
 );
 eq(
     modelSingle.runtime_evidence.artifact_counts.m1s,
     wbSingle.runtime?.artifacts?.m1s?.length ?? 0,
-    "B11: merged-state count mapped from runtime artifacts"
+    "B14: merged-state count mapped from runtime artifacts"
 );
 eq(
     modelSingle.runtime_evidence.total_re_entries,
     wbSingle.runtime?.substrate?.transition_report?.total_re_entries ?? 0,
-    "B12: total_re_entries mapped from transition report"
+    "B15: total_re_entries mapped from transition report"
 );
 eq(
     modelSingle.runtime_evidence.segment_boundary_events,
     wbSingle.runtime?.substrate?.segment_transitions?.length ?? 0,
-    "B13: segment boundary count mapped from segment transitions"
+    "B16: segment boundary count mapped from segment transitions"
 );
 ok(
     modelSingle.runtime_evidence.segment_event_types &&
     typeof modelSingle.runtime_evidence.segment_event_types === "object",
-    "B14: segment event types summary present"
+    "B17: segment event types summary present"
 );
 ok(
     modelSingle.runtime_evidence.anomaly_type_counts &&
     typeof modelSingle.runtime_evidence.anomaly_type_counts === "object",
-    "B15: anomaly type summary present"
+    "B18: anomaly type summary present"
 );
 
 section("C. Browser HUD projection surface");

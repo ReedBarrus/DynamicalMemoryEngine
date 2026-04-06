@@ -24,6 +24,12 @@
 
 "use strict";
 
+import {
+    readReadinessReport,
+    readCanonCandidateDossier,
+    readConsensusReview,
+} from "./workbenchLayerReaders.js";
+
 // ─── ID generation ────────────────────────────────────────────────────────────
 function makeRequestId(type) {
     const ts = Date.now();
@@ -38,8 +44,9 @@ function makeRequestId(type) {
 function extractLineage(workbench, runResult) {
     if (!workbench && !runResult) return {};
     const scope = workbench?.scope ?? {};
-    const dossier = workbench?.canon_candidate?.dossier ?? {};
-    const readiness = workbench?.promotion_readiness?.report ?? {};
+    const dossier = readCanonCandidateDossier(workbench);
+    const readiness = readReadinessReport(workbench);
+    const consensusReview = readConsensusReview(workbench);
     const a1 = runResult?.artifacts?.a1
         ?? runResult?.ingest?.artifact
         ?? workbench?.runtime?.artifacts?.a1
@@ -57,7 +64,7 @@ function extractLineage(workbench, runResult) {
         anomaly_count: anomalyReports.length,
         overall_readiness: readiness?.readiness_summary?.overall_readiness ?? null,
         candidate_claim_type: dossier?.candidate_claim?.claim_type ?? null,
-        consensus_result: workbench?.consensus_review?.review?.result ?? null,
+        consensus_result: consensusReview?.result ?? null,
     };
 }
 

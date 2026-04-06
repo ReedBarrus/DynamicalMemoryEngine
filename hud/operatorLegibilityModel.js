@@ -11,6 +11,11 @@ import { deriveMemorySupportClassification } from "./memorySupportClassification
 import { deriveCompressionRemintingAccountability } from "./compressionRemintingAccountability.js";
 import { deriveBoundedObjectTracking } from "./boundedObjectTracking.js";
 import { deriveWeakStateAccounting } from "./weakStateAccounting.js";
+import {
+    readTrajectoryOverlay,
+    readReadinessReport,
+    readCanonCandidateDossier,
+} from "./workbenchLayerReaders.js";
 
 function safeArray(value) {
     return Array.isArray(value) ? value : [];
@@ -917,7 +922,7 @@ function replayStageStatus({ replay, hasActiveResult }) {
 }
 
 function buildInterpretationStage({ hasActiveResult, sourceFamilyLabel, runResult, workbench }) {
-    const trajectory = workbench?.interpretation?.trajectory ?? {};
+    const trajectory = readTrajectoryOverlay(workbench);
     const tracking = deriveBoundedObjectTracking({
         objectKind: "interpretation_overlay",
         hasActiveResult,
@@ -933,7 +938,7 @@ function buildInterpretationStage({ hasActiveResult, sourceFamilyLabel, runResul
             ? "Interpretation overlay"
             : "Interpretation overlay awaiting structural evidence",
         producedBy: hasActiveResult
-            ? "Trajectory and attention-memory read-side interpretation reports"
+            ? "Semantic overlay bundle sourced from trajectory and attention-memory reports"
             : "Requires runtime evidence before overlay can be shown",
         dependsOn: hasActiveResult
             ? joinParts([
@@ -943,22 +948,27 @@ function buildInterpretationStage({ hasActiveResult, sourceFamilyLabel, runResul
             ])
             : "Depends on runtime evidence and retained support",
         currentStatus: hasActiveResult
-            ? "displayed overlay | lower authority than source and structural evidence"
+            ? "displayed semantic overlay | lower authority than structural runtime evidence"
             : "awaiting_run",
         legalClaim: hasActiveResult
-            ? "Bounded interpretation only. It overlays structural evidence and does not replace it."
+            ? "Bounded semantic overlay only. It reads from structural evidence and does not replace runtime, readiness, or review surfaces."
             : "No interpretation claim is available without runtime evidence.",
         nextAction: hasActiveResult
-            ? "Use interpretation to orient review, not to overrule structural evidence."
+            ? "Use semantic overlay to orient review, not to collapse runtime, readiness, and review into one claim surface."
             : "Run a source before interpretation becomes available.",
-        auditFacts: trackingAuditFacts(tracking),
+        auditFacts: [
+            ...trackingAuditFacts(tracking),
+            ["bundle source", "semantic_overlay bundle primary; interpretation aliases fallback only"],
+        ],
         postureNote: tracking.addressBoundary,
     };
 }
 
 function buildReviewStage({ hasActiveResult, sourceFamilyLabel, runResult, activeRequest, requestLog, workbench }) {
-    const readiness = workbench?.promotion_readiness?.report?.readiness_summary?.overall_readiness ?? "unknown";
-    const claimType = workbench?.canon_candidate?.dossier?.candidate_claim?.claim_type ?? "candidate_only";
+    const readinessReport = readReadinessReport(workbench);
+    const canonCandidate = readCanonCandidateDossier(workbench);
+    const readiness = readinessReport?.readiness_summary?.overall_readiness ?? "unknown";
+    const claimType = canonCandidate?.candidate_claim?.claim_type ?? "candidate_only";
     const memoryClass = deriveMemorySupportClassification({
         objectKind: "review_gate",
         hasActiveResult,
@@ -1006,6 +1016,7 @@ function buildReviewStage({ hasActiveResult, sourceFamilyLabel, runResult, activ
             : "Run a source before review-facing surfaces can be prepared.",
         auditFacts: [
             ...trackingAuditFacts(tracking),
+            ["bundle source", "readiness_overlay and review_overlay primary; compatibility aliases fallback only"],
             ["memory / support class", memoryClass.classLabel],
             ["classification basis", memoryClass.classificationBasis],
             ["memory next posture", memoryClass.lawfulNextPosture],

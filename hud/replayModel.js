@@ -27,6 +27,7 @@
 "use strict";
 
 import { reconstructFromReplayRequest } from "../runtime/reconstruction/ProvenanceReconstructionPipeline.js";
+import { readReadinessReport, readCanonCandidateDossier } from "./workbenchLayerReaders.js";
 
 function makeReplayId(type) {
     const ts = Date.now();
@@ -178,8 +179,8 @@ export function buildRuntimeReconstructionReplay({
 
     const id = makeReplayId("runtime_reconstruction");
     const scope = workbench?.scope ?? {};
-    const read = workbench?.promotion_readiness?.report ?? {};
-    const dos = workbench?.canon_candidate?.dossier ?? {};
+    const read = readReadinessReport(workbench);
+    const dos = readCanonCandidateDossier(workbench);
     const lens = declareLens(sourceFamilyLabel, runResult);
     const tier = retainedTierOverride ?? declareRetainedTier(runResult);
     const normalizedReceiptSupport = normalizeReceiptSupport(receiptSupport);

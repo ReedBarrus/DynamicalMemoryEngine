@@ -162,6 +162,8 @@ section("D. projectForHUD — shape and density");
     ok(typeof hud.provenance.run_label === "string", "D3: provenance.run_label present");
     ok(typeof hud.provenance.segment_count_label === "string", "D4: segment_count_label present");
     ok(typeof hud.provenance.cross_run_label === "string", "D5: cross_run_label present");
+    ok(typeof hud.layer_boundary?.runtime === "string", "D5b: HUD layer_boundary runtime note present");
+    ok(typeof hud.layer_boundary?.semantic_overlay === "string", "D5c: HUD layer_boundary semantic note present");
 
     // 2. Evidence (full counts)
     eq(hud.evidence.harmonic_state_count, 10, "D6: harmonic_state_count preserved");
@@ -198,6 +200,7 @@ section("E. projectForDemo — calmer and narrower");
     ok(typeof demo.provenance.object_label === "string", "E2: object_label present");
     ok(typeof demo.provenance.declared_lens === "string", "E3: declared_lens present");
     ok("source_profile_note" in demo.provenance, "E3b: source_profile_note present in demo provenance");
+    ok(typeof demo.layer_boundary_note === "string", "E3c: demo layer_boundary_note present");
 
     // 2. Evidence compact (no raw counts)
     ok(Array.isArray(demo.evidence.summary_lines) && demo.evidence.summary_lines.length > 0,

@@ -27,6 +27,13 @@
 
 "use strict";
 
+import {
+    readTrajectoryOverlay,
+    readReadinessReport,
+    readCanonCandidateDossier,
+    readConsensusReview,
+} from "../workbenchLayerReaders.js";
+
 // ─── Input normalizer ─────────────────────────────────────────────────────────
 // Accepts the shape emitted by the execution shell and normalizes missing fields
 // gracefully. Does not re-derive runtime values from raw operators.
@@ -99,8 +106,9 @@ function extractProvenance(input) {
 function extractEvidence(input) {
     const { runResult, workbench } = input;
     const runtime = workbench?.runtime ?? {};
-    const r = workbench?.promotion_readiness?.report ?? {};
-    const dos = workbench?.canon_candidate?.dossier ?? {};
+    const r = readReadinessReport(workbench);
+    const dos = readCanonCandidateDossier(workbench);
+    const review = readConsensusReview(workbench);
     const anomalyReports = runtime?.artifacts?.anomaly_reports ?? runResult?.anomalies ?? [];
     const harmonicStateCount = safeNum(runtime?.artifacts?.h1s?.length ?? workbench?.runtime_evidence?.harmonic_state_count);
     const mergedStateCount = safeNum(runtime?.artifacts?.m1s?.length ?? workbench?.runtime_evidence?.merged_state_count);
@@ -119,7 +127,7 @@ function extractEvidence(input) {
         })),
         overall_readiness: safeStr(r?.readiness_summary?.overall_readiness),
         candidate_claim_type: safeStr(dos?.candidate_claim?.claim_type),
-        consensus_result: safeStr(workbench?.consensus_review?.review?.result),
+        consensus_result: safeStr(review?.result),
     };
 }
 
@@ -131,16 +139,18 @@ function deriveInterpretation(input, evidence) {
             posture: "derived · non-authoritative · not canon",
         };
     }
+    const trajectory = readTrajectoryOverlay(input.workbench);
+    const primaryPosture = trajectory?.primary_posture ?? null;
     const readiness = evidence.overall_readiness;
     let summary;
     if (readiness === "insufficient") {
-        summary = `Current evidence is insufficient for promotion review. Runtime memory is structured and lawful. Further cross-run evidence is needed before canon review.`;
+        summary = `Current structural evidence remains bounded. Semantic overlay is available${primaryPosture ? ` with ${primaryPosture} posture` : ""}, while readiness and review stay downstream and insufficient for promotion review.`;
     } else if (readiness === "deferred") {
-        summary = `Deferred. The run produced structural evidence but additional review conditions must be met before activation consideration.`;
+        summary = `Deferred. Structural evidence is present, semantic overlay remains bounded, and downstream readiness/review conditions still need explicit resolution.`;
     } else if (evidence.anomaly_count > 0) {
-        summary = `Structural evidence is present with ${evidence.anomaly_count} anomaly event${evidence.anomaly_count > 1 ? "s" : ""} observed. Review posture and candidate dossier are available for inspection.`;
+        summary = `Structural evidence is present with ${evidence.anomaly_count} anomaly event${evidence.anomaly_count > 1 ? "s" : ""} observed. Semantic overlay, readiness, and review remain separate read-side surfaces for inspection.`;
     } else {
-        summary = `Structural evidence is present. No anomaly events observed in this run. Readiness posture and candidate dossier are available for review.`;
+        summary = `Structural evidence is present. No anomaly events observed in this run. Semantic overlay remains bounded and downstream readiness/review packaging stays separate for inspection.`;
     }
     return {
         summary,
@@ -208,6 +218,12 @@ export function projectForHUD(input) {
             cross_run_label: prov.cross_run_available
                 ? `yes · ${prov.cross_run_count} run${prov.cross_run_count !== 1 ? "s" : ""}`
                 : "no",
+        },
+        layer_boundary: {
+            runtime: "primary structural evidence",
+            semantic_overlay: "separate downstream interpretation layer",
+            readiness_overlay: "separate downstream advisory layer",
+            review_overlay: "separate downstream review layer",
         },
 
         // 2. Runtime Evidence (full counts)
@@ -310,6 +326,8 @@ export function projectForDemo(input) {
             lineage_note: prov.lineage_note,
             ingest_ok: prov.ingest_ok,
         },
+        layer_boundary_note:
+            "Provenance and runtime evidence remain primary. Semantic overlay, readiness, and review stay separate downstream read-side layers.",
 
         // 2. Evidence (compact, no raw counts)
         evidence: {
