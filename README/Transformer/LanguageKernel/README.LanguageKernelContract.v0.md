@@ -639,13 +639,23 @@ Any future revision should therefore be judged first by whether it preserves bou
 
 {
   "kernel_run_id": "string",
+  "kernel_contract_version": "v0.1",
+  "reasoning_schema_version": "v0.1",
+  "export_schema_version": "v0.1",
+  "validation_schema_version": "v0.1",
+  "model_info": {
+    "provider": "ollama",
+    "model_name": "llama3.1"
+  },
   "export_packet_id": "string",
   "declared_lens": "string",
-  "claim_ceiling": "L1",
+  "query_class": "Q3",
+  "claim_class_ceiling": "L1",
+  "legal_posture": "Read-side Language Kernel run only. No canon authority. Not structural truth. Not primary retention substance.",
   "language_frames": [
     {
-      "frame_id": "LF-001",
-      "frame_type": "reasoning",
+      "frame_id": "LF:run_1775479542686:0001",
+      "frame_type": "reasoning_overlay",
       "what_object_am_i": "string",
       "how_produced": "string",
       "depends_on": ["exact handles or prior frame_ids"],
@@ -669,13 +679,20 @@ Any future revision should therefore be judged first by whether it preserves bou
     "loss_gradient_honesty": 0.99,
     "claim_ceiling_adherence": 1.0,
     "recursion_explicitness_score": 1.0,
-    "stack_purity_score": 0.97
+    "stack_purity_score": 0.97,
+    "overall_status": "valid"
   },
   "validation_receipt": {
+    "validation_scope": "full_kernel_run",
+    "checked_artifacts": {
+      "kernel_run_id": "string",
+      "export_packet_id": "string"
+    },
+    "invariant_results": [
+      {"invariant_name": "identity", "status": "pass", "score": 1.0}
+    ],
     "passed_invariants": ["identity", "provenance", "explicit_recursion"],
     "violations": [],
     "overall_status": "valid"
   }
 }
-
-make legal_claim a required exact string (or allow a small set of approved variants) to make validator enforcement easier

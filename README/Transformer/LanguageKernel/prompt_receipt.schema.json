@@ -19,7 +19,6 @@
         "operator_mode",
         "legal_claim_string",
         "what_next_string",
-        "prompt_hash_sha256",
         "legal_posture",
         "prompt_status",
         "invoked_at"
@@ -36,14 +35,14 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 64,
-            "pattern": "^v[0-9]+(?:\.[0-9]+)?$",
+            "pattern": "^v[0-9]+(?:\\.[0-9]+)?$",
             "description": "Version of the invoker or caller that assembled and submitted the prompt."
         },
         "kernel_contract_version": {
             "type": "string",
             "minLength": 1,
             "maxLength": 64,
-            "pattern": "^v[0-9]+(?:\.[0-9]+)?$",
+            "pattern": "^v[0-9]+(?:\\.[0-9]+)?$",
             "description": "Version of the Language Kernel contract governing this prompt receipt."
         },
         "export_packet_id": {
@@ -383,6 +382,26 @@
                         "const": "L6"
                     }
                 }
+            }
+        },
+        {
+            "if": {
+                "properties": {
+                    "prompt_status": {
+                        "enum": [
+                            "assembled",
+                            "submitted"
+                        ]
+                    }
+                },
+                "required": [
+                    "prompt_status"
+                ]
+            },
+            "then": {
+                "required": [
+                    "prompt_hash_sha256"
+                ]
             }
         },
         {

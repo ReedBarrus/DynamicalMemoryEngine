@@ -27,7 +27,7 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 64,
-            "pattern": "^v[0-9]+(?:\.[0-9]+)?$",
+            "pattern": "^v[0-9]+(?:\\.[0-9]+)?$",
             "description": "Version of the validator that produced this receipt."
         },
         "validation_scope": {

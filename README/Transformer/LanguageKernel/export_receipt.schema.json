@@ -38,14 +38,14 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 64,
-            "pattern": "^v[0-9]+(?:\.[0-9]+)?$",
+            "pattern": "^v[0-9]+(?:\\.[0-9]+)?$",
             "description": "Version of the exporter that produced this receipt."
         },
         "kernel_contract_version": {
             "type": "string",
             "minLength": 1,
             "maxLength": 64,
-            "pattern": "^v[0-9]+(?:\.[0-9]+)?$",
+            "pattern": "^v[0-9]+(?:\\.[0-9]+)?$",
             "description": "Version of the Language Kernel contract governing this export."
         },
         "export_packet_id": {
@@ -159,16 +159,16 @@
         },
         "row_count": {
             "type": "integer",
-            "minimum": 1,
+            "minimum": 0,
             "maximum": 100000,
-            "description": "Number of exported rows included in the packet."
+            "description": "Number of exported rows included in the packet. May be 0 when export is blocked before row emission."
         },
         "object_handles": {
             "type": "array",
-            "minItems": 1,
+            "minItems": 0,
             "maxItems": 100000,
             "uniqueItems": true,
-            "description": "Exact exported object handles exposed to the Language Kernel.",
+            "description": "Exact exported object handles exposed to the Language Kernel. This may be empty when export is blocked before exposure.",
             "items": {
                 "type": "string",
                 "minLength": 1,
@@ -178,10 +178,10 @@
         },
         "receipt_hashes": {
             "type": "array",
-            "minItems": 1,
+            "minItems": 0,
             "maxItems": 100000,
             "uniqueItems": true,
-            "description": "Exact provenance receipt hashes exposed through the export packet.",
+            "description": "Exact provenance receipt hashes exposed through the export packet. This may be empty when export is blocked before exposure.",
             "items": {
                 "type": "string",
                 "minLength": 16,
