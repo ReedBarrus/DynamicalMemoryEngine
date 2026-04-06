@@ -346,6 +346,8 @@ ok(runC?.ok === true, "A3: runC ok");
 ok(report && typeof report === "object", "A4: compare() returns plain object");
 eq(report.report_type, "runtime:cross_run_dynamics_report", "A5: report_type correct");
 includes(report.generated_from, "not canon", "A6: generated_from denies canon");
+eq(report.comparison_posture, "evidence_first_cross_run_comparison", "A6b: report comparison_posture declared");
+eq(report.claim_ceiling, "comparative_support_only", "A6c: report claim_ceiling declared");
 ok(report.scope && typeof report.scope === "object", "A7: scope present");
 eq(report.scope.run_count, 3, "A8: scope.run_count = 3");
 deepEq(report.scope.run_labels, ["run_a", "run_b", "run_c"], "A9: scope.run_labels preserved");
@@ -369,6 +371,8 @@ ok(sigC && typeof sigC === "object", "B4: run_c signature present");
 
 ok(sigA.signature && typeof sigA.signature === "object", "B5: signature block present");
 ok(sigA.evidence && typeof sigA.evidence === "object", "B6: evidence block present");
+eq(sigA.comparison_posture, "structural_support_signature_with_subordinate_semantic_summary", "B6b: per-run signature posture declared");
+eq(sigA.claim_ceiling, "comparative_support_only", "B6c: per-run signature claim ceiling declared");
 
 ok("convergence" in sigA.signature, "B7: signature.convergence present");
 ok("motion" in sigA.signature, "B8: signature.motion present");
@@ -385,6 +389,10 @@ ok("total_transitions" in sigA.evidence, "B17: evidence.total_transitions presen
 ok("total_re_entries" in sigA.evidence, "B18: evidence.total_re_entries present");
 ok("dominant_dwell_share" in sigA.evidence, "B19: evidence.dominant_dwell_share present");
 ok("transition_density_value" in sigA.evidence, "B20: evidence.transition_density_value present");
+ok("h1_count" in sigA.evidence, "B21: evidence.h1_count present");
+ok("m1_count" in sigA.evidence, "B22: evidence.m1_count present");
+ok("anomaly_count" in sigA.evidence, "B23: evidence.anomaly_count present");
+ok("query_present" in sigA.evidence, "B24: evidence.query_present present");
 
 section("C. Pairwise comparison sanity");
 eq(report.pairwise_comparisons.length, 3, "C1: 3 pairwise comparisons for 3 runs");
@@ -400,8 +408,11 @@ ok(pairAB && typeof pairAB === "object", "C2: pairwise run_a/run_b present");
 ok(pairAC && typeof pairAC === "object", "C3: pairwise run_a/run_c present");
 
 isOneOf(pairAB.similarity, ["low", "medium", "high"], "C4: pairAB similarity label allowed");
+eq(pairAB.comparison_posture, "evidence_first_pairwise_comparison", "C4b: pairwise comparison posture declared");
+eq(pairAB.claim_ceiling, "comparative_support_only", "C4c: pairwise claim ceiling declared");
 ok(pairAB.differences && typeof pairAB.differences === "object", "C5: pairAB differences block present");
 ok(pairAB.evidence && typeof pairAB.evidence === "object", "C6: pairAB evidence block present");
+ok(pairAB.semantic_summary && typeof pairAB.semantic_summary === "object", "C6b: pairAB semantic_summary present");
 
 ok("convergence_changed" in pairAB.differences, "C7: pairAB differences.convergence_changed present");
 ok("motion_changed" in pairAB.differences, "C8: pairAB differences.motion_changed present");
@@ -413,19 +424,27 @@ ok("memory_shift" in pairAB.differences, "C12: pairAB differences.memory_shift p
 ok("shared_labels" in pairAB.evidence, "C13: pairAB evidence.shared_labels present");
 ok("differing_labels" in pairAB.evidence, "C14: pairAB evidence.differing_labels present");
 ok("similarity_ratio" in pairAB.evidence, "C15: pairAB evidence.similarity_ratio present");
-ok("segment_count_delta" in pairAB.evidence, "C16: pairAB evidence.segment_count_delta present");
-ok("dominant_dwell_share_delta" in pairAB.evidence, "C17: pairAB evidence.dominant_dwell_share_delta present");
-ok("transition_density_delta" in pairAB.evidence, "C18: pairAB evidence.transition_density_delta present");
+ok("semantic_similarity_ratio" in pairAB.evidence, "C16: pairAB evidence.semantic_similarity_ratio present");
+ok("segment_count_delta" in pairAB.evidence, "C17: pairAB evidence.segment_count_delta present");
+ok("dominant_dwell_share_delta" in pairAB.evidence, "C18: pairAB evidence.dominant_dwell_share_delta present");
+ok("transition_density_delta" in pairAB.evidence, "C19: pairAB evidence.transition_density_delta present");
 
 ok(
     Number.isFinite(pairAB.evidence.similarity_ratio) &&
     pairAB.evidence.similarity_ratio >= 0 &&
     pairAB.evidence.similarity_ratio <= 1,
-    "C19: pairAB similarity_ratio in [0,1]"
+    "C20: pairAB similarity_ratio in [0,1]"
+);
+ok(
+    pairAB.semantic_summary.subordinate_to_evidence === true,
+    "C21: semantic summary explicitly subordinate to evidence"
 );
 
 section("D. Reproducibility summary");
 const rs = report.reproducibility_summary;
+eq(rs.comparison_posture, "evidence_first_reproducibility_summary", "D0: reproducibility comparison_posture declared");
+eq(rs.claim_ceiling, "comparative_support_only", "D0b: reproducibility claim ceiling declared");
+isOneOf(rs.structural_reproducibility, ["low", "medium", "high", "insufficient_data"], "D0c: structural reproducibility allowed");
 isOneOf(rs.convergence_reproducibility, ["low", "medium", "high", "insufficient_data"], "D1: convergence reproducibility allowed");
 isOneOf(rs.neighborhood_reproducibility, ["low", "medium", "high", "insufficient_data"], "D2: neighborhood reproducibility allowed");
 isOneOf(rs.segment_reproducibility, ["low", "medium", "high", "insufficient_data"], "D3: segment reproducibility allowed");
@@ -466,6 +485,14 @@ ok(
     report.notes.some(n => n.includes("Repeated structure strengthens evidence but does not prove ontology or true dynamical basin membership.")),
     "F14: notes preserve no-ontology/no-true-basin boundary"
 );
+ok(
+    report.notes.some(n => n.includes("Structural/support evidence is compared first")),
+    "F15: notes preserve evidence-first comparison boundary"
+);
+ok(
+    report.notes.some(n => n.includes("same-object continuity, memory closure, or identity closure")),
+    "F16: notes preserve anti-closure boundary"
+);
 
 section("G. Failed input handling");
 const fail0 = crd.compare([]);
@@ -488,5 +515,64 @@ eq(single.scope.run_count, 1, "H1: single-run scope.run_count = 1");
 eq(single.per_run_signatures.length, 1, "H2: single-run still emits one signature");
 eq(single.pairwise_comparisons.length, 0, "H3: single-run emits zero pairwise comparisons");
 eq(single.reproducibility_summary.overall_reproducibility, "insufficient_data", "H4: single-run overall reproducibility insufficient_data");
+
+section("I. Evidence-first restraint");
+const semanticOnlyShift = clone(runB);
+semanticOnlyShift.run_label = "semantic_only_shift";
+semanticOnlyShift.semantic_overlay = clone(runA.semantic_overlay ?? {});
+semanticOnlyShift.interpretation = clone(runA.interpretation ?? {});
+semanticOnlyShift.semantic_overlay = semanticOnlyShift.semantic_overlay ?? {};
+semanticOnlyShift.semantic_overlay.trajectory = clone(
+    semanticOnlyShift.semantic_overlay.trajectory ?? semanticOnlyShift.interpretation?.trajectory ?? {}
+);
+semanticOnlyShift.semantic_overlay.trajectory.trajectory_character = {
+    ...(semanticOnlyShift.semantic_overlay.trajectory.trajectory_character ?? {}),
+    convergence: "shifted_convergence",
+    motion: "shifted_motion",
+};
+semanticOnlyShift.semantic_overlay.trajectory.segment_character = {
+    ...(semanticOnlyShift.semantic_overlay.trajectory.segment_character ?? {}),
+    continuity: "shifted_continuity",
+};
+
+const semanticFirstReport = crd.compare([runA, semanticOnlyShift]);
+const semanticPair = semanticFirstReport.pairwise_comparisons[0];
+ok(
+    semanticPair.evidence.similarity_ratio >= semanticPair.evidence.semantic_similarity_ratio,
+    "I1: strong structural evidence is not lowered below weaker semantic label similarity"
+);
+eq(semanticPair.similarity, "high", "I2: semantic-only divergence does not collapse evidence-led similarity");
+
+const evidenceOnlyShift = clone(runA);
+evidenceOnlyShift.run_label = "evidence_only_shift";
+evidenceOnlyShift.artifacts = clone(runA.artifacts);
+evidenceOnlyShift.substrate = clone(runA.substrate);
+evidenceOnlyShift.artifacts.h1s = [];
+evidenceOnlyShift.artifacts.m1s = [];
+evidenceOnlyShift.artifacts.anomaly_reports = Array.from({ length: 6 }, (_, idx) => ({ artifact_class: "An", id: `an.${idx}` }));
+evidenceOnlyShift.artifacts.q = null;
+evidenceOnlyShift.substrate.state_count = 40;
+evidenceOnlyShift.substrate.basin_count = 7;
+evidenceOnlyShift.substrate.segment_count = 9;
+evidenceOnlyShift.substrate.transition_report = {
+    ...(evidenceOnlyShift.substrate.transition_report ?? {}),
+    total_transitions: 12,
+    total_re_entries: 5,
+};
+
+const evidenceFirstReport = crd.compare([runA, evidenceOnlyShift]);
+const evidencePair = evidenceFirstReport.pairwise_comparisons[0];
+ok(
+    evidencePair.evidence.semantic_similarity_ratio > evidencePair.evidence.similarity_ratio,
+    "I3: semantic similarity can exceed evidence similarity without taking precedence"
+);
+ok(
+    evidencePair.similarity !== "high",
+    "I4: label-space agreement does not round weak evidence upward to high similarity"
+);
+ok(
+    evidencePair.semantic_summary.caution_posture === "semantic_similarity_narrowed_to_structural_support",
+    "I5: semantic-over-evidence caution posture is explicit"
+);
 
 finish();
