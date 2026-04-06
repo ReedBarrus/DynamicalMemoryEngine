@@ -17,6 +17,11 @@
  * - three query modes: IDENTITY (complex bin vectors), ENERGY (spectral energy),
  *   BAND_PROFILE (normalized distribution, scale-invariant)
  * - four query kinds: similarity, band_lookup, energy_trend, compare
+ * - current truthful query-class support is narrow:
+ *     * Q0 observation / descriptive for energy_trend
+ *     * Q1 structural retrieval for similarity, band_lookup, compare
+ *   stronger continuity, support, memory, identity, review, or consultation
+ *   query classes remain deferred at this seam
  * - deterministic given identical corpus + query_spec + query_policy;
  *   tie-break: score desc, then ref lexicographic
  * - never mutates corpus objects
@@ -124,6 +129,7 @@
  * @property {string[]} filters
  * @property {string[]} consulted_refs
  * @property {boolean} lens_artifact_used
+ * @property {string} query_support_subset
  */
 
 /**
@@ -131,7 +137,13 @@
  * @property {string} artifact_type
  * @property {"Q"} artifact_class
  * @property {string} query_id
+ * @property {QueryKind} kind
  * @property {QueryMode} mode
+ * @property {string} query_class
+ * @property {string} claim_ceiling
+ * @property {string} answer_posture
+ * @property {string} downgrade_posture
+ * @property {string[]} explicit_non_claims
  * @property {QueryScope} scope
  * @property {QueryResultItem[]} results
  * @property {Object} receipts
@@ -248,6 +260,8 @@ export class QueryOp {
         const mode = query_spec.mode;
         const kind = query_spec.kind;
         const topK = query_policy.topK ?? 10;
+        const queryClass = deriveQueryClass(kind);
+        const claimCeiling = deriveClaimCeiling(queryClass);
 
         let results = [];
         let consultedRefs = scoped.map(makeInputRef);
@@ -400,7 +414,13 @@ export class QueryOp {
             artifact_type: "QueryResult",
             artifact_class: "Q",
             query_id: query_spec.query_id,
+            kind,
             mode,
+            query_class: queryClass,
+            claim_ceiling: claimCeiling,
+            answer_posture: deriveAnswerPosture({ queryClass, results }),
+            downgrade_posture: deriveDowngradePosture({ queryClass, results }),
+            explicit_non_claims: explicitNonClaimsForQueryClass(queryClass),
             scope: query_spec.scope,
             results,
             receipts: {
@@ -412,6 +432,7 @@ export class QueryOp {
                     filters,
                     consulted_refs: consultedRefs,
                     lens_artifact_used: lensArtifactUsed,
+                    query_support_subset: "Q0 observation and Q1 structural retrieval only; Q2+ deferred at this seam",
                 },
             },
             provenance: {
@@ -423,6 +444,52 @@ export class QueryOp {
 
         return { ok: true, artifact };
     }
+}
+
+function deriveQueryClass(kind) {
+    if (kind === "energy_trend") return "Q0_observation";
+    if (["similarity", "band_lookup", "compare"].includes(kind)) return "Q1_structural";
+    return "Q_unknown";
+}
+
+function deriveClaimCeiling(queryClass) {
+    if (queryClass === "Q0_observation") return "L0_descriptive_only";
+    if (queryClass === "Q1_structural") return "L0_descriptive_or_structural_support_only";
+    return "deferred";
+}
+
+function deriveAnswerPosture({ queryClass, results }) {
+    const count = Array.isArray(results) ? results.length : 0;
+    if (count === 0) {
+        return queryClass === "Q0_observation"
+            ? "descriptive_no_match"
+            : "structural_no_match";
+    }
+    if (queryClass === "Q0_observation") return "descriptive_match_set";
+    if (queryClass === "Q1_structural") return "structural_match_set";
+    return "deferred";
+}
+
+function deriveDowngradePosture({ queryClass, results }) {
+    const count = Array.isArray(results) ? results.length : 0;
+    if (count === 0) {
+        return "empty result set | no stronger closure is justified from this query at the current seam";
+    }
+    if (queryClass === "Q0_observation") {
+        return "observation-only | returned matches do not become structural continuity, memory, or identity claims";
+    }
+    if (queryClass === "Q1_structural") {
+        return "structural-only | retrieval similarity does not become support, memory, continuity, or identity closure";
+    }
+    return "deferred | stronger query posture remains unsupported at this seam";
+}
+
+function explicitNonClaimsForQueryClass(queryClass) {
+    const base = ["not truth", "not canon", "not a memory claim", "not an identity claim"];
+    if (queryClass === "Q0_observation") {
+        return [...base, "not a structural continuity verdict"];
+    }
+    return [...base, "not a continuity verdict"];
 }
 
 /**
