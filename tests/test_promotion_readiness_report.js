@@ -350,18 +350,29 @@ section("A. Output shape");
 ok(runA?.ok === true, "A1: runA ok");
 ok(reportNoCross && typeof reportNoCross === "object", "A2: interpret() returns plain object");
 eq(reportNoCross.report_type, "runtime:promotion_readiness_report", "A3: report_type correct");
-includes(reportNoCross.generated_from, "not canon", "A4: generated_from denies canon");
-includes(reportNoCross.generated_from, "not promotion", "A5: generated_from denies promotion");
-ok(reportNoCross.scope && typeof reportNoCross.scope === "object", "A6: scope present");
-ok(reportNoCross.readiness_summary && typeof reportNoCross.readiness_summary === "object", "A7: readiness_summary present");
-ok(reportNoCross.evidence_domains && typeof reportNoCross.evidence_domains === "object", "A8: evidence_domains present");
-ok(Array.isArray(reportNoCross.blockers), "A9: blockers array present");
-ok(Array.isArray(reportNoCross.insufficiencies), "A10: insufficiencies array present");
-ok(reportNoCross.promotion_hints && typeof reportNoCross.promotion_hints === "object", "A11: promotion_hints present");
-ok(Array.isArray(reportNoCross.readiness_flags), "A12: readiness_flags array present");
-ok(Array.isArray(reportNoCross.notes), "A13: notes array present");
-eq(reportNoCross.scope.stream_id, runA?.artifacts?.a1?.stream_id ?? null, "A14: scope.stream_id sourced from A1");
-deepEq(reportNoCross.scope.segment_ids, runA?.substrate?.segment_ids ?? [], "A15: scope.segment_ids preserved from substrate");
+eq(reportNoCross.report_kind, "promotion_readiness_advisory_overlay", "A4: report_kind correct");
+eq(reportNoCross.query_class, "Q7_consultation_readiness", "A5: query_class explicit");
+eq(reportNoCross.claim_ceiling, "readiness_only", "A6: claim_ceiling explicit");
+includes(reportNoCross.generated_from, "not canon", "A7: generated_from denies canon");
+includes(reportNoCross.generated_from, "not promotion", "A8: generated_from denies promotion");
+includes(reportNoCross.generated_from, "not approval", "A9: generated_from denies approval");
+ok(reportNoCross.scope && typeof reportNoCross.scope === "object", "A10: scope present");
+ok(typeof reportNoCross.primary_posture === "string", "A11: primary_posture present");
+ok(Array.isArray(reportNoCross.primary_descriptors), "A12: primary_descriptors present");
+ok(Array.isArray(reportNoCross.secondary_descriptors), "A13: secondary_descriptors present");
+ok(Array.isArray(reportNoCross.evidence_refs), "A14: evidence_refs present");
+ok(Array.isArray(reportNoCross.explicit_non_claims), "A15: explicit_non_claims present");
+ok(reportNoCross.advisory_posture && typeof reportNoCross.advisory_posture === "object", "A16: advisory_posture present");
+ok(reportNoCross.readiness_summary && typeof reportNoCross.readiness_summary === "object", "A17: readiness_summary present");
+ok(reportNoCross.evidence_domains && typeof reportNoCross.evidence_domains === "object", "A18: evidence_domains present");
+ok(Array.isArray(reportNoCross.blockers), "A19: blockers array present");
+ok(Array.isArray(reportNoCross.insufficiencies), "A20: insufficiencies array present");
+ok(reportNoCross.advisory_horizon && typeof reportNoCross.advisory_horizon === "object", "A21: advisory_horizon present");
+ok(reportNoCross.promotion_hints && typeof reportNoCross.promotion_hints === "object", "A22: promotion_hints compatibility surface present");
+ok(Array.isArray(reportNoCross.readiness_flags), "A23: readiness_flags array present");
+ok(Array.isArray(reportNoCross.notes), "A24: notes array present");
+eq(reportNoCross.scope.stream_id, runA?.artifacts?.a1?.stream_id ?? null, "A25: scope.stream_id sourced from A1");
+deepEq(reportNoCross.scope.segment_ids, runA?.substrate?.segment_ids ?? [], "A26: scope.segment_ids preserved from substrate");
 
 section("B. Evidence discipline");
 const domains = reportNoCross.evidence_domains;
@@ -418,9 +429,11 @@ section("E. Label sanity");
 const readiness = reportWithCross.readiness_summary;
 isOneOf(readiness.overall_readiness, ["low", "medium", "high", "insufficient_data"], "E1: overall_readiness allowed");
 isOneOf(readiness.confidence_posture, ["cautious", "developing", "supported"], "E2: confidence_posture allowed");
+isOneOf(reportWithCross.advisory_posture.posture, ["advisory_insufficient", "advisory_blocked", "advisory_supported", "advisory_developing", "advisory_cautious", "advisory_limited"], "E3: advisory_posture.posture allowed");
+isOneOf(reportWithCross.advisory_posture.review_horizon, ["defer", "blocked", "supported", "developing", "cautious", "limited"], "E4: advisory_posture.review_horizon allowed");
 
 for (const [name, domain] of Object.entries(reportWithCross.evidence_domains)) {
-    isOneOf(domain.label, ["low", "medium", "high", "insufficient_data"], `E3: ${name}.label allowed`);
+    isOneOf(domain.label, ["low", "medium", "high", "insufficient_data"], `E5: ${name}.label allowed`);
 }
 
 section("F. Determinism");
@@ -439,22 +452,29 @@ notIncludes(json, '"promotion_action"', "G6: no promotion action object");
 notIncludes(json, '"promote"', "G7: no promote field");
 notIncludes(json, '"true basin"', "G8: no true basin claim");
 notIncludes(json, '"attractor basin"', "G9: no attractor basin language");
+notIncludes(json, '"approval"', "G10: no approval key");
 
-includes(reportWithCross.generated_from, "not canon", "G10: generated_from denies canon");
-includes(reportWithCross.generated_from, "not promotion", "G11: generated_from denies promotion");
-includes(reportWithCross.generated_from, "not ontology", "G12: generated_from denies ontology");
+includes(reportWithCross.generated_from, "not canon", "G11: generated_from denies canon");
+includes(reportWithCross.generated_from, "not promotion", "G12: generated_from denies promotion");
+includes(reportWithCross.generated_from, "not approval", "G13: generated_from denies approval");
+includes(reportWithCross.generated_from, "not ontology", "G14: generated_from denies ontology");
+ok(reportWithCross.primary_descriptors.length <= 3, "G15: primary descriptor count bounded");
+ok(reportWithCross.secondary_descriptors.length <= 2, "G16: secondary descriptor count bounded");
+ok(reportWithCross.explicit_non_claims.includes("not_promotion"), "G17: explicit_non_claims deny promotion");
+ok(reportWithCross.explicit_non_claims.includes("not_approval"), "G18: explicit_non_claims deny approval");
+ok(reportWithCross.explicit_non_claims.includes("not_runtime_substance"), "G19: explicit_non_claims deny runtime substance");
 
 ok(
-    reportWithCross.notes.some(n => n.includes("Promotion readiness is not canon and does not promote memory by itself.")),
-    "G13: notes preserve no-canon/no-promotion boundary"
+    reportWithCross.notes.some(n => n.includes("Promotion readiness is an advisory downstream surface only and does not imply approval or promotion.")),
+    "G20: notes preserve advisory/non-promotional boundary"
 );
 ok(
-    reportWithCross.notes.some(n => n.includes("Readiness summarizes evidence, blockers, and insufficiencies only.")),
-    "G14: notes preserve evidence-only boundary"
+    reportWithCross.notes.some(n => n.includes("Readiness summarizes evidence, blockers, insufficiencies, and review horizon only.")),
+    "G21: notes preserve evidence-only boundary"
 );
 ok(
     reportWithCross.notes.some(n => n.includes("Repeated structure strengthens evidence but does not prove ontology or true dynamical basin membership.")),
-    "G15: notes preserve no-ontology/no-true-basin boundary"
+    "G22: notes preserve no-ontology/no-true-basin boundary"
 );
 
 section("H. Failed input handling");

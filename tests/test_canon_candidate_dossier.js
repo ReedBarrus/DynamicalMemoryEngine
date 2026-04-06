@@ -347,19 +347,30 @@ section("A. Output shape");
 ok(runA?.ok === true, "A1: runA ok");
 ok(dossierNoCross && typeof dossierNoCross === "object", "A2: assemble() returns plain object");
 eq(dossierNoCross.dossier_type, "runtime:canon_candidate_dossier", "A3: dossier_type correct");
-includes(dossierNoCross.generated_from, "not canon", "A4: generated_from denies canon");
-includes(dossierNoCross.generated_from, "not promotion", "A5: generated_from denies promotion");
-ok(dossierNoCross.scope && typeof dossierNoCross.scope === "object", "A6: scope present");
-ok(dossierNoCross.candidate_claim && typeof dossierNoCross.candidate_claim === "object", "A7: candidate_claim present");
-ok(dossierNoCross.source_refs && typeof dossierNoCross.source_refs === "object", "A8: source_refs present");
-ok(dossierNoCross.evidence_bundle && typeof dossierNoCross.evidence_bundle === "object", "A9: evidence_bundle present");
-ok(Array.isArray(dossierNoCross.blockers), "A10: blockers array present");
-ok(Array.isArray(dossierNoCross.insufficiencies), "A11: insufficiencies array present");
-ok(dossierNoCross.promotion_recommendation && typeof dossierNoCross.promotion_recommendation === "object", "A12: promotion_recommendation present");
-ok(dossierNoCross.receipts && typeof dossierNoCross.receipts === "object", "A13: receipts present");
-ok(Array.isArray(dossierNoCross.notes), "A14: notes array present");
-ok(typeof dossierNoCross.candidate_id === "string" && dossierNoCross.candidate_id.startsWith("ccd:"), "A15: candidate_id present and prefixed");
-ok(typeof dossierNoCross.generated_at === "string", "A16: generated_at string present");
+eq(dossierNoCross.report_kind, "canon_candidate_review_packaging", "A4: report_kind correct");
+eq(dossierNoCross.query_class, "Q6_review", "A5: query_class explicit");
+eq(dossierNoCross.claim_ceiling, "review_only", "A6: claim_ceiling explicit");
+includes(dossierNoCross.generated_from, "not canon", "A7: generated_from denies canon");
+includes(dossierNoCross.generated_from, "not promotion", "A8: generated_from denies promotion");
+includes(dossierNoCross.generated_from, "not approval", "A9: generated_from denies approval");
+ok(dossierNoCross.scope && typeof dossierNoCross.scope === "object", "A10: scope present");
+ok(typeof dossierNoCross.primary_posture === "string", "A11: primary_posture present");
+ok(Array.isArray(dossierNoCross.primary_descriptors), "A12: primary_descriptors present");
+ok(Array.isArray(dossierNoCross.secondary_descriptors), "A13: secondary_descriptors present");
+ok(Array.isArray(dossierNoCross.evidence_refs), "A14: evidence_refs present");
+ok(Array.isArray(dossierNoCross.explicit_non_claims), "A15: explicit_non_claims present");
+ok(dossierNoCross.review_packaging_posture && typeof dossierNoCross.review_packaging_posture === "object", "A16: review_packaging_posture present");
+ok(dossierNoCross.review_horizon && typeof dossierNoCross.review_horizon === "object", "A17: review_horizon present");
+ok(dossierNoCross.candidate_claim && typeof dossierNoCross.candidate_claim === "object", "A18: candidate_claim present");
+ok(dossierNoCross.source_refs && typeof dossierNoCross.source_refs === "object", "A19: source_refs present");
+ok(dossierNoCross.evidence_bundle && typeof dossierNoCross.evidence_bundle === "object", "A20: evidence_bundle present");
+ok(Array.isArray(dossierNoCross.blockers), "A21: blockers array present");
+ok(Array.isArray(dossierNoCross.insufficiencies), "A22: insufficiencies array present");
+ok(dossierNoCross.promotion_recommendation && typeof dossierNoCross.promotion_recommendation === "object", "A23: promotion_recommendation compatibility surface present");
+ok(dossierNoCross.receipts && typeof dossierNoCross.receipts === "object", "A24: receipts present");
+ok(Array.isArray(dossierNoCross.notes), "A25: notes array present");
+ok(typeof dossierNoCross.candidate_id === "string" && dossierNoCross.candidate_id.startsWith("ccd:"), "A26: candidate_id present and prefixed");
+ok(typeof dossierNoCross.generated_at === "string", "A27: generated_at string present");
 
 section("B. Candidate claim structure");
 eq(dossierNoCross.candidate_claim.intended_canon_target, "C1", "B1: intended_canon_target = C1");
@@ -433,6 +444,17 @@ isOneOf(
 );
 ok(Array.isArray(dossierNoCross.promotion_recommendation.rationale), "E3: rationale array present");
 ok(Array.isArray(dossierNoCross.promotion_recommendation.minimum_next_evidence), "E4: minimum_next_evidence array present");
+isOneOf(
+    dossierNoCross.review_packaging_posture.posture,
+    ["review_packaging_insufficient", "review_packaging_blocked", "review_packaging_supported", "review_packaging_narrowed", "review_packaging_cautious", "review_packaging_limited"],
+    "E5: review_packaging_posture.posture allowed"
+);
+isOneOf(
+    dossierNoCross.review_horizon.status,
+    ["defer", "blocked", "supported", "narrowed", "cautious", "limited"],
+    "E6: review_horizon.status allowed"
+);
+ok(Array.isArray(dossierNoCross.review_horizon.next_evidence_targets), "E7: review_horizon.next_evidence_targets array present");
 
 section("F. Cross-run / no-cross-run behavior");
 eq(dossierNoCross.scope.cross_run_context.available, false, "F1: no cross-run -> scope.cross_run_context.available=false");
@@ -466,22 +488,29 @@ notIncludes(json, '"ontology":', "I5: no ontology key");
 notIncludes(json, '"promotion_action"', "I6: no promotion action object");
 notIncludes(json, '"promote"', "I7: no promote field");
 notIncludes(json, '"review_status":"reviewed"', "I8: never pretends review already occurred");
+notIncludes(json, '"approval"', "I9: no approval key");
 
-includes(dossierWithCross.generated_from, "not canon", "I9: generated_from denies canon");
-includes(dossierWithCross.generated_from, "not promotion", "I10: generated_from denies promotion");
-includes(dossierWithCross.generated_from, "not ontology", "I11: generated_from denies ontology");
+includes(dossierWithCross.generated_from, "not canon", "I10: generated_from denies canon");
+includes(dossierWithCross.generated_from, "not promotion", "I11: generated_from denies promotion");
+includes(dossierWithCross.generated_from, "not approval", "I12: generated_from denies approval");
+includes(dossierWithCross.generated_from, "not ontology", "I13: generated_from denies ontology");
+ok(dossierWithCross.primary_descriptors.length <= 3, "I14: primary descriptor count bounded");
+ok(dossierWithCross.secondary_descriptors.length <= 2, "I15: secondary descriptor count bounded");
+ok(dossierWithCross.explicit_non_claims.includes("not_promotion"), "I16: explicit_non_claims deny promotion");
+ok(dossierWithCross.explicit_non_claims.includes("not_canon"), "I17: explicit_non_claims deny canon");
+ok(dossierWithCross.explicit_non_claims.includes("not_runtime_substance"), "I18: explicit_non_claims deny runtime substance");
 
 ok(
-    dossierWithCross.notes.some(n => n.includes("This dossier is not canon.")),
-    "I12: notes preserve not-canon boundary"
+    dossierWithCross.notes.some(n => n.includes("This dossier is downstream review packaging only and is not runtime truth, approval, promotion, or canon.")),
+    "I19: notes preserve downstream/non-promotional boundary"
 );
 ok(
-    dossierWithCross.notes.some(n => n.includes("This dossier does not promote memory.")),
-    "I13: notes preserve no-promotion boundary"
+    dossierWithCross.notes.some(n => n.includes("This dossier does not promote memory or establish identity closure by packaging.")),
+    "I20: notes preserve no-promotion/no-identity-closure boundary"
 );
 ok(
-    dossierWithCross.notes.some(n => n.includes("ConsensusOp or later canon review must make the promotion decision explicitly.")),
-    "I14: notes preserve explicit-review boundary"
+    dossierWithCross.notes.some(n => n.includes("ConsensusOp or later canon review must make any later review decision explicitly.")),
+    "I21: notes preserve explicit-review boundary"
 );
 
 section("J. Failed input handling");

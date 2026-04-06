@@ -8,7 +8,7 @@
  *   Not a pipeline operator. Not an authority-bearing artifact.
  *
  * Purpose:
- *   Summarize how much legitimate evidence exists toward future promotion review,
+ *   Summarize advisory readiness posture over already-derived evidence,
  *   what blockers remain, and what evidence is still insufficient.
  *
  * Boundary contract:
@@ -72,23 +72,90 @@ export class PromotionReadinessReport {
         const blockers = this._collectBlockers(evidenceDomains);
         const insufficiencies = this._collectInsufficiencies(evidenceDomains, crossRunReport);
         const promotionHints = this._buildPromotionHints(evidenceDomains, blockers, insufficiencies);
+        const advisoryHorizon = this._buildAdvisoryHorizon(evidenceDomains, blockers, insufficiencies);
         const readinessSummary = this._summarizeReadiness(evidenceDomains, blockers, insufficiencies);
+        const advisoryPosture = this._buildAdvisoryPosture(readinessSummary, blockers, insufficiencies);
+        const semanticEnvelope = this._buildSemanticEnvelope({
+            readinessSummary,
+            blockers,
+            insufficiencies,
+            evidenceDomains,
+        });
         const readinessFlags = this._deriveFlags(readinessSummary, evidenceDomains, blockers, insufficiencies);
-        const notes = this._buildNotes(readinessSummary, blockers, insufficiencies);
+        const notes = this._buildNotes(readinessSummary, blockers, insufficiencies, advisoryPosture);
 
         return {
             report_type: "runtime:promotion_readiness_report",
+            report_kind: semanticEnvelope.report_kind,
             generated_from:
-                "Door One substrate summaries, transition reports, trajectory interpretation, attention/memory overlays, transition-selectivity heuristics, and optional cross-run comparison evidence only; not canon, not promotion, not ontology",
+                "Door One substrate summaries, transition reports, trajectory interpretation, attention-memory semantic overlay, transition-selectivity heuristics, and optional cross-run comparison evidence only; advisory readiness overlay, not runtime truth, not approval, not promotion, not canon, not ontology",
             scope,
+            query_class: semanticEnvelope.query_class,
+            claim_ceiling: semanticEnvelope.claim_ceiling,
+            primary_posture: semanticEnvelope.primary_posture,
+            primary_descriptors: semanticEnvelope.primary_descriptors,
+            secondary_descriptors: semanticEnvelope.secondary_descriptors,
+            ...(semanticEnvelope.caution_posture ? { caution_posture: semanticEnvelope.caution_posture } : {}),
+            evidence_refs: semanticEnvelope.evidence_refs,
+            explicit_non_claims: semanticEnvelope.explicit_non_claims,
+            advisory_posture: advisoryPosture,
             readiness_summary: readinessSummary,
             evidence_domains: evidenceDomains,
             blockers,
             insufficiencies,
+            advisory_horizon: advisoryHorizon,
             promotion_hints: promotionHints,
             readiness_flags: readinessFlags,
             notes,
         };
+    }
+
+    _buildSemanticEnvelope({ readinessSummary, blockers, insufficiencies, evidenceDomains }) {
+        return {
+            report_kind: "promotion_readiness_advisory_overlay",
+            query_class: "Q7_consultation_readiness",
+            claim_ceiling: "readiness_only",
+            primary_posture: this._derivePrimaryPosture(readinessSummary, blockers, insufficiencies),
+            primary_descriptors: [
+                `overall_readiness:${readinessSummary?.overall_readiness ?? "insufficient_data"}`,
+                `blockers:${blockers?.length ?? 0}`,
+                `insufficiencies:${insufficiencies?.length ?? 0}`,
+            ].slice(0, 3),
+            secondary_descriptors: [
+                `cross_run:${evidenceDomains?.cross_run_reproducibility?.label ?? "insufficient_data"}`,
+                `structural_stability:${evidenceDomains?.structural_stability?.label ?? "insufficient_data"}`,
+            ].slice(0, 2),
+            caution_posture: this._deriveCautionPosture(readinessSummary, blockers, insufficiencies),
+            evidence_refs: [
+                "interpretation.trajectory",
+                "interpretation.attention_memory",
+                "substrate.transition_report",
+                "optional.cross_run_report",
+            ],
+            explicit_non_claims: [
+                "not_truth_claim",
+                "not_runtime_substance",
+                "not_approval",
+                "not_promotion",
+                "not_canon",
+            ],
+        };
+    }
+
+    _derivePrimaryPosture(summary, blockers, insufficiencies) {
+        if ((summary?.overall_readiness ?? "insufficient_data") === "insufficient_data") return "advisory_insufficient";
+        if ((blockers?.length ?? 0) > 0) return "advisory_blocked";
+        if ((summary?.overall_readiness ?? "low") === "high") return "advisory_supported";
+        if ((summary?.overall_readiness ?? "low") === "medium") return "advisory_developing";
+        if ((insufficiencies?.length ?? 0) > 0) return "advisory_cautious";
+        return "advisory_limited";
+    }
+
+    _deriveCautionPosture(summary, blockers, insufficiencies) {
+        if ((blockers?.length ?? 0) > 0) return "review_horizon_blocked";
+        if ((summary?.overall_readiness ?? "insufficient_data") === "insufficient_data") return "insufficient_evidence";
+        if ((insufficiencies?.length ?? 0) > 0) return "non_promotional";
+        return null;
     }
 
     _buildScope(result, crossRunReport) {
@@ -351,6 +418,15 @@ export class PromotionReadinessReport {
         };
     }
 
+    _buildAdvisoryHorizon(domains, blockers, insufficiencies) {
+        const entries = Object.entries(domains);
+        return {
+            supported_domains: entries.filter(([, d]) => d.label === "high").map(([k]) => k),
+            blocked_domains: blockers.map(b => b.code),
+            next_evidence_targets: insufficiencies.map(i => i.code),
+        };
+    }
+
     _summarizeReadiness(domains, blockers, insufficiencies) {
         const labels = Object.values(domains).map(d => d.label);
         const highCount = labels.filter(l => l === "high").length;
@@ -374,6 +450,24 @@ export class PromotionReadinessReport {
         };
     }
 
+    _buildAdvisoryPosture(summary, blockers, insufficiencies) {
+        return {
+            posture: this._derivePrimaryPosture(summary, blockers, insufficiencies),
+            blocker_posture: blockers.length > 0 ? "blocked" : "clear",
+            insufficiency_posture: insufficiencies.length > 0 ? "evidence_gaps_live" : "evidence_gaps_bounded",
+            review_horizon: this._deriveReviewHorizon(summary, blockers, insufficiencies),
+        };
+    }
+
+    _deriveReviewHorizon(summary, blockers, insufficiencies) {
+        if ((summary?.overall_readiness ?? "insufficient_data") === "insufficient_data") return "defer";
+        if ((blockers?.length ?? 0) > 0) return "blocked";
+        if ((summary?.overall_readiness ?? "low") === "high") return "supported";
+        if ((summary?.overall_readiness ?? "low") === "medium") return "developing";
+        if ((insufficiencies?.length ?? 0) > 0) return "cautious";
+        return "limited";
+    }
+
     _deriveFlags(summary, domains, blockers, insufficiencies) {
         const flags = [];
 
@@ -383,16 +477,16 @@ export class PromotionReadinessReport {
         if (domains.recurrence_strength.label === "high") flags.push("recurrently_supported");
         if (domains.transition_selectivity.label === "high") flags.push("transition_selective");
         if (domains.segment_coherence.label === "low") flags.push("segment_fragmentation_detected");
-        if (summary.overall_readiness === "high" && blockers.length === 0) flags.push("promotion_review_candidate");
+        if (summary.overall_readiness === "high" && blockers.length === 0) flags.push("review_horizon_supported");
         if (insufficiencies.some(i => i.code === "NO_CROSS_RUN_CONTEXT")) flags.push("cross_run_missing");
 
         return flags;
     }
 
-    _buildNotes(summary, blockers, insufficiencies) {
+    _buildNotes(summary, blockers, insufficiencies, advisoryPosture) {
         const notes = [
-            "Promotion readiness is not canon and does not promote memory by itself.",
-            "Readiness summarizes evidence, blockers, and insufficiencies only.",
+            "Promotion readiness is an advisory downstream surface only and does not imply approval or promotion.",
+            "Readiness summarizes evidence, blockers, insufficiencies, and review horizon only.",
             "Repeated structure strengthens evidence but does not prove ontology or true dynamical basin membership.",
         ];
 
@@ -404,6 +498,9 @@ export class PromotionReadinessReport {
         }
         if (insufficiencies.length > 0) {
             notes.push("Missing evidence should be addressed before stronger readiness claims are made.");
+        }
+        if (advisoryPosture?.review_horizon === "supported") {
+            notes.push("Supported review horizon remains advisory only and is not approval, promotion, or canon activation.");
         }
 
         return notes;

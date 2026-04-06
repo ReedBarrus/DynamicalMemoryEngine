@@ -8,7 +8,7 @@
  *   Not a pipeline operator. Not an authority-bearing artifact.
  *
  * Purpose:
- *   Assemble a bounded, non-canonical promotion-review packet from already-lawful
+ *   Assemble a bounded, non-canonical review packet from already-lawful
  *   Door One evidence surfaces.
  *
  * Boundary contract:
@@ -130,16 +130,35 @@ export class CanonCandidateDossier {
         const blockers = this._copyArray(readiness?.blockers);
         const insufficiencies = this._copyArray(readiness?.insufficiencies);
         const promotionRecommendation = this._buildPromotionRecommendation(readiness, blockers, insufficiencies);
+        const reviewPackagingPosture = this._buildReviewPackagingPosture(readiness, blockers, insufficiencies);
+        const reviewHorizon = this._buildReviewHorizon(readiness, blockers, insufficiencies);
         const receipts = this._buildReceipts(result, crossRunReport, readiness);
-        const notes = this._buildNotes(readiness);
+        const semanticEnvelope = this._buildSemanticEnvelope({
+            readiness,
+            blockers,
+            insufficiencies,
+            reviewPackagingPosture,
+        });
+        const notes = this._buildNotes(readiness, reviewPackagingPosture);
 
         return {
             dossier_type: "runtime:canon_candidate_dossier",
+            report_kind: semanticEnvelope.report_kind,
             candidate_id: this._buildCandidateId(result, readiness, candidateClaim),
             generated_at: this._generatedAt(result),
             generated_from:
-                "Door One runtime evidence only; candidate packet for canon review, not canon, not promotion, not ontology",
+                "Door One runtime evidence only; downstream candidate review packaging, not runtime truth, not approval, not promotion, not canon, not ontology",
             scope,
+            query_class: semanticEnvelope.query_class,
+            claim_ceiling: semanticEnvelope.claim_ceiling,
+            primary_posture: semanticEnvelope.primary_posture,
+            primary_descriptors: semanticEnvelope.primary_descriptors,
+            secondary_descriptors: semanticEnvelope.secondary_descriptors,
+            ...(semanticEnvelope.caution_posture ? { caution_posture: semanticEnvelope.caution_posture } : {}),
+            evidence_refs: semanticEnvelope.evidence_refs,
+            explicit_non_claims: semanticEnvelope.explicit_non_claims,
+            review_packaging_posture: reviewPackagingPosture,
+            review_horizon: reviewHorizon,
             candidate_claim: candidateClaim,
             source_refs: sourceRefs,
             evidence_bundle: evidenceBundle,
@@ -149,6 +168,56 @@ export class CanonCandidateDossier {
             receipts,
             notes,
         };
+    }
+
+    _buildSemanticEnvelope({ readiness, blockers, insufficiencies, reviewPackagingPosture }) {
+        return {
+            report_kind: "canon_candidate_review_packaging",
+            query_class: "Q6_review",
+            claim_ceiling: "review_only",
+            primary_posture: this._derivePrimaryPosture(readiness, blockers, insufficiencies),
+            primary_descriptors: [
+                `review_horizon:${reviewPackagingPosture?.review_horizon ?? "defer"}`,
+                `blockers:${blockers?.length ?? 0}`,
+                `insufficiencies:${insufficiencies?.length ?? 0}`,
+            ].slice(0, 3),
+            secondary_descriptors: [
+                `readiness:${readiness?.readiness_summary?.overall_readiness ?? "insufficient_data"}`,
+                `trust_status:untrusted_candidate`,
+            ].slice(0, 2),
+            caution_posture: this._deriveCautionPosture(readiness, blockers, insufficiencies),
+            evidence_refs: [
+                "source_refs.artifact_refs",
+                "source_refs.report_refs",
+                "evidence_bundle",
+                "readiness_overlay.promotion_readiness",
+            ],
+            explicit_non_claims: [
+                "not_truth_claim",
+                "not_runtime_substance",
+                "not_approval",
+                "not_promotion",
+                "not_canon",
+            ],
+        };
+    }
+
+    _derivePrimaryPosture(readiness, blockers, insufficiencies) {
+        const overall = readiness?.readiness_summary?.overall_readiness ?? "insufficient_data";
+        if (overall === "insufficient_data") return "review_packaging_insufficient";
+        if ((blockers?.length ?? 0) > 0) return "review_packaging_blocked";
+        if (overall === "high") return "review_packaging_supported";
+        if (overall === "medium") return "review_packaging_narrowed";
+        if ((insufficiencies?.length ?? 0) > 0) return "review_packaging_cautious";
+        return "review_packaging_limited";
+    }
+
+    _deriveCautionPosture(readiness, blockers, insufficiencies) {
+        const overall = readiness?.readiness_summary?.overall_readiness ?? "insufficient_data";
+        if ((blockers?.length ?? 0) > 0) return "review_required";
+        if (overall === "insufficient_data") return "insufficient_evidence";
+        if ((insufficiencies?.length ?? 0) > 0) return "non_promotional";
+        return null;
     }
 
     _buildScope(result, crossRunReport) {
@@ -285,6 +354,36 @@ export class CanonCandidateDossier {
         };
     }
 
+    _buildReviewPackagingPosture(readiness, blockers, insufficiencies) {
+        return {
+            posture: this._derivePrimaryPosture(readiness, blockers, insufficiencies),
+            candidate_status: "untrusted_candidate",
+            blocker_posture: blockers.length > 0 ? "blocked" : "clear",
+            insufficiency_posture: insufficiencies.length > 0 ? "evidence_gaps_live" : "evidence_gaps_bounded",
+            review_horizon: this._deriveReviewHorizon(readiness, blockers, insufficiencies),
+        };
+    }
+
+    _buildReviewHorizon(readiness, blockers, insufficiencies) {
+        return {
+            status: this._deriveReviewHorizon(readiness, blockers, insufficiencies),
+            next_evidence_targets: [
+                ...insufficiencies.map(i => i.code),
+                ...blockers.map(b => b.code),
+            ],
+        };
+    }
+
+    _deriveReviewHorizon(readiness, blockers, insufficiencies) {
+        const overall = readiness?.readiness_summary?.overall_readiness ?? "insufficient_data";
+        if (overall === "insufficient_data") return "defer";
+        if ((blockers?.length ?? 0) > 0) return "blocked";
+        if (overall === "high") return "supported";
+        if (overall === "medium") return "narrowed";
+        if ((insufficiencies?.length ?? 0) > 0) return "cautious";
+        return "limited";
+    }
+
     _buildReceipts(result, crossRunReport, readiness) {
         const sourceRefs = this._buildSourceRefs(result, crossRunReport, readiness);
 
@@ -299,16 +398,19 @@ export class CanonCandidateDossier {
         };
     }
 
-    _buildNotes(readiness) {
+    _buildNotes(readiness, reviewPackagingPosture) {
         const notes = [
-            "This dossier is not canon.",
-            "This dossier does not promote memory.",
-            "ConsensusOp or later canon review must make the promotion decision explicitly.",
+            "This dossier is downstream review packaging only and is not runtime truth, approval, promotion, or canon.",
+            "This dossier does not promote memory or establish identity closure by packaging.",
+            "ConsensusOp or later canon review must make any later review decision explicitly.",
         ];
 
         const overall = readiness?.readiness_summary?.overall_readiness ?? "insufficient_data";
         if (overall === "insufficient_data") {
             notes.push("Candidate review remains limited by insufficient evidence.");
+        }
+        if (reviewPackagingPosture?.review_horizon === "supported") {
+            notes.push("Supported review horizon remains bounded review packaging only and does not imply approval, promotion, or canon activation.");
         }
 
         return notes;
