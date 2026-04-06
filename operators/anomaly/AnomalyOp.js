@@ -121,10 +121,13 @@
  * @property {number} divergence_value
  * Receipt mirror of the artifact-level divergence_score field.
  * Kept in receipt for self-contained audit without top-level field lookup.
+ * @property {"above_threshold"|"below_or_equal_threshold"} threshold_relation
  * @property {number} bins_compared
  * @property {"strict"|"dominant_only"|"off"} phase_sensitivity_mode
  * @property {number} sustained_duration_sec
  * @property {boolean} novelty_gate_triggered
+ * @property {string} event_label_posture
+ * @property {string} evidence_support_subset
  */
 
 /**
@@ -141,6 +144,9 @@
  * @property {"structural"|"energy"|"band_profile"} invariance_mode
  * @property {number} divergence_score
  * @property {DetectedEvent[]} detected_events
+ * @property {string} evidence_posture
+ * @property {string} threshold_posture
+ * @property {string[]} explicit_non_claims
  * @property {boolean} novelty_gate_triggered
  * @property {"new_segment"|"continue_segment"} segmentation_recommendation
  * @property {AnomalyReceipt} anomaly_receipt
@@ -389,6 +395,9 @@ export class AnomalyOp {
         const noveltyGateTriggered =
             divergenceScore > threshold &&
             sustainedDurationSec >= anomaly_policy.novelty_min_duration;
+        const thresholdRelation = divergenceScore > threshold
+            ? "above_threshold"
+            : "below_or_equal_threshold";
 
         const segmentationRecommendation =
             noveltyGateTriggered && anomaly_policy.segmentation_mode === "strict"
@@ -410,16 +419,36 @@ export class AnomalyOp {
             invariance_mode: invarianceMode,
             divergence_score: divergenceScore,
             detected_events: detectedEvents,
+            evidence_posture: "structural_deviation_evidence",
+            threshold_posture: deriveThresholdPosture({
+                thresholdRelation,
+                noveltyGateTriggered,
+                sustainedDurationSec,
+                noveltyMinDuration: anomaly_policy.novelty_min_duration,
+                detectedEvents,
+                divergenceScore,
+            }),
+            explicit_non_claims: [
+                "not truth",
+                "not canon",
+                "not a continuity verdict",
+                "not a memory claim",
+                "not an identity claim",
+                "not a review verdict",
+            ],
             novelty_gate_triggered: noveltyGateTriggered,
             segmentation_recommendation: segmentationRecommendation,
             anomaly_receipt: {
                 metric_used: metric,
                 threshold,
                 divergence_value: divergenceScore,
+                threshold_relation: thresholdRelation,
                 bins_compared: match.matchedPairs.length,
                 phase_sensitivity_mode: phaseMode,
                 sustained_duration_sec: sustainedDurationSec,
                 novelty_gate_triggered: noveltyGateTriggered,
+                event_label_posture: "bounded_evidence_labels_only",
+                evidence_support_subset: "deviation evidence and segmentation-gate posture only; continuity, memory, identity, and review meaning deferred at this seam",
             },
             policies: {
                 anomaly_policy_id: makeAnomalyPolicyId(anomaly_policy),
@@ -441,6 +470,31 @@ export class AnomalyOp {
 
         return { ok: true, artifact };
     }
+}
+
+function deriveThresholdPosture({
+    thresholdRelation,
+    noveltyGateTriggered,
+    sustainedDurationSec,
+    noveltyMinDuration,
+    detectedEvents,
+    divergenceScore,
+}) {
+    if (noveltyGateTriggered) {
+        return "above_threshold | segmentation pressure registered";
+    }
+    if (
+        thresholdRelation === "above_threshold" &&
+        Number.isFinite(sustainedDurationSec) &&
+        Number.isFinite(noveltyMinDuration) &&
+        sustainedDurationSec < noveltyMinDuration
+    ) {
+        return "above_threshold | duration_insufficient_for_novelty_gate";
+    }
+    if ((Array.isArray(detectedEvents) && detectedEvents.length > 0) || divergenceScore > 0) {
+        return "below_or_equal_threshold | deviation observed without novelty closure";
+    }
+    return "below_or_equal_threshold | no material deviation closure";
 }
 
 /**
