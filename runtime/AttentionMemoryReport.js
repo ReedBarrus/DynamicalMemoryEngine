@@ -8,8 +8,8 @@
  *   Not a pipeline operator. Not an authority-bearing artifact.
  *
  * Purpose:
- *   Produce a deterministic, plain-data overlay describing attention-like and
- *   memory-like structural behavior using:
+ *   Produce a deterministic, plain-data overlay describing support-persistence
+ *   and reuse-pressure behavior using:
  *     - DoorOneOrchestrator result
  *     - TrajectoryInterpretationReport
  *
@@ -26,6 +26,7 @@
  *
  * Output:
  *   Plain-data report with explicit evidence fields under each overlay label.
+ *   This overlay remains below runtime memory substance and below identity closure.
  *
  * Dependencies:
  *   - runtime/TrajectoryInterpretationReport.js
@@ -97,18 +98,81 @@ export class AttentionMemoryReport {
         const coordinationHints =
             this._interpretCoordinationHints(base);
 
+        const supportPersistence =
+            this._interpretSupportPersistence({
+                attentionCharacter,
+                memoryCharacter,
+                base,
+            });
+
+        const reusePressure =
+            this._interpretReusePressure({
+                attentionCharacter,
+                memoryCharacter,
+                coordinationHints,
+                base,
+            });
+
+        const memoryCandidatePosture =
+            this._interpretMemoryCandidatePosture({
+                supportPersistence,
+                reusePressure,
+                memoryCharacter,
+                base,
+            });
+
+        const semanticOverlay =
+            this._buildSemanticOverlay({
+                supportPersistence,
+                reusePressure,
+                memoryCandidatePosture,
+                attentionCharacter,
+                memoryCharacter,
+                coordinationHints,
+            });
+
         const overlayFlags =
-            this._deriveOverlayFlags({ attentionCharacter, memoryCharacter, coordinationHints });
+            this._deriveOverlayFlags({
+                supportPersistence,
+                reusePressure,
+                memoryCandidatePosture,
+                attentionCharacter,
+                memoryCharacter,
+                coordinationHints,
+            });
 
         const notes =
-            this._buildNotes({ attentionCharacter, memoryCharacter, coordinationHints });
+            this._buildNotes({
+                supportPersistence,
+                reusePressure,
+                memoryCandidatePosture,
+                attentionCharacter,
+                memoryCharacter,
+                coordinationHints,
+            });
 
         return {
             report_type: "runtime:attention_memory_report",
+            report_kind: semanticOverlay.report_kind,
             generated_from:
-                "Door One trajectory interpretation, dwell, recurrence, transition, and segment-boundary observations only; derived overlay, not canon, not intent, not ontology",
+                "Door One trajectory interpretation, dwell, recurrence, transition, and segment-boundary observations only; derived support-persistence and reuse-pressure overlay, not runtime memory substance, not identity closure, not canon, not readiness, not ontology",
             scope: this._copyScope(base.scope),
+            query_class: semanticOverlay.query_class,
+            claim_ceiling: semanticOverlay.claim_ceiling,
+            primary_posture: semanticOverlay.primary_posture,
+            primary_descriptors: semanticOverlay.primary_descriptors,
+            secondary_descriptors: semanticOverlay.secondary_descriptors,
+            ...(semanticOverlay.caution_posture ? { caution_posture: semanticOverlay.caution_posture } : {}),
+            evidence_refs: semanticOverlay.evidence_refs,
+            explicit_non_claims: semanticOverlay.explicit_non_claims,
 
+            support_persistence: supportPersistence,
+            reuse_pressure: reusePressure,
+            memory_candidate_posture: memoryCandidatePosture,
+
+            // Transitional compatibility surfaces for downstream seams that still
+            // consume these names. They remain derived heuristics, not runtime
+            // memory substance and not identity closure.
             attention_character: attentionCharacter,
             memory_character: memoryCharacter,
             coordination_hints: coordinationHints,
@@ -116,6 +180,73 @@ export class AttentionMemoryReport {
             overlay_flags: overlayFlags,
             notes,
         };
+    }
+
+    _buildSemanticOverlay({
+        supportPersistence,
+        reusePressure,
+        memoryCandidatePosture,
+        attentionCharacter,
+        memoryCharacter,
+        coordinationHints,
+    }) {
+        return {
+            report_kind: "attention_memory_semantic_overlay",
+            query_class: "Q3_support_lineage",
+            claim_ceiling: "support_only",
+            primary_posture: this._derivePrimaryPosture({
+                supportPersistence,
+                reusePressure,
+                memoryCandidatePosture,
+            }),
+            primary_descriptors: [
+                `support_persistence:${supportPersistence?.posture ?? "support_only"}`,
+                `reuse_pressure:${reusePressure?.posture ?? "low"}`,
+                `memory_candidate:${memoryCandidatePosture?.posture ?? "no_memory_class_claim"}`,
+            ].slice(0, 3),
+            secondary_descriptors: [
+                `attention_volatility:${attentionCharacter?.volatility ?? "low"}`,
+                `continuity:${memoryCharacter?.evidence?.continuity ?? "mixed"}`,
+            ].slice(0, 2),
+            caution_posture: this._buildCautionPosture({
+                supportPersistence,
+                reusePressure,
+                memoryCandidatePosture,
+                coordinationHints,
+            }),
+            evidence_refs: [
+                "trajectory.scope",
+                "trajectory.neighborhood_character.evidence",
+                "trajectory.segment_character.evidence",
+                "trajectory.dynamics_flags",
+            ],
+            explicit_non_claims: [
+                "not_truth_claim",
+                "not_canon",
+                "not_runtime_substance",
+                "not_retention_substance",
+                "not_runtime_memory_substance",
+                "not_identity_claim",
+                "not_readiness_posture",
+            ],
+        };
+    }
+
+    _derivePrimaryPosture({ supportPersistence, reusePressure, memoryCandidatePosture }) {
+        if (supportPersistence?.posture === "support_only") return "support_only";
+        if (memoryCandidatePosture?.posture === "bounded_M2_candidate") {
+            return "persistent_support_with_bounded_memory_candidate";
+        }
+        if (reusePressure?.posture === "elevated") return "persistent_support_under_reuse_pressure";
+        return "persistent_support";
+    }
+
+    _buildCautionPosture({ supportPersistence, reusePressure, memoryCandidatePosture, coordinationHints }) {
+        if (supportPersistence?.posture === "support_only") return "support_only_non_closure";
+        if (memoryCandidatePosture?.posture === "no_memory_class_claim") return "memory_not_justified";
+        if (reusePressure?.posture === "elevated") return "reuse_fragility";
+        if (coordinationHints?.pre_commitment === "emergent") return "coordination_hint_only";
+        return null;
     }
 
     // -------------------------------------------------------------------------
@@ -184,7 +315,7 @@ export class AttentionMemoryReport {
     }
 
     // -------------------------------------------------------------------------
-    // Memory character
+    // Memory character (compatibility heuristic only)
     // -------------------------------------------------------------------------
 
     _interpretMemoryCharacter(base) {
@@ -262,7 +393,7 @@ export class AttentionMemoryReport {
     }
 
     // -------------------------------------------------------------------------
-    // Coordination hints
+    // Coordination hints (compatibility heuristic only)
     // -------------------------------------------------------------------------
 
     _interpretCoordinationHints(base) {
@@ -307,41 +438,164 @@ export class AttentionMemoryReport {
     }
 
     // -------------------------------------------------------------------------
+    // Support persistence / reuse pressure posture
+    // -------------------------------------------------------------------------
+
+    _interpretSupportPersistence({ attentionCharacter, memoryCharacter, base }) {
+        const concentration = attentionCharacter?.concentration ?? "low";
+        const persistence = attentionCharacter?.persistence ?? "low";
+        const continuity = base?.segment_character?.continuity ?? "mixed";
+        const recurrence = memoryCharacter?.recurrence_strength ?? "low";
+
+        let posture = "support_only";
+        if (
+            (concentration === "high" || concentration === "medium") &&
+            (persistence === "high" || persistence === "medium") &&
+            continuity !== "fragmented"
+        ) {
+            posture = recurrence === "high" ? "sustained" : "developing";
+        }
+
+        return {
+            posture,
+            evidence: {
+                attention_concentration: concentration,
+                attention_persistence: persistence,
+                recurrence_strength: recurrence,
+                continuity,
+            },
+        };
+    }
+
+    _interpretReusePressure({ attentionCharacter, memoryCharacter, coordinationHints, base }) {
+        const volatility = attentionCharacter?.volatility ?? "low";
+        const stability = memoryCharacter?.stability ?? "low";
+        const continuity = base?.segment_character?.continuity ?? "mixed";
+        const preCommitment = coordinationHints?.pre_commitment ?? "absent";
+
+        let posture = "low";
+        if (volatility === "high" || continuity === "fragmented" || continuity === "novelty-driven") {
+            posture = "elevated";
+        } else if (
+            volatility === "medium" ||
+            stability === "medium" ||
+            preCommitment === "weak"
+        ) {
+            posture = "moderate";
+        }
+
+        return {
+            posture,
+            evidence: {
+                attention_volatility: volatility,
+                support_stability: stability,
+                continuity,
+                pre_commitment: preCommitment,
+            },
+        };
+    }
+
+    _interpretMemoryCandidatePosture({ supportPersistence, reusePressure, memoryCharacter, base }) {
+        const recurrence = memoryCharacter?.recurrence_strength ?? "low";
+        const persistence = memoryCharacter?.persistence ?? "low";
+        const stability = memoryCharacter?.stability ?? "low";
+        const continuity = base?.segment_character?.continuity ?? "mixed";
+
+        let posture = "no_memory_class_claim";
+        if (
+            supportPersistence?.posture === "sustained" &&
+            reusePressure?.posture !== "elevated" &&
+            recurrence === "high" &&
+            persistence === "high" &&
+            stability === "high" &&
+            continuity === "smooth"
+        ) {
+            posture = "bounded_M2_candidate";
+        } else if (
+            supportPersistence?.posture !== "support_only" &&
+            (recurrence === "high" || recurrence === "medium") &&
+            (persistence === "high" || persistence === "medium")
+        ) {
+            posture = "bounded_M1_candidate";
+        }
+
+        return {
+            posture,
+            evidence: {
+                support_persistence: supportPersistence?.posture ?? "support_only",
+                reuse_pressure: reusePressure?.posture ?? "low",
+                recurrence_strength: recurrence,
+                persistence,
+                stability,
+                continuity,
+            },
+        };
+    }
+
+    // -------------------------------------------------------------------------
     // Flags / notes
     // -------------------------------------------------------------------------
 
-    _deriveOverlayFlags({ attentionCharacter, memoryCharacter, coordinationHints }) {
+    _deriveOverlayFlags({
+        supportPersistence,
+        reusePressure,
+        memoryCandidatePosture,
+        attentionCharacter,
+        memoryCharacter,
+        coordinationHints,
+    }) {
         const flags = [];
 
         if (attentionCharacter?.concentration === "high") flags.push("attention_concentrated");
         if (attentionCharacter?.persistence === "high") flags.push("attention_persistent");
         if (attentionCharacter?.volatility === "high") flags.push("attention_volatile");
 
-        if (memoryCharacter?.recurrence_strength === "high") flags.push("memory_recurrent");
-        if (memoryCharacter?.stability === "high") flags.push("memory_stable");
+        if (supportPersistence?.posture === "sustained") flags.push("support_persistence_sustained");
+        if (supportPersistence?.posture === "developing") flags.push("support_persistence_developing");
+        if (reusePressure?.posture === "elevated") flags.push("reuse_pressure_elevated");
+        if (memoryCandidatePosture?.posture === "bounded_M1_candidate") flags.push("memory_candidate_m1");
+        if (memoryCandidatePosture?.posture === "bounded_M2_candidate") flags.push("memory_candidate_m2");
 
         if (coordinationHints?.pre_commitment === "emergent") flags.push("pre_commitment_emergent");
+        if (memoryCharacter?.recurrence_strength === "high") flags.push("memory_recurrent");
+        if (memoryCharacter?.stability === "high") flags.push("memory_stable");
 
         return flags;
     }
 
-    _buildNotes({ attentionCharacter, memoryCharacter, coordinationHints }) {
+    _buildNotes({
+        supportPersistence,
+        reusePressure,
+        memoryCandidatePosture,
+        attentionCharacter,
+        memoryCharacter,
+        coordinationHints,
+    }) {
         const notes = [
-            "Attention and memory labels are derived overlays over structural observations only.",
-            "No semantic intent or trusted commitment is asserted.",
-            "Pre-commitment is a cautious coordination hint, not authority or canon.",
+            "Support-persistence and reuse-pressure labels are derived overlays over structural observations only.",
+            "No runtime memory substance, identity closure, or trusted commitment is asserted.",
+            "Any memory-class language remains bounded candidate posture only and does not by itself assert lawful memory closure.",
+            "Legacy attention/memory/coordination field names remain compatibility heuristics for downstream seams and are not runtime substance.",
         ];
 
         if (attentionCharacter?.volatility === "high") {
-            notes.push("Attention-like focus is volatile under current transition/boundary conditions.");
+            notes.push("Support persistence is under elevated reuse pressure from current transition/boundary conditions.");
         }
 
-        if (memoryCharacter?.stability === "low") {
-            notes.push("Memory-like stability is weak under current recurrence/convergence evidence.");
+        if (supportPersistence?.posture === "support_only") {
+            notes.push("Observed structure supports support-only posture and does not justify stronger memory-class closure.");
+        }
+
+        if (memoryCandidatePosture?.posture === "no_memory_class_claim") {
+            notes.push("Current evidence does not justify even a bounded memory-class candidate above support-only posture.");
+        }
+
+        if (reusePressure?.posture === "elevated" || memoryCharacter?.stability === "low") {
+            notes.push("Reuse pressure remains elevated under current recurrence, convergence, or continuity evidence.");
         }
 
         if (coordinationHints?.pre_commitment === "absent") {
-            notes.push("No coordination persistence strong enough for even tentative pre-commitment labeling was observed.");
+            notes.push("No coordination persistence strong enough for even tentative compatibility-hint pre-commitment labeling was observed.");
         }
 
         return notes;
