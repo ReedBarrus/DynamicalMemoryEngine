@@ -358,12 +358,13 @@ eq(wbSingle.workbench_type, "runtime:door_one_workbench", "A3: workbench_type co
 includes(wbSingle.generated_from, "integration view, not canon", "A4: generated_from preserves non-canon boundary");
 ok(wbSingle.scope && typeof wbSingle.scope === "object", "A5: scope present");
 ok(wbSingle.runtime && typeof wbSingle.runtime === "object", "A6: runtime section present");
-ok(wbSingle.interpretation && typeof wbSingle.interpretation === "object", "A7: interpretation section present");
-ok(wbSingle.cross_run && typeof wbSingle.cross_run === "object", "A8: cross_run section present");
-ok(wbSingle.promotion_readiness && typeof wbSingle.promotion_readiness === "object", "A9: promotion_readiness section present");
-ok(wbSingle.canon_candidate && typeof wbSingle.canon_candidate === "object", "A10: canon_candidate section present");
-ok(wbSingle.consensus_review && typeof wbSingle.consensus_review === "object", "A11: consensus_review section present");
-ok(Array.isArray(wbSingle.notes), "A12: notes array present");
+ok(wbSingle.semantic_overlay && typeof wbSingle.semantic_overlay === "object", "A7: semantic_overlay section present");
+ok(wbSingle.interpretation && typeof wbSingle.interpretation === "object", "A8: interpretation section present");
+ok(wbSingle.cross_run && typeof wbSingle.cross_run === "object", "A9: cross_run section present");
+ok(wbSingle.promotion_readiness && typeof wbSingle.promotion_readiness === "object", "A10: promotion_readiness section present");
+ok(wbSingle.canon_candidate && typeof wbSingle.canon_candidate === "object", "A11: canon_candidate section present");
+ok(wbSingle.consensus_review && typeof wbSingle.consensus_review === "object", "A12: consensus_review section present");
+ok(Array.isArray(wbSingle.notes), "A13: notes array present");
 
 section("B. Single-run mode");
 eq(wbSingle.scope.stream_id, runA?.artifacts?.a1?.stream_id ?? null, "B1: scope.stream_id sourced from A1");
@@ -426,8 +427,10 @@ ok(wbSingle.runtime.artifacts && typeof wbSingle.runtime.artifacts === "object",
 ok(wbSingle.runtime.substrate && typeof wbSingle.runtime.substrate === "object", "F2: runtime.substrate present");
 ok(wbSingle.runtime.summaries && typeof wbSingle.runtime.summaries === "object", "F3: runtime.summaries present");
 ok(wbSingle.runtime.audit && typeof wbSingle.runtime.audit === "object", "F4: runtime.audit present");
-ok(wbSingle.interpretation.trajectory && typeof wbSingle.interpretation.trajectory === "object", "F5: interpretation.trajectory present");
-ok(wbSingle.interpretation.attention_memory && typeof wbSingle.interpretation.attention_memory === "object", "F6: interpretation.attention_memory present");
+ok(wbSingle.semantic_overlay.trajectory && typeof wbSingle.semantic_overlay.trajectory === "object", "F5: semantic_overlay.trajectory present");
+eq(wbSingle.semantic_overlay.trajectory.query_class, "Q2_continuity", "F6: semantic_overlay.trajectory query_class declared");
+ok(wbSingle.interpretation.trajectory && typeof wbSingle.interpretation.trajectory === "object", "F7: interpretation.trajectory compatibility alias present");
+ok(wbSingle.interpretation.attention_memory && typeof wbSingle.interpretation.attention_memory === "object", "F8: interpretation.attention_memory present");
 
 section("G. Determinism");
 const wbCross2 = workbench.assemble(runA, {
@@ -459,6 +462,11 @@ includes(
     wbCross.notes.join(" "),
     "Consensus review remains explicit and does not itself imply C1 minting in v0.1.",
     "I8: note preserves bounded consensus boundary"
+);
+includes(
+    wbCross.notes.join(" "),
+    "Trajectory semantic overlay remains removable",
+    "I9: note preserves removable semantic-overlay boundary"
 );
 
 section("J. Failed input handling");

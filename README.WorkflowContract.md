@@ -689,6 +689,117 @@ This preserves:
 - lawful branch-to-packet attribution
 - and a stable current trunk
 
+---
+
+## G. Suggestion Accounting and Suggestion Drift
+
+### Purpose
+
+This section defines how suggestions should be handled during bounded DME collaboration so helpful next-step guidance does not drift into confusing, premature, or ungrounded motion.
+
+It exists to prevent a recurring workflow failure:
+
+**a suggestion appears plausible conversationally, but is not actually justified by the active seam, packet state, operator condition, or current review need.**
+
+This section governs **workflow suggestions** only.
+
+It does **not**:
+
+- create a new authority layer,
+- govern runtime artifact meaning,
+- govern canon activation,
+- or replace packet routing.
+
+### Core rule
+
+**A suggestion is only lawful when it is materially grounded in the active seam, current packet route, current operator state, or a clearly adjacent bounded review need.**
+
+Corollary rules:
+
+- conversational completion pressure is not enough
+- usefulness in some abstract future is not enough
+- richness is not enough
+- momentum is not enough
+- a suggestion that increases confusion without improving routeability is not a good suggestion
+
+### Suggestion classes
+
+#### S0 — Grounded suggestion
+
+A suggestion that:
+
+- reduces immediate ambiguity,
+- identifies the smallest lawful next action,
+- prevents concrete drift or overclaim,
+- or improves packet routing / review clarity.
+
+#### S1 — Optional bounded suggestion
+
+A suggestion that is not necessary for the active seam, but remains clearly adjacent, low-cost, and non-confusing.
+
+It must remain visibly optional.
+
+#### S2 — Suggestion drift
+
+A suggestion that is weakly grounded or ungrounded relative to:
+
+- the active seam,
+- the current packet route,
+- the current operator condition,
+- the current review task,
+- or the current developmental pressure order.
+
+Suggestion drift often appears as:
+
+- premature redesign suggestions
+- speculative next-stack branching
+- convenience suggestions that do not reduce confusion
+- generic closing suggestions added out of habit
+- future-useful but currently disorienting recommendations
+
+### Suggestion accounting questions
+
+Before giving a suggestion, ask:
+
+1. What active seam is this suggestion attached to?
+2. What concrete confusion or route problem does it reduce?
+3. Is it required now, or merely optional?
+4. Does it preserve the current packet/developmental order?
+5. Would omitting it make the current task materially worse?
+6. Is the user currently in a state to benefit from this suggestion, or will it add load?
+
+If these cannot be answered clearly, the suggestion should usually be withheld.
+
+### Anti-drift rule
+
+Do not append suggestions merely because a response feels incomplete without them.
+
+When the active seam is already clear, the task is already routed, or the operator is overloaded, it is often more lawful to stop cleanly than to add one more suggestion.
+
+### Human-state rule
+
+Suggestion quality is relative not only to architecture, but also to operator condition.
+
+A suggestion that is useful when the operator is energized may become suggestion drift when the operator is saturated, frustrated, or trying to close one bounded loop.
+
+### Preferred posture
+
+Prefer:
+
+- zero suggestions when the next action is already obvious
+- one suggestion when it materially reduces ambiguity
+- explicit optionality when a suggestion is not required
+
+Avoid:
+
+- multiple speculative follow-ons
+- ornamental “helpful” branching
+- future-stack motion that outruns the current closure step
+
+### One-line review question
+
+**Did this suggestion materially improve bounded workflow movement, or did it merely add plausible motion after the real closure point had already been reached?**
+
 ### Branch posture
 
 #### Main branch

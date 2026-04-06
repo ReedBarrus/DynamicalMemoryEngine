@@ -219,16 +219,25 @@ assert("A21: audit.consensus_receipts is array", Array.isArray(result.audit.cons
 assert("A22: result has interpretation section",
     result.interpretation && typeof result.interpretation === "object");
 
-assert("A23: interpretation.trajectory present",
+assert("A23: result has semantic_overlay section",
+    result.semantic_overlay && typeof result.semantic_overlay === "object");
+
+assert("A24: semantic_overlay.trajectory present",
+    result.semantic_overlay?.trajectory && typeof result.semantic_overlay.trajectory === "object");
+
+assert("A25: interpretation.trajectory compatibility alias present",
     result.interpretation?.trajectory && typeof result.interpretation.trajectory === "object");
 
-assert("A24: interpretation.attention_memory present",
+assert("A26: interpretation.attention_memory present",
     result.interpretation?.attention_memory && typeof result.interpretation.attention_memory === "object");
 
-assert("A25: trajectory interpretation report_type correct",
-    result.interpretation?.trajectory?.report_type === "runtime:trajectory_interpretation_report");
+assert("A27: trajectory overlay report_type correct",
+    result.semantic_overlay?.trajectory?.report_type === "runtime:trajectory_interpretation_report");
 
-assert("A26: attention/memory report_type correct",
+assert("A28: trajectory overlay query_class declared",
+    result.semantic_overlay?.trajectory?.query_class === "Q2_continuity");
+
+assert("A29: attention/memory report_type correct",
     result.interpretation?.attention_memory?.report_type === "runtime:attention_memory_report");
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -271,6 +280,21 @@ assert("C5: consensus_receipts all result=deferred",
     result.audit.consensus_receipts.every(r => r.result === "deferred") ||
     result.audit.consensus_receipts.length === 0);
 
+section("C2. Semantic overlay removability");
+
+const structuralOnly = JSON.parse(JSON.stringify(result));
+delete structuralOnly.semantic_overlay;
+if (structuralOnly.interpretation) {
+    delete structuralOnly.interpretation.trajectory;
+}
+
+assert("C6: structural-only copy keeps artifacts", typeof structuralOnly.artifacts === "object");
+assert("C7: structural-only copy keeps substrate", typeof structuralOnly.substrate === "object");
+assert("C8: structural-only copy keeps summaries", typeof structuralOnly.summaries === "object");
+assert("C9: structural-only copy keeps audit", typeof structuralOnly.audit === "object");
+assert("C10: structural trajectory summary remains available without overlay",
+    typeof structuralOnly.summaries?.trajectory === "object");
+
 // ════════════════════════════════════════════════════════════════════════════
 // D. Determinism — batch run twice with identical input → identical shape
 // ════════════════════════════════════════════════════════════════════════════
@@ -291,6 +315,8 @@ assert("D5: same transition counts",
 assert("D6: same Q result refs",
     JSON.stringify(result.artifacts.q.results.map(r => r.ref)) ===
     JSON.stringify(result2.artifacts.q.results.map(r => r.ref)));
+assert("D7: same semantic overlay posture",
+    result.semantic_overlay?.trajectory?.primary_posture === result2.semantic_overlay?.trajectory?.primary_posture);
 
 // ════════════════════════════════════════════════════════════════════════════
 // E. Incremental path — ingestAndAlign + processWindow + finalise

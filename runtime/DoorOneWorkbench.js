@@ -128,7 +128,7 @@ export class DoorOneWorkbench {
         return {
             workbench_type: "runtime:door_one_workbench",
             generated_from:
-                "Door One runtime, interpretation, cross-run, readiness, dossier, and consensus review surfaces only; integration view, not canon",
+                "Door One runtime, semantic overlay, interpretation, cross-run, readiness, dossier, and consensus review surfaces only; integration view, not canon",
             scope: {
                 stream_id: result?.artifacts?.a1?.stream_id ?? null,
                 source_id: result?.artifacts?.a1?.source_id ?? null,
@@ -155,7 +155,16 @@ export class DoorOneWorkbench {
                 audit: this._copy(result?.audit ?? {}),
             },
 
+            semantic_overlay: {
+                trajectory: this._copy(
+                    result?.semantic_overlay?.trajectory ??
+                    result?.interpretation?.trajectory ??
+                    null
+                ),
+            },
+
             interpretation: {
+                // Compatibility alias while downstream consumers still read interpretation.trajectory.
                 trajectory: this._copy(result?.interpretation?.trajectory ?? null),
                 attention_memory: this._copy(result?.interpretation?.attention_memory ?? null),
             },
@@ -216,6 +225,7 @@ export class DoorOneWorkbench {
         const notes = [
             "Workbench is an integration view, not canon.",
             "Consensus review remains explicit and does not itself imply C1 minting in v0.1.",
+            "Trajectory semantic overlay remains removable and does not become structural runtime substance by itself.",
         ];
 
         if (!crossRunReport) {

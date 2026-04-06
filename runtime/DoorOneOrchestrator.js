@@ -520,8 +520,12 @@ function buildResult({ a1, a2, h1s, m1s, a3, q, basinSets, anomalyReports,
             trajectory: trajSummary,
             segtracker: segTracker?.summary() ?? null,
         },
+        semantic_overlay: {
+            trajectory: trajectoryInterpretation,
+        },
         // - Interpretation
         interpretation: {
+            // Compatibility alias while downstream seams are still being isolated.
             trajectory: trajectoryInterpretation,
             attention_memory: attentionMemory,
         },

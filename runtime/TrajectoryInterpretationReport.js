@@ -87,11 +87,27 @@ export class TrajectoryInterpretationReport {
         const notes =
             this._buildNotes({ trajectoryCharacter, neighborhoodCharacter, segmentCharacter });
 
+        const semanticOverlay =
+            this._buildSemanticOverlay({
+                trajectoryCharacter,
+                neighborhoodCharacter,
+                segmentCharacter,
+            });
+
         return {
             report_type: "runtime:trajectory_interpretation_report",
+            report_kind: semanticOverlay.report_kind,
             generated_from:
                 "Door One trajectory, dwell, recurrence, segment-boundary, and structural neighborhood observations only; not canon, not prediction, not ontology",
             scope,
+            query_class: semanticOverlay.query_class,
+            claim_ceiling: semanticOverlay.claim_ceiling,
+            primary_posture: semanticOverlay.primary_posture,
+            primary_descriptors: semanticOverlay.primary_descriptors,
+            secondary_descriptors: semanticOverlay.secondary_descriptors,
+            ...(semanticOverlay.caution_posture ? { caution_posture: semanticOverlay.caution_posture } : {}),
+            evidence_refs: semanticOverlay.evidence_refs,
+            explicit_non_claims: semanticOverlay.explicit_non_claims,
 
             trajectory_character: trajectoryCharacter,
             neighborhood_character: neighborhoodCharacter,
@@ -100,6 +116,94 @@ export class TrajectoryInterpretationReport {
             dynamics_flags: dynamicsFlags,
             notes,
         };
+    }
+
+    _buildSemanticOverlay({ trajectoryCharacter, neighborhoodCharacter, segmentCharacter }) {
+        return {
+            report_kind: "trajectory_semantic_overlay",
+            query_class: "Q2_continuity",
+            claim_ceiling: "bounded continuity interpretation only",
+            primary_posture: this._derivePrimaryPosture({
+                trajectoryCharacter,
+                neighborhoodCharacter,
+                segmentCharacter,
+            }),
+            primary_descriptors: this._buildPrimaryDescriptors({
+                trajectoryCharacter,
+                segmentCharacter,
+            }),
+            secondary_descriptors: this._buildSecondaryDescriptors({
+                neighborhoodCharacter,
+                segmentCharacter,
+            }),
+            caution_posture: this._buildCautionPosture({
+                trajectoryCharacter,
+                neighborhoodCharacter,
+                segmentCharacter,
+            }),
+            evidence_refs: [
+                "summaries.trajectory",
+                "substrate.transition_report",
+                "substrate.segment_transitions",
+                "summaries.segtracker",
+            ],
+            explicit_non_claims: [
+                "not canon",
+                "not prediction",
+                "not ontology",
+                "not retention substance",
+                "not a memory claim",
+                "not an identity verdict",
+            ],
+        };
+    }
+
+    _derivePrimaryPosture({ trajectoryCharacter, neighborhoodCharacter, segmentCharacter }) {
+        const convergence = trajectoryCharacter?.convergence ?? "insufficient_data";
+        const motion = trajectoryCharacter?.motion ?? "diffuse";
+        const continuity = segmentCharacter?.continuity ?? "mixed";
+        const transitionDensity = neighborhoodCharacter?.transition_density ?? "low";
+
+        if (continuity === "fragmented") return "degraded";
+        if (convergence === "insufficient_data") return "unresolved";
+        if (continuity === "mixed" || motion === "diffuse") return "unresolved";
+        if (continuity === "novelty-driven" || motion === "drifting" || transitionDensity === "high") {
+            return "degraded";
+        }
+        if (continuity === "smooth" && (convergence === "strong" || convergence === "moderate")) {
+            return "bounded_conserved";
+        }
+        return "narrowed_conserved";
+    }
+
+    _buildPrimaryDescriptors({ trajectoryCharacter, segmentCharacter }) {
+        return [
+            `convergence:${trajectoryCharacter?.convergence ?? "insufficient_data"}`,
+            `motion:${trajectoryCharacter?.motion ?? "diffuse"}`,
+            `continuity:${segmentCharacter?.continuity ?? "mixed"}`,
+        ].slice(0, 3);
+    }
+
+    _buildSecondaryDescriptors({ neighborhoodCharacter, segmentCharacter }) {
+        return [
+            `recurrence_signature_strength:${neighborhoodCharacter?.recurrence_strength ?? "low"}`,
+            `boundary_stress:${segmentCharacter?.boundary_density ?? "low"}`,
+        ].slice(0, 2);
+    }
+
+    _buildCautionPosture({ trajectoryCharacter, neighborhoodCharacter, segmentCharacter }) {
+        const convergence = trajectoryCharacter?.convergence ?? "insufficient_data";
+        const occupancy = neighborhoodCharacter?.occupancy ?? "sparse";
+        const transitionDensity = neighborhoodCharacter?.transition_density ?? "low";
+        const continuity = segmentCharacter?.continuity ?? "mixed";
+        const boundaryDensity = segmentCharacter?.boundary_density ?? "low";
+
+        if (convergence === "insufficient_data") return "limited_structural_evidence";
+        if (continuity === "mixed" || occupancy === "sparse") return "interpretive_non_closure";
+        if (continuity === "fragmented" || boundaryDensity === "high" || transitionDensity === "high") {
+            return "boundary_stress";
+        }
+        return null;
     }
 
     // ---------------------------------------------------------------------------

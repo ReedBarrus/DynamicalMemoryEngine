@@ -279,16 +279,26 @@ section("A. Output shape");
 ok(result?.ok === true, "A1: orchestrator result.ok before interpretation");
 ok(report && typeof report === "object", "A2: interpret() returns plain object");
 eq(report.report_type, "runtime:trajectory_interpretation_report", "A3: report_type correct");
-includes(report.generated_from, "observations only", "A4: generated_from preserves observational boundary");
-ok(report.scope && typeof report.scope === "object", "A5: scope present");
-ok(report.trajectory_character && typeof report.trajectory_character === "object", "A6: trajectory_character present");
-ok(report.neighborhood_character && typeof report.neighborhood_character === "object", "A7: neighborhood_character present");
-ok(report.segment_character && typeof report.segment_character === "object", "A8: segment_character present");
-ok(Array.isArray(report.dynamics_flags), "A9: dynamics_flags array present");
-ok(Array.isArray(report.notes), "A10: notes array present");
-eq(report.scope.stream_id, result.artifacts?.a1?.stream_id ?? null, "A11: scope.stream_id sourced from A1");
-deepEq(report.scope.segment_ids, result.substrate?.segment_ids ?? [], "A12: scope.segment_ids preserved from substrate");
-ok(report.scope.t_span === null || typeof report.scope.t_span === "object", "A13: scope.t_span object|null");
+eq(report.report_kind, "trajectory_semantic_overlay", "A4: report_kind declares semantic overlay seam");
+eq(report.query_class, "Q2_continuity", "A5: query_class declared");
+eq(report.claim_ceiling, "bounded continuity interpretation only", "A6: claim ceiling declared");
+isOneOf(report.primary_posture, ["bounded_conserved", "narrowed_conserved", "degraded", "unresolved", "broken"], "A7: primary posture allowed");
+ok(Array.isArray(report.primary_descriptors), "A8: primary_descriptors present");
+ok(Array.isArray(report.secondary_descriptors), "A9: secondary_descriptors present");
+ok(report.primary_descriptors.length <= 3, "A10: primary descriptor count bounded");
+ok(report.secondary_descriptors.length <= 2, "A11: secondary descriptor count bounded");
+ok(Array.isArray(report.evidence_refs), "A12: evidence_refs array present");
+ok(Array.isArray(report.explicit_non_claims), "A13: explicit_non_claims present");
+includes(report.generated_from, "observations only", "A14: generated_from preserves observational boundary");
+ok(report.scope && typeof report.scope === "object", "A15: scope present");
+ok(report.trajectory_character && typeof report.trajectory_character === "object", "A16: trajectory_character present");
+ok(report.neighborhood_character && typeof report.neighborhood_character === "object", "A17: neighborhood_character present");
+ok(report.segment_character && typeof report.segment_character === "object", "A18: segment_character present");
+ok(Array.isArray(report.dynamics_flags), "A19: dynamics_flags array present");
+ok(Array.isArray(report.notes), "A20: notes array present");
+eq(report.scope.stream_id, result.artifacts?.a1?.stream_id ?? null, "A21: scope.stream_id sourced from A1");
+deepEq(report.scope.segment_ids, result.substrate?.segment_ids ?? [], "A22: scope.segment_ids preserved from substrate");
+ok(report.scope.t_span === null || typeof report.scope.t_span === "object", "A23: scope.t_span object|null");
 
 section("B. Evidence discipline");
 ok(report.trajectory_character.evidence && typeof report.trajectory_character.evidence === "object", "B1: trajectory evidence object present");
@@ -302,11 +312,15 @@ ok("total_neighborhoods_observed" in report.neighborhood_character.evidence, "B7
 ok("dominant_dwell_share" in report.neighborhood_character.evidence, "B8: neighborhood evidence.dominant_dwell_share present");
 ok("segment_transition_count" in report.segment_character.evidence, "B9: segment evidence.segment_transition_count present");
 ok("event_type_counts" in report.segment_character.evidence, "B10: segment evidence.event_type_counts present");
+ok(report.evidence_refs.includes("summaries.trajectory"), "B11: evidence_refs include trajectory summary");
+ok(report.evidence_refs.includes("substrate.transition_report"), "B12: evidence_refs include transition report");
+ok(report.explicit_non_claims.includes("not canon"), "B13: non-claims include not canon");
+ok(report.explicit_non_claims.includes("not an identity verdict"), "B14: non-claims fence identity uplift");
 
-ok(!("artifact_class" in report), "B11: report has no artifact_class");
-ok(!("artifact_class" in report.trajectory_character), "B12: trajectory_character has no artifact_class");
-ok(!("artifact_class" in report.neighborhood_character), "B13: neighborhood_character has no artifact_class");
-ok(!("artifact_class" in report.segment_character), "B14: segment_character has no artifact_class");
+ok(!("artifact_class" in report), "B15: report has no artifact_class");
+ok(!("artifact_class" in report.trajectory_character), "B16: trajectory_character has no artifact_class");
+ok(!("artifact_class" in report.neighborhood_character), "B17: neighborhood_character has no artifact_class");
+ok(!("artifact_class" in report.segment_character), "B18: segment_character has no artifact_class");
 
 section("C. Determinism");
 const report2 = tir.interpret(buildGoodResult());
@@ -365,14 +379,15 @@ notIncludes(json, '"forecast"', "E9: no forecast language");
 includes(report.generated_from, "not canon", "E10: generated_from denies canon");
 includes(report.generated_from, "not prediction", "E11: generated_from denies prediction");
 includes(report.generated_from, "not ontology", "E12: generated_from denies ontology");
+ok(!("caution_posture" in report) || typeof report.caution_posture === "string", "E13: caution_posture only appears as bounded compact string");
 
 ok(
     report.notes.some(n => n.includes("Neighborhood recurrence does not prove true dynamical basin membership.")),
-    "E13: notes preserve basin-membership caution"
+    "E14: notes preserve basin-membership caution"
 );
 ok(
     report.notes.some(n => n.includes("No forward prediction is performed.")),
-    "E14: notes preserve no-prediction boundary"
+    "E15: notes preserve no-prediction boundary"
 );
 
 section("F. Failed input handling");
