@@ -103,6 +103,14 @@ if (demoSrc) {
 }
 if (hudSrc) {
     ok(!hudSrc.includes("handleRun"), "E10: lab HUD has no run controls");
+    ok(
+        hudSrc.includes("Structural continuity here is not settlement or identity closure."),
+        "E11: lab HUD keeps structural continuity separate from settlement and identity closure"
+    );
+    ok(
+        hudSrc.includes("post-perturbation") && hudSrc.includes("identity audit"),
+        "E12: lab HUD reserves optional future read-side attachment space without implementing it"
+    );
 }
 
 section("F. Tandem and ordering posture remain bounded");

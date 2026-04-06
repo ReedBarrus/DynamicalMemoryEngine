@@ -513,6 +513,8 @@ notIncludes(modelJson, '"artifact_class":"C1"', "E1: HUD model does not mint C1"
 notIncludes(modelJson, '"promoted":true', "E2: HUD model does not promote");
 notIncludes(modelJson, '"truth"', "E3: HUD model does not define truth");
 notIncludes(modelJson, '"ontology"', "E4: HUD model does not define ontology");
+notIncludes(modelJson, '"settlement_report"', "E5: HUD model does not require settlement_report");
+notIncludes(modelJson, '"identity_audit"', "E6: HUD model does not require identity_audit");
 
 section("F. Lawful read-side posture summary");
 

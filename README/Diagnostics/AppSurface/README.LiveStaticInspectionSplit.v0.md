@@ -277,6 +277,14 @@ Inspection mode must not be mistaken for:
 
 It is a bounded audit and forensics surface.
 
+If future work later adds a post-perturbation settlement panel or an identity audit panel, those surfaces must remain:
+
+* optional
+* read-side
+* visually separate from anomaly evidence
+* visually separate from structural continuity labels
+* visually separate from identity closure
+
 ### One-line summary
 
 **Inspection mode is for dense bounded structural forensics and operator audit.**
@@ -328,6 +336,8 @@ Inspection mode is for:
 ### Rule
 
 Do not treat inspection density as the default shape of every static viewer.
+
+If future settlement interpretation attaches here, it should attach as a separate optional panel or section rather than silently rebranding static or inspection structure as already settled.
 
 ---
 
@@ -541,6 +551,7 @@ This split is designed to prevent:
 * This note does **not** define the final viewer payload schema by itself.
 * This note does **not** finalize all viewer families.
 * This note does **not** require the current composed app to disappear immediately.
+* This note does **not** authorize settlement labels or identity indicators as current mode features.
 
 ---
 
