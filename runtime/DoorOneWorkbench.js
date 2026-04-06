@@ -247,6 +247,8 @@ export class DoorOneWorkbench {
         const notes = [
             "Workbench is an integration view, not canon.",
             "Consensus review remains explicit and does not itself imply C1 minting in v0.1.",
+            "consensus_review remains a downstream review-only bundle; retained result labels do not themselves imply promotion.",
+            "promotion_recommendation remains a retained dossier compatibility label for review routing only and does not itself imply promotion.",
             "Trajectory semantic overlay remains removable and does not become structural runtime substance by itself.",
             "Structural runtime remains the primary workbench section; semantic, readiness, and review outputs are attached downstream as explicit bundles.",
             "Compatibility aliases are grouped under compatibility_aliases and mirrored at top level only as transitional downstream bridges.",

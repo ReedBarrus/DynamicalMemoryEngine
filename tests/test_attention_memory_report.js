@@ -317,7 +317,7 @@ ok(report.coordination_hints.evidence && typeof report.coordination_hints.eviden
 
 ok("attention_concentration" in report.support_persistence.evidence, "B7: support_persistence.attention_concentration present");
 ok("reuse_pressure" in report.memory_candidate_posture.evidence, "B8: memory_candidate_posture.reuse_pressure present");
-ok("pre_commitment" in report.reuse_pressure.evidence, "B9: reuse_pressure.pre_commitment present");
+ok(!("pre_commitment" in report.reuse_pressure.evidence), "B9: reuse_pressure no longer depends on pre_commitment");
 ok("dominant_dwell_share" in report.attention_character.evidence, "B10: attention evidence.dominant_dwell_share present");
 ok("transition_density_value" in report.attention_character.evidence, "B11: attention evidence.transition_density_value present");
 ok("motion" in report.attention_character.evidence, "B12: attention evidence.motion present");
@@ -326,9 +326,9 @@ ok("total_re_entries" in report.memory_character.evidence, "B13: memory evidence
 ok("convergence" in report.memory_character.evidence, "B14: memory evidence.convergence present");
 ok("continuity" in report.memory_character.evidence, "B15: memory evidence.continuity present");
 
-ok("sticky_neighborhood" in report.coordination_hints.evidence, "B16: coordination evidence.sticky_neighborhood present");
-ok("high_recurrence" in report.coordination_hints.evidence, "B17: coordination evidence.high_recurrence present");
-ok("convergence" in report.coordination_hints.evidence, "B18: coordination evidence.convergence present");
+ok("support_persistence" in report.coordination_hints.evidence, "B16: coordination evidence.support_persistence present");
+ok("reuse_pressure" in report.coordination_hints.evidence, "B17: coordination evidence.reuse_pressure present");
+ok("memory_candidate_posture" in report.coordination_hints.evidence, "B18: coordination evidence.memory_candidate_posture present");
 
 ok(!("artifact_class" in report), "B19: report has no artifact_class");
 ok(!("artifact_class" in report.support_persistence), "B20: support_persistence has no artifact_class");

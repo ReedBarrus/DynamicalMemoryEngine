@@ -36,8 +36,8 @@
  *
  *   3. Minimum required evidence surfaces
  *      - completed DoorOneOrchestrator result
- *      - interpretation.trajectory
- *      - interpretation.attention_memory
+ *      - semantic_overlay.trajectory
+ *      - semantic_overlay.attention_memory
  *      - PromotionReadinessReport (supplied or internally derived)
  *      - optional CrossRunDynamicsReport
  *
@@ -100,14 +100,20 @@ export class CanonCandidateDossier {
             };
         }
 
-        const trajectory = result?.interpretation?.trajectory ?? null;
-        const attentionMemory = result?.interpretation?.attention_memory ?? null;
+        const trajectory =
+            result?.semantic_overlay?.trajectory ??
+            result?.interpretation?.trajectory ??
+            null;
+        const attentionMemory =
+            result?.semantic_overlay?.attention_memory ??
+            result?.interpretation?.attention_memory ??
+            null;
 
         if (!trajectory || !attentionMemory) {
             return {
                 ok: false,
                 error: "INVALID_INPUT",
-                reasons: ["CanonCandidateDossier requires interpretation.trajectory and interpretation.attention_memory"],
+                reasons: ["CanonCandidateDossier requires semantic_overlay.trajectory and semantic_overlay.attention_memory"],
             };
         }
 
@@ -159,6 +165,11 @@ export class CanonCandidateDossier {
             explicit_non_claims: semanticEnvelope.explicit_non_claims,
             review_packaging_posture: reviewPackagingPosture,
             review_horizon: reviewHorizon,
+            review_routing_posture: this._buildReviewRoutingPosture(
+                promotionRecommendation,
+                blockers,
+                insufficiencies
+            ),
             candidate_claim: candidateClaim,
             source_refs: sourceRefs,
             evidence_bundle: evidenceBundle,
@@ -187,6 +198,8 @@ export class CanonCandidateDossier {
             ].slice(0, 2),
             caution_posture: this._deriveCautionPosture(readiness, blockers, insufficiencies),
             evidence_refs: [
+                "semantic_overlay.trajectory",
+                "semantic_overlay.attention_memory",
                 "source_refs.artifact_refs",
                 "source_refs.report_refs",
                 "evidence_bundle",
@@ -271,6 +284,15 @@ export class CanonCandidateDossier {
     }
 
     _buildSourceRefs(result, crossRunReport, readiness) {
+        const trajectory =
+            result?.semantic_overlay?.trajectory ??
+            result?.interpretation?.trajectory ??
+            null;
+        const attentionMemory =
+            result?.semantic_overlay?.attention_memory ??
+            result?.interpretation?.attention_memory ??
+            null;
+
         return {
             artifact_refs: {
                 a1_ref: result?.artifacts?.a1?.stream_id ?? null,
@@ -280,8 +302,8 @@ export class CanonCandidateDossier {
                 basin_set_refs: this._pluckIds(result?.artifacts?.basin_sets, "artifact_id"),
             },
             report_refs: {
-                trajectory_report_type: result?.interpretation?.trajectory?.report_type ?? null,
-                attention_memory_report_type: result?.interpretation?.attention_memory?.report_type ?? null,
+                trajectory_report_type: trajectory?.report_type ?? null,
+                attention_memory_report_type: attentionMemory?.report_type ?? null,
                 cross_run_report_type: crossRunReport?.report_type ?? null,
                 promotion_readiness_report_type: readiness?.report_type ?? null,
             },
@@ -289,8 +311,14 @@ export class CanonCandidateDossier {
     }
 
     _buildEvidenceBundle(result, crossRunReport, readiness) {
-        const trajectory = result?.interpretation?.trajectory ?? {};
-        const attentionMemory = result?.interpretation?.attention_memory ?? {};
+        const trajectory =
+            result?.semantic_overlay?.trajectory ??
+            result?.interpretation?.trajectory ??
+            {};
+        const attentionMemory =
+            result?.semantic_overlay?.attention_memory ??
+            result?.interpretation?.attention_memory ??
+            {};
         const pairwise = Array.isArray(crossRunReport?.pairwise_comparisons)
             ? crossRunReport.pairwise_comparisons
             : [];
@@ -310,10 +338,12 @@ export class CanonCandidateDossier {
                 attention_concentration: attentionMemory?.attention_character?.concentration ?? "unknown",
                 attention_persistence: attentionMemory?.attention_character?.persistence ?? "unknown",
                 attention_volatility: attentionMemory?.attention_character?.volatility ?? "unknown",
+                support_persistence: attentionMemory?.support_persistence?.posture ?? "unknown",
+                reuse_pressure: attentionMemory?.reuse_pressure?.posture ?? "unknown",
+                memory_candidate_posture: attentionMemory?.memory_candidate_posture?.posture ?? "unknown",
                 memory_recurrence_strength: attentionMemory?.memory_character?.recurrence_strength ?? "unknown",
                 memory_persistence: attentionMemory?.memory_character?.persistence ?? "unknown",
                 memory_stability: attentionMemory?.memory_character?.stability ?? "unknown",
-                pre_commitment: attentionMemory?.coordination_hints?.pre_commitment ?? "unknown",
             },
 
             cross_run: {
@@ -342,16 +372,48 @@ export class CanonCandidateDossier {
         return {
             review_status: "unreviewed",
             recommendation,
+            compatibility_posture: "legacy_review_routing_name_only",
+            route_horizon: this._deriveReviewRoutingHorizon(recommendation, blockers, insufficiencies),
+            explicit_non_claims: [
+                "not_promotion",
+                "not_approval",
+                "not_canon",
+            ],
             rationale: [
                 `overall_readiness=${overall}`,
                 `blockers=${blockers.length}`,
                 `insufficiencies=${insufficiencies.length}`,
+                "routing_only=review_boundary",
             ],
             minimum_next_evidence: [
                 ...insufficiencies.map(i => i.code),
                 ...blockers.map(b => b.code),
             ],
         };
+    }
+
+    _buildReviewRoutingPosture(promotionRecommendation, blockers, insufficiencies) {
+        return {
+            posture: "review_routing_only",
+            compatibility_surface: "promotion_recommendation",
+            route_status: promotionRecommendation?.recommendation ?? "defer_review",
+            route_horizon: promotionRecommendation?.route_horizon ?? "defer",
+            blocker_posture: blockers.length > 0 ? "blocked" : "clear",
+            insufficiency_posture: insufficiencies.length > 0 ? "evidence_gaps_live" : "evidence_gaps_bounded",
+            explicit_non_claims: [
+                "not_promotion",
+                "not_approval",
+                "not_canon",
+            ],
+        };
+    }
+
+    _deriveReviewRoutingHorizon(recommendation, blockers, insufficiencies) {
+        if ((blockers?.length ?? 0) > 0) return "blocked";
+        if ((insufficiencies?.length ?? 0) > 0) return "defer";
+        if (recommendation === "eligible_for_review") return "review_supported";
+        if (recommendation === "weak_review") return "review_narrowed";
+        return "defer";
     }
 
     _buildReviewPackagingPosture(readiness, blockers, insufficiencies) {
@@ -402,6 +464,7 @@ export class CanonCandidateDossier {
         const notes = [
             "This dossier is downstream review packaging only and is not runtime truth, approval, promotion, or canon.",
             "This dossier does not promote memory or establish identity closure by packaging.",
+            "promotion_recommendation is a retained compatibility label for review routing only and does not imply promotion.",
             "ConsensusOp or later canon review must make any later review decision explicitly.",
         ];
 

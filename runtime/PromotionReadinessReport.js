@@ -25,8 +25,9 @@
  *   - optional CrossRunDynamicsReport
  *
  * Sources:
- *   - interpretation.trajectory
- *   - interpretation.attention_memory
+ *   - semantic_overlay.trajectory
+ *   - semantic_overlay.attention_memory
+ *   - interpretation.* compatibility aliases only as fallback
  *   - optional cross-run reproducibility report
  */
 
@@ -47,14 +48,20 @@ export class PromotionReadinessReport {
             };
         }
 
-        const trajectory = result?.interpretation?.trajectory ?? null;
-        const attentionMemory = result?.interpretation?.attention_memory ?? null;
+        const trajectory =
+            result?.semantic_overlay?.trajectory ??
+            result?.interpretation?.trajectory ??
+            null;
+        const attentionMemory =
+            result?.semantic_overlay?.attention_memory ??
+            result?.interpretation?.attention_memory ??
+            null;
 
         if (!trajectory || !attentionMemory) {
             return {
                 ok: false,
                 error: "INVALID_INPUT",
-                reasons: ["PromotionReadinessReport requires interpretation.trajectory and interpretation.attention_memory"],
+                reasons: ["PromotionReadinessReport requires semantic_overlay.trajectory and semantic_overlay.attention_memory"],
             };
         }
 
@@ -127,8 +134,8 @@ export class PromotionReadinessReport {
             ].slice(0, 2),
             caution_posture: this._deriveCautionPosture(readinessSummary, blockers, insufficiencies),
             evidence_refs: [
-                "interpretation.trajectory",
-                "interpretation.attention_memory",
+                "semantic_overlay.trajectory",
+                "semantic_overlay.attention_memory",
                 "substrate.transition_report",
                 "optional.cross_run_report",
             ],
@@ -289,22 +296,28 @@ export class PromotionReadinessReport {
     }
 
     _scoreAttentionMemoryAlignment(attentionMemory) {
-        const concentration = attentionMemory?.attention_character?.concentration ?? "low";
-        const persistence = attentionMemory?.attention_character?.persistence ?? "low";
-        const memoryStability = attentionMemory?.memory_character?.stability ?? "low";
-        const memoryPersistence = attentionMemory?.memory_character?.persistence ?? "low";
+        const supportPersistence = attentionMemory?.support_persistence?.posture ?? "support_only";
+        const reusePressure = attentionMemory?.reuse_pressure?.posture ?? "low";
+        const memoryCandidate = attentionMemory?.memory_candidate_posture?.posture ?? "no_memory_class_claim";
+        const concentration =
+            attentionMemory?.support_persistence?.evidence?.attention_concentration ??
+            attentionMemory?.attention_character?.concentration ??
+            "low";
+        const persistence =
+            attentionMemory?.support_persistence?.evidence?.attention_persistence ??
+            attentionMemory?.attention_character?.persistence ??
+            "low";
 
         let label = "low";
         if (
-            (concentration === "high" || concentration === "medium") &&
-            (persistence === "high" || persistence === "medium") &&
-            (memoryStability === "high" || memoryStability === "medium") &&
-            (memoryPersistence === "high" || memoryPersistence === "medium")
+            supportPersistence === "sustained" &&
+            reusePressure !== "elevated" &&
+            memoryCandidate !== "no_memory_class_claim"
         ) {
             label = "high";
         } else if (
-            (concentration !== "low" && persistence !== "low") ||
-            (memoryStability !== "low" && memoryPersistence !== "low")
+            supportPersistence !== "support_only" &&
+            reusePressure !== "elevated"
         ) {
             label = "medium";
         }
@@ -312,11 +325,11 @@ export class PromotionReadinessReport {
         return {
             label,
             evidence: {
+                support_persistence: supportPersistence,
+                reuse_pressure: reusePressure,
+                memory_candidate_posture: memoryCandidate,
                 attention_concentration: concentration,
                 attention_persistence: persistence,
-                memory_stability: memoryStability,
-                memory_persistence: memoryPersistence,
-                pre_commitment: attentionMemory?.coordination_hints?.pre_commitment ?? "absent",
             },
         };
     }

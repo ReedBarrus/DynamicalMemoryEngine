@@ -161,12 +161,13 @@ export class CrossRunDynamicsReport {
             attention_concentration: attentionMemory?.attention_character?.concentration ?? "unknown",
             attention_persistence: attentionMemory?.attention_character?.persistence ?? "unknown",
             attention_volatility: attentionMemory?.attention_character?.volatility ?? "unknown",
+            support_persistence: attentionMemory?.support_persistence?.posture ?? "unknown",
+            reuse_pressure: attentionMemory?.reuse_pressure?.posture ?? "unknown",
+            memory_candidate_posture: attentionMemory?.memory_candidate_posture?.posture ?? "unknown",
 
             memory_recurrence_strength: attentionMemory?.memory_character?.recurrence_strength ?? "unknown",
             memory_persistence: attentionMemory?.memory_character?.persistence ?? "unknown",
             memory_stability: attentionMemory?.memory_character?.stability ?? "unknown",
-
-            pre_commitment: attentionMemory?.coordination_hints?.pre_commitment ?? "unknown",
         };
 
         const evidence = {
@@ -360,10 +361,12 @@ export class CrossRunDynamicsReport {
             "attention_concentration",
             "attention_persistence",
             "attention_volatility",
+            "support_persistence",
+            "reuse_pressure",
+            "memory_candidate_posture",
             "memory_recurrence_strength",
             "memory_persistence",
             "memory_stability",
-            "pre_commitment",
         ]);
 
         return {

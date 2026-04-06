@@ -380,7 +380,10 @@ ok("occupancy" in sigA.signature, "B9: signature.occupancy present");
 ok("continuity" in sigA.signature, "B10: signature.continuity present");
 ok("attention_concentration" in sigA.signature, "B11: signature.attention_concentration present");
 ok("memory_stability" in sigA.signature, "B12: signature.memory_stability present");
-ok("pre_commitment" in sigA.signature, "B13: signature.pre_commitment present");
+ok("support_persistence" in sigA.signature, "B13: signature.support_persistence present");
+ok("reuse_pressure" in sigA.signature, "B13b: signature.reuse_pressure present");
+ok("memory_candidate_posture" in sigA.signature, "B13c: signature.memory_candidate_posture present");
+ok(!("pre_commitment" in sigA.signature), "B13d: signature no longer depends on pre_commitment");
 
 ok("state_count" in sigA.evidence, "B14: evidence.state_count present");
 ok("basin_count" in sigA.evidence, "B15: evidence.basin_count present");

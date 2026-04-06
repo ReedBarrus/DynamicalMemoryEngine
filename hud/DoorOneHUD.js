@@ -350,7 +350,7 @@ export class DoorOneHUD {
             }
 
             // [8] Canon Candidate Dossier
-            push(this._bar("─"), "  [8] CANON CANDIDATE DOSSIER  (candidate packet only)", this._bar("─"));
+            push(this._bar("─"), "  [8] CANON CANDIDATE DOSSIER  (review packet only; not promotion)", this._bar("─"));
             push(
                 this._row("candidate_id", String(dossier?.candidate_id ?? "—")),
                 this._row("claim_type", String(dossier?.candidate_claim?.claim_type ?? "—")),
@@ -358,11 +358,11 @@ export class DoorOneHUD {
                 this._row("canon_target", String(dossier?.candidate_claim?.intended_canon_target ?? "—")),
                 this._row("trust_status", String(dossier?.candidate_claim?.trust_status ?? "—")),
                 this._row("review_status", String(dossier?.promotion_recommendation?.review_status ?? "—")),
-                this._row("recommendation", String(dossier?.promotion_recommendation?.recommendation ?? "—")),
+                this._row("review_route", String(dossier?.promotion_recommendation?.recommendation ?? "—")),
             );
 
             // [9] Consensus Review
-            push(this._bar("─"), "  [9] CONSENSUS REVIEW  (explicit review outcome)", this._bar("─"));
+            push(this._bar("─"), "  [9] CONSENSUS REVIEW  (review gate only; below promotion)", this._bar("─"));
             if (!review) {
                 push(
                     this._row("result", "not_run"),
@@ -371,6 +371,7 @@ export class DoorOneHUD {
             } else {
                 push(
                     this._row("result", String(review?.result ?? "—")),
+                    this._row("result_posture", String(review?.review_boundary_posture?.status ?? "—")),
                     this._row("policy_id", String(review?.review_receipt?.policy_id ?? "—")),
                     this._row("epoch_id", String(review?.review_receipt?.epoch_id ?? "—")),
                     this._row("dossier_id", String(review?.review_receipt?.dossier_id ?? "—")),
@@ -394,6 +395,7 @@ export class DoorOneHUD {
             push("  " + dim("workbench notes:"));
             push(this._indent("Workbench is an integration view, not canon."));
             push(this._indent("Consensus review remains explicit and does not itself imply C1 minting in v0.1."));
+            push(this._indent("Retained routing labels remain review-only and do not imply promotion by naming alone."));
         }
 
         push(this._bar("═"), "  end of inspection  |  no canon, prediction, or ontology below this line", this._bar("═"));

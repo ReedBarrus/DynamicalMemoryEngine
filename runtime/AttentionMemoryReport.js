@@ -95,9 +95,6 @@ export class AttentionMemoryReport {
         const memoryCharacter =
             this._interpretMemoryCharacter(base);
 
-        const coordinationHints =
-            this._interpretCoordinationHints(base);
-
         const supportPersistence =
             this._interpretSupportPersistence({
                 attentionCharacter,
@@ -109,7 +106,6 @@ export class AttentionMemoryReport {
             this._interpretReusePressure({
                 attentionCharacter,
                 memoryCharacter,
-                coordinationHints,
                 base,
             });
 
@@ -119,6 +115,13 @@ export class AttentionMemoryReport {
                 reusePressure,
                 memoryCharacter,
                 base,
+            });
+
+        const coordinationHints =
+            this._interpretCoordinationHints({
+                supportPersistence,
+                reusePressure,
+                memoryCandidatePosture,
             });
 
         const semanticOverlay =
@@ -212,7 +215,6 @@ export class AttentionMemoryReport {
                 supportPersistence,
                 reusePressure,
                 memoryCandidatePosture,
-                coordinationHints,
             }),
             evidence_refs: [
                 "trajectory.scope",
@@ -241,11 +243,10 @@ export class AttentionMemoryReport {
         return "persistent_support";
     }
 
-    _buildCautionPosture({ supportPersistence, reusePressure, memoryCandidatePosture, coordinationHints }) {
+    _buildCautionPosture({ supportPersistence, reusePressure, memoryCandidatePosture }) {
         if (supportPersistence?.posture === "support_only") return "support_only_non_closure";
         if (memoryCandidatePosture?.posture === "no_memory_class_claim") return "memory_not_justified";
         if (reusePressure?.posture === "elevated") return "reuse_fragility";
-        if (coordinationHints?.pre_commitment === "emergent") return "coordination_hint_only";
         return null;
     }
 
@@ -396,45 +397,33 @@ export class AttentionMemoryReport {
     // Coordination hints (compatibility heuristic only)
     // -------------------------------------------------------------------------
 
-    _interpretCoordinationHints(base) {
-        const t = base?.trajectory_character ?? {};
-        const n = base?.neighborhood_character ?? {};
-        const s = base?.segment_character ?? {};
-        const flags = Array.isArray(base?.dynamics_flags) ? base.dynamics_flags : [];
+    _interpretCoordinationHints({ supportPersistence, reusePressure, memoryCandidatePosture }) {
+        const supportPosture = supportPersistence?.posture ?? "support_only";
+        const reusePosture = reusePressure?.posture ?? "low";
+        const memoryCandidate = memoryCandidatePosture?.posture ?? "no_memory_class_claim";
 
-        const stickyNeighborhood = flags.includes("sticky_neighborhood");
-        const highRecurrence = flags.includes("high_recurrence");
-        const convergence = t?.convergence ?? "insufficient_data";
-        const continuity = s?.continuity ?? "mixed";
-
-        const preCommitment =
-            this._labelPreCommitment({
-                stickyNeighborhood,
-                highRecurrence,
-                convergence,
-                continuity,
-            });
+        let preCommitment = "absent";
+        if (
+            supportPosture === "sustained" &&
+            reusePosture !== "elevated" &&
+            memoryCandidate !== "no_memory_class_claim"
+        ) {
+            preCommitment = "emergent";
+        } else if (
+            supportPosture !== "support_only" &&
+            reusePosture !== "elevated"
+        ) {
+            preCommitment = "weak";
+        }
 
         return {
             pre_commitment: preCommitment,
             evidence: {
-                sticky_neighborhood: stickyNeighborhood,
-                high_recurrence: highRecurrence,
-                convergence,
-                continuity,
+                support_persistence: supportPosture,
+                reuse_pressure: reusePosture,
+                memory_candidate_posture: memoryCandidate,
             },
         };
-    }
-
-    _labelPreCommitment({ stickyNeighborhood, highRecurrence, convergence, continuity }) {
-        if (continuity === "fragmented" || continuity === "novelty-driven") return "absent";
-        if (stickyNeighborhood && highRecurrence && (convergence === "strong" || convergence === "moderate")) {
-            return "emergent";
-        }
-        if (stickyNeighborhood || highRecurrence) {
-            return "weak";
-        }
-        return "absent";
     }
 
     // -------------------------------------------------------------------------
@@ -467,11 +456,10 @@ export class AttentionMemoryReport {
         };
     }
 
-    _interpretReusePressure({ attentionCharacter, memoryCharacter, coordinationHints, base }) {
+    _interpretReusePressure({ attentionCharacter, memoryCharacter, base }) {
         const volatility = attentionCharacter?.volatility ?? "low";
         const stability = memoryCharacter?.stability ?? "low";
         const continuity = base?.segment_character?.continuity ?? "mixed";
-        const preCommitment = coordinationHints?.pre_commitment ?? "absent";
 
         let posture = "low";
         if (volatility === "high" || continuity === "fragmented" || continuity === "novelty-driven") {
@@ -479,7 +467,7 @@ export class AttentionMemoryReport {
         } else if (
             volatility === "medium" ||
             stability === "medium" ||
-            preCommitment === "weak"
+            continuity === "mixed"
         ) {
             posture = "moderate";
         }
@@ -490,7 +478,6 @@ export class AttentionMemoryReport {
                 attention_volatility: volatility,
                 support_stability: stability,
                 continuity,
-                pre_commitment: preCommitment,
             },
         };
     }
@@ -556,7 +543,6 @@ export class AttentionMemoryReport {
         if (memoryCandidatePosture?.posture === "bounded_M1_candidate") flags.push("memory_candidate_m1");
         if (memoryCandidatePosture?.posture === "bounded_M2_candidate") flags.push("memory_candidate_m2");
 
-        if (coordinationHints?.pre_commitment === "emergent") flags.push("pre_commitment_emergent");
         if (memoryCharacter?.recurrence_strength === "high") flags.push("memory_recurrent");
         if (memoryCharacter?.stability === "high") flags.push("memory_stable");
 
@@ -592,10 +578,6 @@ export class AttentionMemoryReport {
 
         if (reusePressure?.posture === "elevated" || memoryCharacter?.stability === "low") {
             notes.push("Reuse pressure remains elevated under current recurrence, convergence, or continuity evidence.");
-        }
-
-        if (coordinationHints?.pre_commitment === "absent") {
-            notes.push("No coordination persistence strong enough for even tentative compatibility-hint pre-commitment labeling was observed.");
         }
 
         return notes;

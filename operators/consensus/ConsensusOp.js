@@ -51,7 +51,8 @@
  *   - reject:
  *       inadmissible claim, invalid dossier, or legitimacy clearly fails
  *   - eligible_for_promotion:
- *       dossier is reviewable and may proceed to a later explicit canon-mint step
+ *       dossier is reviewable and may proceed to a later explicit promotion-consideration step
+ *       no promotion occurs here
  *
  * Admissible claim types (v0.1):
  *   - stable_structural_identity
@@ -111,7 +112,16 @@ export class ConsensusOp {
 
         return {
             ok: true,
+            report_kind: "consensus_review_boundary_result",
+            claim_ceiling: "review_only",
             result: outcome.result,
+            review_boundary_posture: this._buildReviewBoundaryPosture(outcome.result),
+            explicit_non_claims: [
+                "not_promotion",
+                "not_canon",
+                "not_truth_claim",
+                "not_runtime_substance",
+            ],
             review_receipt: {
                 operator_id: this.operator_id,
                 operator_version: this.operator_version,
@@ -119,10 +129,12 @@ export class ConsensusOp {
                 dossier_id: dossier?.candidate_id ?? null,
                 claim_type: dossier?.candidate_claim?.claim_type ?? null,
                 epoch_id: epochContext?.epoch_id ?? null,
+                review_only_boundary: true,
                 legitimacy_checks: legitimacyChecks,
                 blockers_considered: blockers.map(b => b?.code ?? b).filter(Boolean),
                 insufficiencies_considered: insufficiencies.map(i => i?.code ?? i).filter(Boolean),
                 rationale: outcome.rationale,
+                boundary_notes: this._buildBoundaryNotes(outcome.result),
                 canonical_state_emitted: false,
             },
         };
@@ -314,7 +326,8 @@ export class ConsensusOp {
             return {
                 result: "eligible_for_promotion",
                 rationale: [
-                    "Dossier is reviewable and promotion-eligible under current bounded policy.",
+                    "Dossier is reviewable and may proceed to a later explicit promotion-consideration step under current bounded policy.",
+                    "This result remains review-only routing and does not itself promote or mint canon.",
                     "No blockers or insufficiencies remain.",
                 ],
             };
@@ -335,6 +348,37 @@ export class ConsensusOp {
                 "Default defer posture applied.",
             ],
         };
+    }
+
+    _buildReviewBoundaryPosture(result) {
+        const status =
+            result === "eligible_for_promotion"
+                ? "review_only_promotion_consideration"
+                : result === "reject"
+                    ? "review_only_rejected"
+                    : "review_only_deferred";
+
+        return {
+            status,
+            compatibility_result: result,
+            explicit_non_claims: [
+                "not_promotion",
+                "not_canon",
+                "not_truth_claim",
+            ],
+        };
+    }
+
+    _buildBoundaryNotes(result) {
+        const notes = [
+            "ConsensusOp remains a review gate only and does not itself promote or mint canon.",
+        ];
+
+        if (result === "eligible_for_promotion") {
+            notes.push("eligible_for_promotion is a retained compatibility label for later explicit promotion consideration only.");
+        }
+
+        return notes;
     }
 
     _copy(v) {

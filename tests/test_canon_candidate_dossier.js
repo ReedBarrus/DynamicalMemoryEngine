@@ -358,19 +358,23 @@ ok(typeof dossierNoCross.primary_posture === "string", "A11: primary_posture pre
 ok(Array.isArray(dossierNoCross.primary_descriptors), "A12: primary_descriptors present");
 ok(Array.isArray(dossierNoCross.secondary_descriptors), "A13: secondary_descriptors present");
 ok(Array.isArray(dossierNoCross.evidence_refs), "A14: evidence_refs present");
+ok(dossierNoCross.evidence_refs.includes("semantic_overlay.trajectory"), "A14b: evidence_refs use semantic_overlay.trajectory");
+ok(dossierNoCross.evidence_refs.includes("semantic_overlay.attention_memory"), "A14c: evidence_refs use semantic_overlay.attention_memory");
+ok(dossierNoCross.evidence_refs.includes("readiness_overlay.promotion_readiness"), "A14d: evidence_refs retain readiness overlay reference");
 ok(Array.isArray(dossierNoCross.explicit_non_claims), "A15: explicit_non_claims present");
 ok(dossierNoCross.review_packaging_posture && typeof dossierNoCross.review_packaging_posture === "object", "A16: review_packaging_posture present");
 ok(dossierNoCross.review_horizon && typeof dossierNoCross.review_horizon === "object", "A17: review_horizon present");
-ok(dossierNoCross.candidate_claim && typeof dossierNoCross.candidate_claim === "object", "A18: candidate_claim present");
-ok(dossierNoCross.source_refs && typeof dossierNoCross.source_refs === "object", "A19: source_refs present");
-ok(dossierNoCross.evidence_bundle && typeof dossierNoCross.evidence_bundle === "object", "A20: evidence_bundle present");
-ok(Array.isArray(dossierNoCross.blockers), "A21: blockers array present");
-ok(Array.isArray(dossierNoCross.insufficiencies), "A22: insufficiencies array present");
-ok(dossierNoCross.promotion_recommendation && typeof dossierNoCross.promotion_recommendation === "object", "A23: promotion_recommendation compatibility surface present");
-ok(dossierNoCross.receipts && typeof dossierNoCross.receipts === "object", "A24: receipts present");
-ok(Array.isArray(dossierNoCross.notes), "A25: notes array present");
-ok(typeof dossierNoCross.candidate_id === "string" && dossierNoCross.candidate_id.startsWith("ccd:"), "A26: candidate_id present and prefixed");
-ok(typeof dossierNoCross.generated_at === "string", "A27: generated_at string present");
+ok(dossierNoCross.review_routing_posture && typeof dossierNoCross.review_routing_posture === "object", "A18: review_routing_posture present");
+ok(dossierNoCross.candidate_claim && typeof dossierNoCross.candidate_claim === "object", "A19: candidate_claim present");
+ok(dossierNoCross.source_refs && typeof dossierNoCross.source_refs === "object", "A20: source_refs present");
+ok(dossierNoCross.evidence_bundle && typeof dossierNoCross.evidence_bundle === "object", "A21: evidence_bundle present");
+ok(Array.isArray(dossierNoCross.blockers), "A22: blockers array present");
+ok(Array.isArray(dossierNoCross.insufficiencies), "A23: insufficiencies array present");
+ok(dossierNoCross.promotion_recommendation && typeof dossierNoCross.promotion_recommendation === "object", "A24: promotion_recommendation compatibility surface present");
+ok(dossierNoCross.receipts && typeof dossierNoCross.receipts === "object", "A25: receipts present");
+ok(Array.isArray(dossierNoCross.notes), "A26: notes array present");
+ok(typeof dossierNoCross.candidate_id === "string" && dossierNoCross.candidate_id.startsWith("ccd:"), "A27: candidate_id present and prefixed");
+ok(typeof dossierNoCross.generated_at === "string", "A28: generated_at string present");
 
 section("B. Candidate claim structure");
 eq(dossierNoCross.candidate_claim.intended_canon_target, "C1", "B1: intended_canon_target = C1");
@@ -400,13 +404,13 @@ ok(Array.isArray(dossierWithCross.source_refs.artifact_refs.basin_set_refs), "C7
 
 eq(
     dossierWithCross.source_refs.report_refs.trajectory_report_type,
-    runA.interpretation?.trajectory?.report_type ?? null,
-    "C8: trajectory_report_type matches run interpretation"
+    runA.semantic_overlay?.trajectory?.report_type ?? null,
+    "C8: trajectory_report_type matches semantic overlay"
 );
 eq(
     dossierWithCross.source_refs.report_refs.attention_memory_report_type,
-    runA.interpretation?.attention_memory?.report_type ?? null,
-    "C9: attention_memory_report_type matches run interpretation"
+    runA.semantic_overlay?.attention_memory?.report_type ?? null,
+    "C9: attention_memory_report_type matches semantic overlay"
 );
 eq(
     dossierWithCross.source_refs.report_refs.cross_run_report_type,
@@ -427,6 +431,9 @@ ok(dossierWithCross.evidence_bundle.readiness && typeof dossierWithCross.evidenc
 
 ok("convergence" in dossierWithCross.evidence_bundle.trajectory, "D5: trajectory.convergence present");
 ok("attention_concentration" in dossierWithCross.evidence_bundle.attention_memory, "D6: attention_memory.attention_concentration present");
+ok("support_persistence" in dossierWithCross.evidence_bundle.attention_memory, "D6b: attention_memory.support_persistence present");
+ok("reuse_pressure" in dossierWithCross.evidence_bundle.attention_memory, "D6c: attention_memory.reuse_pressure present");
+ok(!("pre_commitment" in dossierWithCross.evidence_bundle.attention_memory), "D6d: attention_memory no longer exports pre_commitment");
 ok("reproducibility" in dossierWithCross.evidence_bundle.cross_run, "D7: cross_run.reproducibility present");
 ok("readiness_label" in dossierWithCross.evidence_bundle.readiness, "D8: readiness.readiness_label present");
 
@@ -444,6 +451,9 @@ isOneOf(
 );
 ok(Array.isArray(dossierNoCross.promotion_recommendation.rationale), "E3: rationale array present");
 ok(Array.isArray(dossierNoCross.promotion_recommendation.minimum_next_evidence), "E4: minimum_next_evidence array present");
+eq(dossierNoCross.promotion_recommendation.compatibility_posture, "legacy_review_routing_name_only", "E4b: promotion_recommendation marked as legacy review-routing name");
+ok(Array.isArray(dossierNoCross.promotion_recommendation.explicit_non_claims), "E4c: promotion_recommendation explicit_non_claims present");
+ok(dossierNoCross.promotion_recommendation.explicit_non_claims.includes("not_promotion"), "E4d: promotion_recommendation denies promotion");
 isOneOf(
     dossierNoCross.review_packaging_posture.posture,
     ["review_packaging_insufficient", "review_packaging_blocked", "review_packaging_supported", "review_packaging_narrowed", "review_packaging_cautious", "review_packaging_limited"],
@@ -455,6 +465,9 @@ isOneOf(
     "E6: review_horizon.status allowed"
 );
 ok(Array.isArray(dossierNoCross.review_horizon.next_evidence_targets), "E7: review_horizon.next_evidence_targets array present");
+eq(dossierNoCross.review_routing_posture.posture, "review_routing_only", "E8: review_routing_posture stays review-only");
+eq(dossierNoCross.review_routing_posture.compatibility_surface, "promotion_recommendation", "E9: review_routing_posture names compatibility surface");
+ok(dossierNoCross.review_routing_posture.explicit_non_claims.includes("not_promotion"), "E10: review_routing_posture denies promotion");
 
 section("F. Cross-run / no-cross-run behavior");
 eq(dossierNoCross.scope.cross_run_context.available, false, "F1: no cross-run -> scope.cross_run_context.available=false");
@@ -476,6 +489,18 @@ ok(Array.isArray(dossierWithCross.receipts.legitimacy_notes), "G4: receipts.legi
 section("H. Determinism");
 const dossierWithCross2 = ccd.assemble(runA, crossRunReport, readinessWithCross);
 deepEq(dossierWithCross, dossierWithCross2, "H1: identical inputs -> identical dossier");
+
+section("H2. Bundle-first trajectory access");
+const bundleFirstRun = clone(runA);
+delete bundleFirstRun.interpretation;
+const bundleFirstReadiness = prr.interpret(bundleFirstRun, crossRunReport);
+const bundleFirstDossier = ccd.assemble(bundleFirstRun, crossRunReport, bundleFirstReadiness);
+eq(bundleFirstDossier.dossier_type, "runtime:canon_candidate_dossier", "H2.1: semantic_overlay-only run still assembles dossier");
+eq(
+    bundleFirstDossier.source_refs.report_refs.trajectory_report_type,
+    runA.semantic_overlay?.trajectory?.report_type ?? null,
+    "H2.2: dossier source refs read trajectory from semantic_overlay directly"
+);
 
 section("I. Boundary integrity");
 const json = JSON.stringify(dossierWithCross);
@@ -512,6 +537,10 @@ ok(
     dossierWithCross.notes.some(n => n.includes("ConsensusOp or later canon review must make any later review decision explicitly.")),
     "I21: notes preserve explicit-review boundary"
 );
+ok(
+    dossierWithCross.notes.some(n => n.includes("promotion_recommendation is a retained compatibility label for review routing only")),
+    "I22: notes cool promotion_recommendation as compatibility-only review routing"
+);
 
 section("J. Failed input handling");
 const fail0 = ccd.assemble(null);
@@ -529,11 +558,12 @@ const fail2 = ccd.assemble({
     substrate: {},
     summaries: {},
     audit: {},
+    semantic_overlay: {},
     interpretation: {},
 });
-eq(fail2.ok, false, "J6: missing interpretation surfaces -> ok=false");
-eq(fail2.error, "INVALID_INPUT", "J7: missing interpretation surfaces -> INVALID_INPUT");
-ok(Array.isArray(fail2.reasons), "J8: missing interpretation surfaces -> reasons array");
+eq(fail2.ok, false, "J6: missing semantic overlay surfaces -> ok=false");
+eq(fail2.error, "INVALID_INPUT", "J7: missing semantic overlay surfaces -> INVALID_INPUT");
+ok(Array.isArray(fail2.reasons), "J8: missing semantic overlay surfaces -> reasons array");
 
 const fail3 = ccd.assemble(runA, crossRunReport, { ok: false, error: "INVALID_READINESS" });
 eq(fail3.ok, false, "J9: invalid readiness report -> ok=false");

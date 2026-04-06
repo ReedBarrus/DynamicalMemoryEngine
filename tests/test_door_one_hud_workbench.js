@@ -340,6 +340,7 @@ ok(output.includes("[6] INTERPRETATION"), "B6: panel [6] present");
 ok(output.includes("[7] PROMOTION READINESS"), "B7: panel [7] present");
 ok(output.includes("[8] CANON CANDIDATE DOSSIER"), "B8: panel [8] present");
 ok(output.includes("[9] CONSENSUS REVIEW"), "B9: panel [9] present");
+ok(output.includes("review gate only; below promotion"), "B10: consensus review panel cooled below promotion");
 
 section("C. Promotion readiness panel");
 ok(output.includes("overall"), "C1: readiness overall row present");
@@ -355,14 +356,15 @@ ok(output.includes("claim_label"), "D3: claim_label row present");
 ok(output.includes("canon_target"), "D4: canon_target row present");
 ok(output.includes("trust_status"), "D5: trust_status row present");
 ok(output.includes("review_status"), "D6: review_status row present");
-ok(output.includes("recommendation"), "D7: recommendation row present");
+ok(output.includes("review_route"), "D7: review_route row present");
 
 section("E. Consensus review panel");
 ok(output.includes("result"), "E1: review result row present");
-ok(output.includes("policy_id"), "E2: review policy_id row present");
-ok(output.includes("epoch_id"), "E3: review epoch_id row present");
-ok(output.includes("dossier_id"), "E4: review dossier_id row present");
-ok(output.includes("c1_emitted"), "E5: c1_emitted row present");
+ok(output.includes("result_posture"), "E2: review result_posture row present");
+ok(output.includes("policy_id"), "E3: review policy_id row present");
+ok(output.includes("epoch_id"), "E4: review epoch_id row present");
+ok(output.includes("dossier_id"), "E5: review dossier_id row present");
+ok(output.includes("c1_emitted"), "E6: c1_emitted row present");
 
 section("F. Boundary integrity");
 ok(!output.includes("C1 CanonicalState"), "F1: no C1 CanonicalState language");
@@ -372,6 +374,7 @@ ok(!output.includes("attractor basin"), "F4: no attractor basin language");
 ok(!output.includes("likely next"), "F5: no prediction language");
 ok(output.includes("integration view, not canon") || output.includes("Workbench is an integration view, not canon."), "F6: non-canon boundary preserved");
 ok(output.includes("no C1 minting in v0.1") || output.includes("does not itself imply C1 minting in v0.1"), "F7: bounded consensus note preserved");
+ok(output.includes("Retained routing labels remain review-only and do not imply promotion by naming alone."), "F8: workbench note cools hot routing labels");
 
 section("G. Determinism");
 const output2 = hud.renderWorkbench(wb, {

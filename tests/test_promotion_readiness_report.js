@@ -361,6 +361,8 @@ ok(typeof reportNoCross.primary_posture === "string", "A11: primary_posture pres
 ok(Array.isArray(reportNoCross.primary_descriptors), "A12: primary_descriptors present");
 ok(Array.isArray(reportNoCross.secondary_descriptors), "A13: secondary_descriptors present");
 ok(Array.isArray(reportNoCross.evidence_refs), "A14: evidence_refs present");
+ok(reportNoCross.evidence_refs.includes("semantic_overlay.trajectory"), "A14b: evidence_refs use semantic_overlay.trajectory");
+ok(reportNoCross.evidence_refs.includes("semantic_overlay.attention_memory"), "A14c: evidence_refs use semantic_overlay.attention_memory");
 ok(Array.isArray(reportNoCross.explicit_non_claims), "A15: explicit_non_claims present");
 ok(reportNoCross.advisory_posture && typeof reportNoCross.advisory_posture === "object", "A16: advisory_posture present");
 ok(reportNoCross.readiness_summary && typeof reportNoCross.readiness_summary === "object", "A17: readiness_summary present");
@@ -394,6 +396,9 @@ ok("total_re_entries" in domains.recurrence_strength.evidence, "B10: recurrence_
 ok("continuity" in domains.segment_coherence.evidence, "B11: segment_coherence evidence.continuity present");
 ok("transition_density" in domains.transition_selectivity.evidence, "B12: transition_selectivity evidence.transition_density present");
 ok("attention_concentration" in domains.attention_memory_alignment.evidence, "B13: attention_memory_alignment evidence.attention_concentration present");
+ok("support_persistence" in domains.attention_memory_alignment.evidence, "B13b: attention_memory_alignment evidence.support_persistence present");
+ok("reuse_pressure" in domains.attention_memory_alignment.evidence, "B13c: attention_memory_alignment evidence.reuse_pressure present");
+ok(!("pre_commitment" in domains.attention_memory_alignment.evidence), "B13d: attention_memory_alignment no longer depends on pre_commitment");
 ok("overall_reproducibility" in domains.cross_run_reproducibility.evidence, "B14: cross_run_reproducibility evidence.overall_reproducibility present");
 
 ok(!("artifact_class" in reportNoCross), "B15: report has no artifact_class");
@@ -439,6 +444,17 @@ for (const [name, domain] of Object.entries(reportWithCross.evidence_domains)) {
 section("F. Determinism");
 const reportWithCross2 = prr.interpret(runA, crossRunReport);
 deepEq(reportWithCross, reportWithCross2, "F1: identical inputs -> identical readiness report");
+
+section("F2. Bundle-first trajectory access");
+const bundleFirstRun = clone(runA);
+delete bundleFirstRun.interpretation;
+const bundleFirstReport = prr.interpret(bundleFirstRun, crossRunReport);
+eq(bundleFirstReport.report_type, "runtime:promotion_readiness_report", "F2.1: semantic_overlay-only run remains valid");
+eq(
+    bundleFirstReport.evidence_domains.structural_stability.evidence.convergence,
+    runA.semantic_overlay?.trajectory?.trajectory_character?.convergence ?? "insufficient_data",
+    "F2.2: readiness reads trajectory from semantic_overlay directly"
+);
 
 section("G. Boundary integrity");
 const json = JSON.stringify(reportWithCross);
@@ -493,10 +509,11 @@ const fail2 = prr.interpret({
     substrate: {},
     summaries: {},
     audit: {},
+    semantic_overlay: {},
     interpretation: {},
 });
-eq(fail2.ok, false, "H6: missing interpretation surfaces -> ok=false");
-eq(fail2.error, "INVALID_INPUT", "H7: missing interpretation surfaces -> INVALID_INPUT");
-ok(Array.isArray(fail2.reasons), "H8: missing interpretation surfaces -> reasons array");
+eq(fail2.ok, false, "H6: missing semantic overlay surfaces -> ok=false");
+eq(fail2.error, "INVALID_INPUT", "H7: missing semantic overlay surfaces -> INVALID_INPUT");
+ok(Array.isArray(fail2.reasons), "H8: missing semantic overlay surfaces -> reasons array");
 
 finish();

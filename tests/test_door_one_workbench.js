@@ -443,6 +443,16 @@ ok(
     ["defer", "reject", "eligible_for_promotion"].includes(wbCross.review_overlay.consensus_review?.result),
     "E6: review overlay consensus result allowed"
 );
+eq(
+    wbCross.review_overlay.canon_candidate.review_routing_posture?.posture,
+    "review_routing_only",
+    "E7: canon candidate review routing stays explicitly review-only"
+);
+eq(
+    wbCross.review_overlay.consensus_review?.claim_ceiling,
+    "review_only",
+    "E8: consensus review remains review_only"
+);
 
 section("F. Runtime / interpretation copies present");
 ok(wbSingle.runtime.artifacts && typeof wbSingle.runtime.artifacts === "object", "F1: runtime.artifacts present");
@@ -509,6 +519,16 @@ includes(
     wbCross.notes.join(" "),
     "Consensus review remains explicit and does not itself imply C1 minting in v0.1.",
     "I8: note preserves bounded consensus boundary"
+);
+includes(
+    wbCross.notes.join(" "),
+    "consensus_review remains a downstream review-only bundle",
+    "I8b: note cools consensus_review as review-only bundle"
+);
+includes(
+    wbCross.notes.join(" "),
+    "promotion_recommendation remains a retained dossier compatibility label for review routing only",
+    "I8c: note cools promotion_recommendation as review-routing compatibility label"
 );
 includes(
     wbCross.notes.join(" "),

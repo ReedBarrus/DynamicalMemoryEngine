@@ -373,19 +373,23 @@ ok(strongDossier && typeof strongDossier === "object", "A1: strong dossier prese
 const strongReview = cons.review(strongDossier, epochContext, { policy_id: "consensus.review.v1" });
 ok(strongReview && typeof strongReview === "object", "A2: review() returns object");
 eq(strongReview.ok, true, "A3: review ok=true on valid dossier");
-isOneOf(strongReview.result, ["defer", "reject", "eligible_for_promotion"], "A4: result label allowed");
-ok(strongReview.review_receipt && typeof strongReview.review_receipt === "object", "A5: review_receipt present");
-eq(strongReview.review_receipt.operator_id, "ConsensusOp", "A6: operator_id correct");
-eq(strongReview.review_receipt.operator_version, "0.1.0", "A7: operator_version correct");
-eq(strongReview.review_receipt.policy_id, "consensus.review.v1", "A8: policy_id preserved");
-eq(strongReview.review_receipt.dossier_id, strongDossier.candidate_id, "A9: dossier_id preserved");
-eq(strongReview.review_receipt.claim_type, strongDossier.candidate_claim.claim_type, "A10: claim_type preserved");
-eq(strongReview.review_receipt.epoch_id, epochContext.epoch_id, "A11: epoch_id preserved");
-ok(Array.isArray(strongReview.review_receipt.legitimacy_checks), "A12: legitimacy_checks array present");
-ok(Array.isArray(strongReview.review_receipt.blockers_considered), "A13: blockers_considered array present");
-ok(Array.isArray(strongReview.review_receipt.insufficiencies_considered), "A14: insufficiencies_considered array present");
-ok(Array.isArray(strongReview.review_receipt.rationale), "A15: rationale array present");
-eq(strongReview.review_receipt.canonical_state_emitted, false, "A16: canonical_state_emitted = false");
+eq(strongReview.report_kind, "consensus_review_boundary_result", "A4: report_kind explicit");
+eq(strongReview.claim_ceiling, "review_only", "A5: claim_ceiling explicit");
+isOneOf(strongReview.result, ["defer", "reject", "eligible_for_promotion"], "A6: result label allowed");
+ok(strongReview.review_boundary_posture && typeof strongReview.review_boundary_posture === "object", "A7: review_boundary_posture present");
+ok(Array.isArray(strongReview.explicit_non_claims), "A8: explicit_non_claims present");
+ok(strongReview.review_receipt && typeof strongReview.review_receipt === "object", "A9: review_receipt present");
+eq(strongReview.review_receipt.operator_id, "ConsensusOp", "A10: operator_id correct");
+eq(strongReview.review_receipt.operator_version, "0.1.0", "A11: operator_version correct");
+eq(strongReview.review_receipt.policy_id, "consensus.review.v1", "A12: policy_id preserved");
+eq(strongReview.review_receipt.dossier_id, strongDossier.candidate_id, "A13: dossier_id preserved");
+eq(strongReview.review_receipt.claim_type, strongDossier.candidate_claim.claim_type, "A14: claim_type preserved");
+eq(strongReview.review_receipt.epoch_id, epochContext.epoch_id, "A15: epoch_id preserved");
+ok(Array.isArray(strongReview.review_receipt.legitimacy_checks), "A16: legitimacy_checks array present");
+ok(Array.isArray(strongReview.review_receipt.blockers_considered), "A17: blockers_considered array present");
+ok(Array.isArray(strongReview.review_receipt.insufficiencies_considered), "A18: insufficiencies_considered array present");
+ok(Array.isArray(strongReview.review_receipt.rationale), "A19: rationale array present");
+eq(strongReview.review_receipt.canonical_state_emitted, false, "A20: canonical_state_emitted = false");
 
 section("B. Input validation");
 const bad0 = cons.review(null, epochContext);
@@ -487,6 +491,11 @@ const eligibleReview = cons.review(eligibleDossier, epochContext);
 eq(eligibleReview.ok, true, "F1: eligible dossier review ok=true");
 eq(eligibleReview.result, "eligible_for_promotion", "F2: clean eligible dossier -> eligible_for_promotion");
 eq(eligibleReview.review_receipt.canonical_state_emitted, false, "F3: still no C1 emitted in v0.1");
+eq(eligibleReview.review_boundary_posture.status, "review_only_promotion_consideration", "F4: eligible_for_promotion cooled to review-only promotion consideration");
+ok(
+    eligibleReview.review_receipt.boundary_notes.some(n => String(n).includes("retained compatibility label")),
+    "F5: boundary notes cool eligible_for_promotion as compatibility label only"
+);
 
 section("G. Determinism");
 const strongReview2 = cons.review(strongDossier, epochContext, { policy_id: "consensus.review.v1" });
@@ -507,5 +516,8 @@ notIncludes(json, '"ontology":', "I5: no ontology key");
 notIncludes(json, '"prediction"', "I6: no prediction key");
 notIncludes(json, '"canonical_state_emitted":true', "I7: never claims canon emission");
 isOneOf(strongReview.result, ["defer", "reject", "eligible_for_promotion"], "I8: bounded review result only");
+ok(strongReview.explicit_non_claims.includes("not_promotion"), "I9: explicit_non_claims deny promotion");
+ok(strongReview.explicit_non_claims.includes("not_canon"), "I10: explicit_non_claims deny canon");
+eq(strongReview.review_receipt.review_only_boundary, true, "I11: review receipt remains explicitly review-only");
 
 finish();
