@@ -33,28 +33,28 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 64,
-            "pattern": "^v[0-9]+(?:\.[0-9]+)?$",
+            "pattern": "^v[0-9]+(?:\\.[0-9]+)?$",
             "description": "Version of the Language Kernel contract governing this run."
         },
         "reasoning_schema_version": {
             "type": "string",
             "minLength": 1,
             "maxLength": 64,
-            "pattern": "^v[0-9]+(?:\.[0-9]+)?$",
+            "pattern": "^v[0-9]+(?:\\.[0-9]+)?$",
             "description": "Version of the reasoning_frame schema used for this run."
         },
         "export_schema_version": {
             "type": "string",
             "minLength": 1,
             "maxLength": 64,
-            "pattern": "^v[0-9]+(?:\.[0-9]+)?$",
+            "pattern": "^v[0-9]+(?:\\.[0-9]+)?$",
             "description": "Version of the language_overlay_export schema used for this run."
         },
         "validation_schema_version": {
             "type": "string",
             "minLength": 1,
             "maxLength": 64,
-            "pattern": "^v[0-9]+(?:\.[0-9]+)?$",
+            "pattern": "^v[0-9]+(?:\\.[0-9]+)?$",
             "description": "Version of the validation receipt schema used for this run."
         },
         "model_info": {
@@ -452,6 +452,46 @@
             "validation_receipt": {
                 "validation_receipt_id": "VR:run_1775479542686:001",
                 "validator_version": "v0.1",
+                "validation_scope": "full_kernel_run",
+                "checked_artifacts": {
+                    "kernel_run_id": "KR:run_1775479542686:001",
+                    "export_packet_id": "EK:run_1775479542686:v1",
+                    "prompt_receipt_id": "PR:run_1775479542686:001",
+                    "response_receipt_id": "RR:run_1775479542686:001",
+                    "frame_ids": [
+                        "LF:run_1775479542686:0001"
+                    ]
+                },
+                "invariant_results": [
+                    {
+                        "invariant_name": "identity",
+                        "status": "pass",
+                        "score": 1,
+                        "checked_frames": [
+                            "LF:run_1775479542686:0001"
+                        ]
+                    },
+                    {
+                        "invariant_name": "provenance",
+                        "status": "pass",
+                        "score": 1
+                    },
+                    {
+                        "invariant_name": "explicit_recursion",
+                        "status": "pass",
+                        "score": 1
+                    },
+                    {
+                        "invariant_name": "continuity_loss",
+                        "status": "pass",
+                        "score": 0.99
+                    },
+                    {
+                        "invariant_name": "geometric_alignment",
+                        "status": "pass",
+                        "score": 0.97
+                    }
+                ],
                 "passed_invariants": [
                     "identity",
                     "provenance",
@@ -460,6 +500,13 @@
                     "geometric_alignment"
                 ],
                 "violations": [],
+                "summary_counts": {
+                    "frames_checked": 1,
+                    "invariants_checked": 5,
+                    "violations_total": 0,
+                    "fatal_violations": 0,
+                    "downgraded_invariants": 0
+                },
                 "overall_status": "valid"
             },
             "timestamps": {
