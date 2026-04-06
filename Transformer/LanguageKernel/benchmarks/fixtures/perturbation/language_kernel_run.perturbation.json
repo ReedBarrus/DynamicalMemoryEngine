@@ -1,0 +1,143 @@
+{
+  "kernel_run_id": "KR:run_1775479542686:017",
+  "kernel_contract_version": "v0.1",
+  "reasoning_schema_version": "v0.1",
+  "export_schema_version": "v0.1",
+  "validation_schema_version": "v0.1",
+  "model_info": {
+    "provider": "ollama",
+    "model_name": "llama3.1",
+    "temperature": 0.2,
+    "top_p": 0.9
+  },
+  "export_packet_id": "EK:run_1775479542686:v1",
+  "prompt_receipt_id": "PR:run_1775479542686:017",
+  "response_receipt_id": "RR:run_1775479542686:017",
+  "declared_lens": "medium FFT / Hann baseline",
+  "query_class": "Q3",
+  "claim_class_ceiling": "L1",
+  "legal_posture": "Read-side Language Kernel run only. No canon authority. Not structural truth. Not primary retention substance.",
+  "operator_mode": "explicit_only",
+  "recursion_depth": 2,
+  "language_frames": [
+    {
+      "frame_id": "LF:run_1775479542686:0171",
+      "frame_type": "reasoning_overlay",
+      "what_object_am_i": "Bounded reasoning frame over RET:1775479542686:4MI-1",
+      "how_produced": "Prompted read-side overlay over export packet EK:run_1775479542686:v1 under perturbation review pressure.",
+      "depends_on": [
+        "RET:1775479542686:4MI-1",
+        "SPC:1775479542686:8HI",
+        "LF:run_1775479542686:0168"
+      ],
+      "query_class": "Q3",
+      "claim_class_ceiling": "L1",
+      "current_status": {
+        "continuity": "Drifting",
+        "structural_loss_percent": 19.75,
+        "support_tier": "RETAINED_ONLY",
+        "uncertainty_class": "U2",
+        "drift_class": "G2"
+      },
+      "legal_claim": "Bounded interpretation overlay only. No canon authority. Not structural truth. Read-side recursion experiment.",
+      "non_claims": [
+        "not canon",
+        "not source restoration",
+        "not identity proof",
+        "not mechanized memory function"
+      ],
+      "reasoning_overlay": "This frame remains bounded but shows perturbation-era continuity drift that must stay downgraded and support-only.",
+      "what_next": "Await explicit operator request for next recursion turn or new retained signature reference."
+    }
+  ],
+  "run_metrics": {
+    "structural_fidelity_score": 0.91,
+    "provenance_trace_completeness": 0.95,
+    "anomaly_propagation_fidelity": 0.84,
+    "loss_gradient_honesty": 0.89,
+    "continuity_badge_accuracy": 0.83,
+    "claim_ceiling_adherence": 0.96,
+    "recursion_explicitness_score": 1,
+    "stack_purity_score": 0.88,
+    "identity_trace_completeness": 0.9,
+    "overall_status": "downgraded"
+  },
+  "validation_receipt": {
+    "validation_receipt_id": "VR:run_1775479542686:017",
+    "validator_version": "v0.1",
+    "validation_scope": "full_kernel_run",
+    "checked_artifacts": {
+      "kernel_run_id": "KR:run_1775479542686:017",
+      "export_packet_id": "EK:run_1775479542686:v1",
+      "prompt_receipt_id": "PR:run_1775479542686:017",
+      "response_receipt_id": "RR:run_1775479542686:017",
+      "frame_ids": [
+        "LF:run_1775479542686:0171"
+      ]
+    },
+    "invariant_results": [
+      {
+        "invariant_name": "identity",
+        "status": "pass",
+        "score": 0.96,
+        "checked_frames": [
+          "LF:run_1775479542686:0171"
+        ]
+      },
+      {
+        "invariant_name": "provenance",
+        "status": "pass",
+        "score": 0.97
+      },
+      {
+        "invariant_name": "explicit_recursion",
+        "status": "pass",
+        "score": 1
+      },
+      {
+        "invariant_name": "continuity_loss",
+        "status": "downgraded",
+        "score": 0.82
+      },
+      {
+        "invariant_name": "geometric_alignment",
+        "status": "pass",
+        "score": 0.9
+      }
+    ],
+    "passed_invariants": [
+      "identity",
+      "provenance",
+      "explicit_recursion",
+      "geometric_alignment"
+    ],
+    "violations": [
+      {
+        "violation_id": "VV:run_1775479542686:017:01",
+        "violation_class": "continuity_smoothing",
+        "severity": "warning",
+        "frame_id": "LF:run_1775479542686:0171",
+        "source_handle": "RET:1775479542686:4MI-1",
+        "message": "Continuity language required downgrade after perturbation pressure softened the loss description.",
+        "suggested_posture": "downgrade"
+      }
+    ],
+    "summary_counts": {
+      "frames_checked": 1,
+      "invariants_checked": 5,
+      "violations_total": 1,
+      "fatal_violations": 0,
+      "downgraded_invariants": 1
+    },
+    "overall_status": "downgraded",
+    "downgrade_posture": [
+      "continuity_drift"
+    ],
+    "validated_at": "2026-04-06T12:05:12Z"
+  },
+  "timestamps": {
+    "exported_at": "2026-04-06T12:05:00Z",
+    "invoked_at": "2026-04-06T12:05:10Z",
+    "validated_at": "2026-04-06T12:05:12Z"
+  }
+}

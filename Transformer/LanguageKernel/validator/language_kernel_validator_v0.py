@@ -11,7 +11,8 @@ from pathlib import Path
 from typing import Any
 
 
-ROOT = Path(__file__).resolve().parent
+REPO_ROOT = Path(__file__).resolve().parents[3]
+ROOT = REPO_ROOT / "README" / "Transformer" / "LanguageKernel"
 SCHEMA_FILES = (
     "reasoning_frame.schema.json",
     "language_overlay_export.schema.json",
