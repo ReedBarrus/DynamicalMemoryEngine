@@ -377,6 +377,27 @@ Expected posture:
 * not canon
 * not runtime truth
 
+### 10.4 Future optional interpretive attachments
+
+Future read-side seams may later attach alongside the structural payload and overlay bundle when separately authorized.
+
+Examples include:
+
+* a post-perturbation `settlement_report`
+* a separate `identity_audit`
+
+These are **not** required v0 viewer fields.
+
+They remain:
+
+* optional
+* read-side
+* removable
+* below identity closure unless independently mechanized
+* structurally traceable back to the same shared base
+
+The current contract must therefore leave room for these attachments without treating them as already implemented.
+
 ### Overlay rule
 
 A viewer must remain useful when overlays are off.
@@ -491,6 +512,20 @@ Viewer clarity must not be mistaken for stronger support, readiness, approval, o
 
 Viewer specialization must not create multiple truth contracts.
 
+### 14.6 Structural perturbation facts remain separate from later interpretation
+
+The viewer contract must preserve three-way separation between:
+
+* anomaly or perturbation evidence
+* later settlement interpretation
+* later identity continuity judgment
+
+Accordingly:
+
+* anomaly evidence is not settlement by default
+* settlement interpretation, if later attached, is not identity continuity by default
+* basin migration or continuity labels must not silently become preserved same-object claims
+
 ---
 
 ## 15. Minimal acceptance tests for this contract
@@ -540,6 +575,8 @@ It is a stabilizing target, not an excuse for over-design.
 * This note does **not** define final routing implementation.
 * This note does **not** replace runtime operator contracts.
 * This note does **not** authorize semantic fusion into structural payload.
+* This note does **not** require `settlement_report` or `identity_audit` to exist now.
+* This note does **not** treat perturbation, settlement, and identity as one merged viewer verdict.
 
 ---
 

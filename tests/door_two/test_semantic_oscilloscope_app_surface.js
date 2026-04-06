@@ -120,7 +120,15 @@ if (demoSrc) {
     ok(demoSrc.includes("read-side only") || demoSrc.includes("Not authority"), "G2: demo keeps read-side posture");
 }
 if (hudSrc) {
-    ok(!hudSrc.includes("handleRun"), "G3: lab HUD has no run controls");
+    ok(!hudSrc.includes("handleRun"), "E10: lab HUD has no run controls");
+    ok(
+        hudSrc.includes("Structural continuity here is not settlement or identity closure."),
+        "E11: lab HUD keeps structural continuity separate from settlement and identity closure"
+    );
+    ok(
+        hudSrc.includes("post-perturbation") && hudSrc.includes("identity audit"),
+        "E12: lab HUD reserves optional future read-side attachment space without implementing it"
+    );
 }
 
 section("H. Legacy composition remains bounded");

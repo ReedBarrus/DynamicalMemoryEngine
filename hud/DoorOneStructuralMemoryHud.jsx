@@ -1447,7 +1447,7 @@ export default function DoorOneStructuralMemoryHUD({
                     <SectionShell
                         eyebrow="Plane 3 — Interpretation"
                         title="Derived Structural Interpretation"
-                        note="Bounded, downstream, non-authoritative readouts over runtime evidence."
+                        note="Bounded, downstream, non-authoritative readouts over runtime evidence. Structural continuity here is not settlement or identity closure."
                     >
                         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                             {Object.entries(data.structure).map(([k, v]) => (
@@ -1474,6 +1474,21 @@ export default function DoorOneStructuralMemoryHUD({
                                     </div>
                                 </div>
                             ))}
+                        </div>
+
+                        <div
+                            className="rounded-2xl border p-3"
+                            style={{
+                                marginTop: "12px",
+                                background: "#111827",
+                                color: "#94a3b8",
+                                fontSize: "13px",
+                            }}
+                        >
+                            Future optional read-side attachments may appear here for a post-perturbation
+                            settlement report or identity audit. They remain separate from anomaly evidence,
+                            separate from current structural continuity labels, and unimplemented in this
+                            surface today.
                         </div>
                     </SectionShell>
 
