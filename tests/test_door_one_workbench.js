@@ -359,12 +359,14 @@ includes(wbSingle.generated_from, "integration view, not canon", "A4: generated_
 ok(wbSingle.scope && typeof wbSingle.scope === "object", "A5: scope present");
 ok(wbSingle.runtime && typeof wbSingle.runtime === "object", "A6: runtime section present");
 ok(wbSingle.semantic_overlay && typeof wbSingle.semantic_overlay === "object", "A7: semantic_overlay section present");
-ok(wbSingle.interpretation && typeof wbSingle.interpretation === "object", "A8: interpretation section present");
-ok(wbSingle.cross_run && typeof wbSingle.cross_run === "object", "A9: cross_run section present");
-ok(wbSingle.promotion_readiness && typeof wbSingle.promotion_readiness === "object", "A10: promotion_readiness section present");
-ok(wbSingle.canon_candidate && typeof wbSingle.canon_candidate === "object", "A11: canon_candidate section present");
-ok(wbSingle.consensus_review && typeof wbSingle.consensus_review === "object", "A12: consensus_review section present");
-ok(Array.isArray(wbSingle.notes), "A13: notes array present");
+ok(wbSingle.readiness_overlay && typeof wbSingle.readiness_overlay === "object", "A8: readiness_overlay section present");
+ok(wbSingle.review_overlay && typeof wbSingle.review_overlay === "object", "A9: review_overlay section present");
+ok(wbSingle.interpretation && typeof wbSingle.interpretation === "object", "A10: interpretation compatibility section present");
+ok(wbSingle.cross_run && typeof wbSingle.cross_run === "object", "A11: cross_run section present");
+ok(wbSingle.promotion_readiness && typeof wbSingle.promotion_readiness === "object", "A12: promotion_readiness compatibility section present");
+ok(wbSingle.canon_candidate && typeof wbSingle.canon_candidate === "object", "A13: canon_candidate compatibility section present");
+ok(wbSingle.consensus_review && typeof wbSingle.consensus_review === "object", "A14: consensus_review compatibility section present");
+ok(Array.isArray(wbSingle.notes), "A15: notes array present");
 
 section("B. Single-run mode");
 eq(wbSingle.scope.stream_id, runA?.artifacts?.a1?.stream_id ?? null, "B1: scope.stream_id sourced from A1");
@@ -377,6 +379,9 @@ eq(wbSingle.cross_run.report, null, "B7: single-run cross_run.report=null");
 ok(wbSingle.promotion_readiness.report && typeof wbSingle.promotion_readiness.report === "object", "B8: promotion readiness derived");
 ok(wbSingle.canon_candidate.dossier && typeof wbSingle.canon_candidate.dossier === "object", "B9: canon candidate dossier derived");
 eq(wbSingle.consensus_review.review, null, "B10: no epochContext -> consensus_review.review=null");
+ok(wbSingle.readiness_overlay.promotion_readiness && typeof wbSingle.readiness_overlay.promotion_readiness === "object", "B11: readiness_overlay.promotion_readiness present");
+ok(wbSingle.review_overlay.canon_candidate && typeof wbSingle.review_overlay.canon_candidate === "object", "B12: review_overlay.canon_candidate present");
+eq(wbSingle.review_overlay.consensus_review, null, "B13: no epochContext -> review_overlay.consensus_review=null");
 
 section("C. Cross-run mode");
 eq(wbCross.scope.cross_run_context.available, true, "C1: cross-run scope.available=true");
@@ -394,6 +399,8 @@ eq(
     "consensus.workbench.v1",
     "C7: consensus policy_id preserved"
 );
+ok(wbCross.review_overlay.consensus_review && typeof wbCross.review_overlay.consensus_review === "object", "C8: review_overlay.consensus_review present");
+ok(wbCross.readiness_overlay.promotion_readiness && typeof wbCross.readiness_overlay.promotion_readiness === "object", "C9: readiness_overlay.promotion_readiness present");
 
 section("D. Cross-run session path");
 eq(wbSession.scope.cross_run_context.available, true, "D1: session path scope.available=true");
@@ -413,13 +420,27 @@ eq(
     "E1: promotion readiness report_type correct"
 );
 eq(
+    wbCross.readiness_overlay.promotion_readiness.report_type,
+    "runtime:promotion_readiness_report",
+    "E2: readiness overlay report_type correct"
+);
+eq(
     wbCross.canon_candidate.dossier.dossier_type,
     "runtime:canon_candidate_dossier",
-    "E2: canon candidate dossier_type correct"
+    "E3: canon candidate dossier_type correct"
+);
+eq(
+    wbCross.review_overlay.canon_candidate.dossier_type,
+    "runtime:canon_candidate_dossier",
+    "E4: review overlay canon candidate dossier_type correct"
 );
 ok(
     ["defer", "reject", "eligible_for_promotion"].includes(wbCross.consensus_review.review?.result),
-    "E3: consensus review result allowed"
+    "E5: consensus review result allowed"
+);
+ok(
+    ["defer", "reject", "eligible_for_promotion"].includes(wbCross.review_overlay.consensus_review?.result),
+    "E6: review overlay consensus result allowed"
 );
 
 section("F. Runtime / interpretation copies present");
@@ -429,8 +450,9 @@ ok(wbSingle.runtime.summaries && typeof wbSingle.runtime.summaries === "object",
 ok(wbSingle.runtime.audit && typeof wbSingle.runtime.audit === "object", "F4: runtime.audit present");
 ok(wbSingle.semantic_overlay.trajectory && typeof wbSingle.semantic_overlay.trajectory === "object", "F5: semantic_overlay.trajectory present");
 eq(wbSingle.semantic_overlay.trajectory.query_class, "Q2_continuity", "F6: semantic_overlay.trajectory query_class declared");
-ok(wbSingle.interpretation.trajectory && typeof wbSingle.interpretation.trajectory === "object", "F7: interpretation.trajectory compatibility alias present");
-ok(wbSingle.interpretation.attention_memory && typeof wbSingle.interpretation.attention_memory === "object", "F8: interpretation.attention_memory present");
+ok(wbSingle.semantic_overlay.attention_memory && typeof wbSingle.semantic_overlay.attention_memory === "object", "F7: semantic_overlay.attention_memory present");
+ok(wbSingle.interpretation.trajectory && typeof wbSingle.interpretation.trajectory === "object", "F8: interpretation.trajectory compatibility alias present");
+ok(wbSingle.interpretation.attention_memory && typeof wbSingle.interpretation.attention_memory === "object", "F9: interpretation.attention_memory compatibility alias present");
 
 section("G. Determinism");
 const wbCross2 = workbench.assemble(runA, {
@@ -467,6 +489,11 @@ includes(
     wbCross.notes.join(" "),
     "Trajectory semantic overlay remains removable",
     "I9: note preserves removable semantic-overlay boundary"
+);
+includes(
+    wbCross.notes.join(" "),
+    "compatibility aliases remain transitional only",
+    "I10: note preserves transitional alias boundary"
 );
 
 section("J. Failed input handling");

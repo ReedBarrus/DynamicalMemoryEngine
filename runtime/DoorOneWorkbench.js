@@ -42,11 +42,11 @@
  * Output:
  *   Plain-data workbench object containing:
  *     - runtime
- *     - interpretation
+ *     - semantic_overlay
+ *     - readiness_overlay
+ *     - review_overlay
+ *     - compatibility aliases for transitional downstream consumers
  *     - optional cross_run
- *     - promotion_readiness
- *     - canon_candidate
- *     - optional consensus_review
  *
  * Non-responsibilities:
  *   - does NOT replace DoorOneOrchestrator
@@ -128,7 +128,7 @@ export class DoorOneWorkbench {
         return {
             workbench_type: "runtime:door_one_workbench",
             generated_from:
-                "Door One runtime, semantic overlay, interpretation, cross-run, readiness, dossier, and consensus review surfaces only; integration view, not canon",
+                "Door One runtime, semantic/readiness/review overlay bundles, cross-run, and transitional compatibility surfaces only; integration view, not canon",
             scope: {
                 stream_id: result?.artifacts?.a1?.stream_id ?? null,
                 source_id: result?.artifacts?.a1?.source_id ?? null,
@@ -161,10 +161,24 @@ export class DoorOneWorkbench {
                     result?.interpretation?.trajectory ??
                     null
                 ),
+                attention_memory: this._copy(
+                    result?.semantic_overlay?.attention_memory ??
+                    result?.interpretation?.attention_memory ??
+                    null
+                ),
+            },
+
+            readiness_overlay: {
+                promotion_readiness: this._copy(promotionReadiness),
+            },
+
+            review_overlay: {
+                canon_candidate: this._copy(canonCandidate),
+                consensus_review: consensusReview ? this._copy(consensusReview) : null,
             },
 
             interpretation: {
-                // Compatibility alias while downstream consumers still read interpretation.trajectory.
+                // Transitional compatibility alias while downstream consumers still read interpretation.*
                 trajectory: this._copy(result?.interpretation?.trajectory ?? null),
                 attention_memory: this._copy(result?.interpretation?.attention_memory ?? null),
             },
@@ -175,14 +189,17 @@ export class DoorOneWorkbench {
             },
 
             promotion_readiness: {
+                // Transitional compatibility alias while downstream consumers are bundle-migrated.
                 report: this._copy(promotionReadiness),
             },
 
             canon_candidate: {
+                // Transitional compatibility alias while downstream consumers are bundle-migrated.
                 dossier: this._copy(canonCandidate),
             },
 
             consensus_review: {
+                // Transitional compatibility alias while downstream consumers are bundle-migrated.
                 review: consensusReview ? this._copy(consensusReview) : null,
             },
 
@@ -226,6 +243,7 @@ export class DoorOneWorkbench {
             "Workbench is an integration view, not canon.",
             "Consensus review remains explicit and does not itself imply C1 minting in v0.1.",
             "Trajectory semantic overlay remains removable and does not become structural runtime substance by itself.",
+            "Semantic, readiness, and review outputs are bundled downstream of structural runtime; compatibility aliases remain transitional only.",
         ];
 
         if (!crossRunReport) {

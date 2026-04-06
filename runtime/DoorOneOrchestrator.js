@@ -522,7 +522,10 @@ function buildResult({ a1, a2, h1s, m1s, a3, q, basinSets, anomalyReports,
         },
         semantic_overlay: {
             trajectory: trajectoryInterpretation,
+            attention_memory: attentionMemory,
         },
+        readiness_overlay: {},
+        review_overlay: {},
         // - Interpretation
         interpretation: {
             // Compatibility alias while downstream seams are still being isolated.

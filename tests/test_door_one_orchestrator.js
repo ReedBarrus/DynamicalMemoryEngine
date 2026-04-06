@@ -222,22 +222,34 @@ assert("A22: result has interpretation section",
 assert("A23: result has semantic_overlay section",
     result.semantic_overlay && typeof result.semantic_overlay === "object");
 
-assert("A24: semantic_overlay.trajectory present",
+assert("A24: result has readiness_overlay section",
+    result.readiness_overlay && typeof result.readiness_overlay === "object");
+
+assert("A25: result has review_overlay section",
+    result.review_overlay && typeof result.review_overlay === "object");
+
+assert("A26: semantic_overlay.trajectory present",
     result.semantic_overlay?.trajectory && typeof result.semantic_overlay.trajectory === "object");
 
-assert("A25: interpretation.trajectory compatibility alias present",
+assert("A27: semantic_overlay.attention_memory present",
+    result.semantic_overlay?.attention_memory && typeof result.semantic_overlay.attention_memory === "object");
+
+assert("A28: interpretation.trajectory compatibility alias present",
     result.interpretation?.trajectory && typeof result.interpretation.trajectory === "object");
 
-assert("A26: interpretation.attention_memory present",
+assert("A29: interpretation.attention_memory present",
     result.interpretation?.attention_memory && typeof result.interpretation.attention_memory === "object");
 
-assert("A27: trajectory overlay report_type correct",
+assert("A30: trajectory overlay report_type correct",
     result.semantic_overlay?.trajectory?.report_type === "runtime:trajectory_interpretation_report");
 
-assert("A28: trajectory overlay query_class declared",
+assert("A31: trajectory overlay query_class declared",
     result.semantic_overlay?.trajectory?.query_class === "Q2_continuity");
 
-assert("A29: attention/memory report_type correct",
+assert("A32: attention/memory overlay report_type correct",
+    result.semantic_overlay?.attention_memory?.report_type === "runtime:attention_memory_report");
+
+assert("A33: attention/memory compatibility alias report_type correct",
     result.interpretation?.attention_memory?.report_type === "runtime:attention_memory_report");
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -284,8 +296,11 @@ section("C2. Semantic overlay removability");
 
 const structuralOnly = JSON.parse(JSON.stringify(result));
 delete structuralOnly.semantic_overlay;
+delete structuralOnly.readiness_overlay;
+delete structuralOnly.review_overlay;
 if (structuralOnly.interpretation) {
     delete structuralOnly.interpretation.trajectory;
+    delete structuralOnly.interpretation.attention_memory;
 }
 
 assert("C6: structural-only copy keeps artifacts", typeof structuralOnly.artifacts === "object");
