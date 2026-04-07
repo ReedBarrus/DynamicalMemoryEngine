@@ -1,5 +1,8 @@
 "use strict";
 
+export const ACTIVE_SHELL_STATE_EVENT = "dme:active-shell-state";
+const ACTIVE_SHELL_STATE_STORAGE_KEY = "dme.activeShellState.v1";
+
 function resolveRunLabel(record) {
     return record?.context_run_label ?? record?.run_label ?? null;
 }
@@ -102,4 +105,62 @@ export function buildActiveShellState({
         runError,
         hasActiveResult: !!(runResult?.ok && workbench),
     };
+}
+
+function buildPublishedShellState(activeShellState = {}) {
+    return {
+        runId: activeShellState?.runId ?? null,
+        activeRunLabel: activeShellState?.activeRunLabel ?? null,
+        workbench: activeShellState?.workbench ?? null,
+        runResult: activeShellState?.runResult ?? null,
+        activeRequest: activeShellState?.activeRequest ?? null,
+        requestLog: Array.isArray(activeShellState?.requestLog) ? activeShellState.requestLog : [],
+        replayLog: Array.isArray(activeShellState?.replayLog) ? activeShellState.replayLog : [],
+        requestHistoryCount: activeShellState?.requestHistoryCount ?? 0,
+        replayHistoryCount: activeShellState?.replayHistoryCount ?? 0,
+        sourceFamilyLabel: activeShellState?.sourceFamilyLabel ?? "unspecified",
+        runStatus: activeShellState?.runStatus ?? "idle",
+        runError: activeShellState?.runError ?? null,
+        hasActiveResult: !!activeShellState?.hasActiveResult,
+    };
+}
+
+export function readPublishedShellState() {
+    if (typeof window === "undefined" || !window.sessionStorage) {
+        return null;
+    }
+
+    try {
+        const raw = window.sessionStorage.getItem(ACTIVE_SHELL_STATE_STORAGE_KEY);
+        return raw ? JSON.parse(raw) : null;
+    } catch (_) {
+        return null;
+    }
+}
+
+export function publishActiveShellState(activeShellState = {}) {
+    const publishedShellState = buildPublishedShellState(activeShellState);
+
+    if (typeof window === "undefined") {
+        return publishedShellState;
+    }
+
+    try {
+        window.sessionStorage?.setItem(
+            ACTIVE_SHELL_STATE_STORAGE_KEY,
+            JSON.stringify(publishedShellState)
+        );
+    } catch (_) {
+        // Storage sync is best-effort only.
+    }
+
+    if (typeof window.dispatchEvent === "function" && typeof window.CustomEvent === "function") {
+        window.dispatchEvent(
+            new window.CustomEvent(ACTIVE_SHELL_STATE_EVENT, {
+                detail: publishedShellState,
+            })
+        );
+    }
+
+    return publishedShellState;
 }

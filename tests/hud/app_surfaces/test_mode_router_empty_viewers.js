@@ -1,6 +1,6 @@
 // tests/hud/app_surfaces/test_mode_router_empty_viewers.js
 //
-// Seam-local contract tests for D1.UI.MODE_ROUTER_EMPTY_VIEWERS_015.
+// Seam-local contract tests for mode shells and state threading.
 
 import { readFile } from "node:fs/promises";
 import path from "node:path";
@@ -64,12 +64,16 @@ let liveSrc = null;
 let staticSrc = null;
 let inspectionSrc = null;
 let frameSrc = null;
+let shellStateRouterSrc = null;
+let executionShellSrc = null;
 
 try { routerSrc = await readFile(path.join(ROOT, "hud/HomeRouterShell.jsx"), "utf8"); } catch (_) {}
 try { liveSrc = await readFile(path.join(ROOT, "hud/LiveModeShell.jsx"), "utf8"); } catch (_) {}
 try { staticSrc = await readFile(path.join(ROOT, "hud/StaticModeShell.jsx"), "utf8"); } catch (_) {}
 try { inspectionSrc = await readFile(path.join(ROOT, "hud/InspectionModeShell.jsx"), "utf8"); } catch (_) {}
 try { frameSrc = await readFile(path.join(ROOT, "hud/ViewerModeShellFrame.jsx"), "utf8"); } catch (_) {}
+try { shellStateRouterSrc = await readFile(path.join(ROOT, "hud/shellStateRouter.js"), "utf8"); } catch (_) {}
+try { executionShellSrc = await readFile(path.join(ROOT, "hud/MetaLayerObjectExecutionShell.jsx"), "utf8"); } catch (_) {}
 
 section("A. Mode shell files exist and are wired");
 ok(routerSrc !== null, "A1: HomeRouterShell exists");
@@ -77,10 +81,13 @@ ok(liveSrc !== null, "A2: LiveModeShell exists");
 ok(staticSrc !== null, "A3: StaticModeShell exists");
 ok(inspectionSrc !== null, "A4: InspectionModeShell exists");
 ok(frameSrc !== null, "A5: ViewerModeShellFrame exists");
+ok(shellStateRouterSrc !== null, "A6: shellStateRouter exists");
 if (routerSrc) {
-    ok(routerSrc.includes('import LiveModeShell from "./LiveModeShell.jsx";'), "A6: router imports LiveModeShell");
-    ok(routerSrc.includes('import StaticModeShell from "./StaticModeShell.jsx";'), "A7: router imports StaticModeShell");
-    ok(routerSrc.includes('import InspectionModeShell from "./InspectionModeShell.jsx";'), "A8: router imports InspectionModeShell");
+    ok(routerSrc.includes('import LiveModeShell from "./LiveModeShell.jsx";'), "A7: router imports LiveModeShell");
+    ok(routerSrc.includes('import StaticModeShell from "./StaticModeShell.jsx";'), "A8: router imports StaticModeShell");
+    ok(routerSrc.includes('import InspectionModeShell from "./InspectionModeShell.jsx";'), "A9: router imports InspectionModeShell");
+    ok(routerSrc.includes("readPublishedShellState"), "A10: router reads published shell state");
+    ok(routerSrc.includes("ACTIVE_SHELL_STATE_EVENT"), "A11: router listens for published shell-state updates");
 }
 
 section("B. Distinct mode posture stays explicit");
@@ -107,24 +114,60 @@ if (frameSrc) {
     ok(frameSrc.includes("payload.structural"), "C3: frame reads structural payload");
     ok(frameSrc.includes("payload.overlays"), "C4: frame treats overlays as optional");
     ok(frameSrc.includes("payload.telemetry?.placeholder_status"), "C5: frame keeps telemetry placeholder posture shallow");
-    ok(!frameSrc.includes("settlement_report"), "C6: frame does not require settlement_report");
-    ok(!frameSrc.includes("identity_audit"), "C7: frame does not require identity_audit");
+    ok(frameSrc.includes("payload.source.state_basis"), "C6: frame exposes state basis");
+    ok(frameSrc.includes("payload.source.state_availability"), "C7: frame exposes fallback posture when state is absent");
+    ok(!frameSrc.includes("settlement_report"), "C8: frame does not require settlement_report");
+    ok(!frameSrc.includes("identity_audit"), "C9: frame does not require identity_audit");
 }
 
-section("D. Adapter output still feeds the shells honestly");
+section("D. State threading remains honest");
+if (routerSrc) {
+    ok(routerSrc.includes("runResult: activeShellState?.hasActiveResult ? activeShellState.runResult : null"), "D1: router only threads runResult when active state exists");
+    ok(routerSrc.includes("workbench: activeShellState?.hasActiveResult ? activeShellState.workbench : null"), "D2: router only threads workbench when active state exists");
+    ok(routerSrc.includes("requestLog: activeShellState?.requestLog ?? []"), "D3: router threads request log through shared payload seam");
+    ok(routerSrc.includes("replayLog: activeShellState?.replayLog ?? []"), "D4: router threads replay log through shared payload seam");
+    ok(routerSrc.includes('sourceFamilyLabel: activeShellState?.sourceFamilyLabel ?? "unspecified"'), "D5: router keeps explicit source-family fallback");
+}
+if (executionShellSrc) {
+    ok(executionShellSrc.includes("publishActiveShellState(activeShellState)"), "D6: execution shell publishes active state");
+}
+if (shellStateRouterSrc) {
+    ok(shellStateRouterSrc.includes("readPublishedShellState"), "D7: shellStateRouter can read published state");
+    ok(shellStateRouterSrc.includes("publishActiveShellState"), "D8: shellStateRouter can publish active state");
+}
+
+section("E. Adapter output still feeds the shells honestly");
 {
     const livePayload = buildStructuralViewerPayload({ ...INPUT, mode: "live" });
     const staticPayload = buildStructuralViewerPayload({ ...INPUT, mode: "static" });
     const inspectionPayload = buildStructuralViewerPayload({ ...INPUT, mode: "inspection" });
 
-    eq(livePayload.source.source_id, staticPayload.source.source_id, "D1: source header is shared across modes");
-    eq(JSON.stringify(staticPayload.lineage.provenance_refs), JSON.stringify(inspectionPayload.lineage.provenance_refs), "D2: lineage provenance stays shared across modes");
-    ok(JSON.stringify(livePayload.structural) === JSON.stringify(inspectionPayload.structural), "D3: structural base does not drift by mode");
-    eq(livePayload.telemetry?.placeholder_status, "live_telemetry_unwired", "D4: live telemetry remains explicit placeholder");
-    eq(staticPayload.telemetry, undefined, "D5: static telemetry remains optional");
-    eq(inspectionPayload.telemetry, undefined, "D6: inspection telemetry remains optional");
-    ok(!JSON.stringify(inspectionPayload).includes('"settlement_report"'), "D7: settlement_report remains non-required");
-    ok(!JSON.stringify(inspectionPayload).includes('"identity_audit"'), "D8: identity_audit remains non-required");
+    eq(livePayload.source.source_id, staticPayload.source.source_id, "E1: source header is shared across modes");
+    eq(JSON.stringify(staticPayload.lineage.provenance_refs), JSON.stringify(inspectionPayload.lineage.provenance_refs), "E2: lineage provenance stays shared across modes");
+    ok(JSON.stringify(livePayload.structural) === JSON.stringify(inspectionPayload.structural), "E3: structural base does not drift by mode");
+    eq(livePayload.source.state_basis, "active_shell_state", "E4: active payload exposes active shell state basis");
+    eq(livePayload.telemetry?.placeholder_status, "live_telemetry_unwired", "E5: live telemetry remains explicit placeholder");
+    eq(staticPayload.telemetry, undefined, "E6: static telemetry remains optional");
+    eq(inspectionPayload.telemetry, undefined, "E7: inspection telemetry remains optional");
+    ok(!JSON.stringify(inspectionPayload).includes('"settlement_report"'), "E8: settlement_report remains non-required");
+    ok(!JSON.stringify(inspectionPayload).includes('"identity_audit"'), "E9: identity_audit remains non-required");
+}
+
+section("F. Fallback posture remains explicit when real state is absent");
+{
+    const fallbackPayload = buildStructuralViewerPayload({
+        mode: "static",
+        sourceFamilyLabel: "Recorded Source (WAV fixture)",
+        runStatus: "error",
+        runError: "adapter failed",
+        hasActiveResult: false,
+    });
+
+    eq(fallbackPayload.source.state_basis, "shell_state_fallback", "F1: shell-state fallback remains explicit");
+    ok(String(fallbackPayload.source.state_availability).includes("adapter failed"), "F2: fallback status carries current error posture");
+    ok(fallbackPayload.lineage.generated_from.includes("shell_state_fallback"), "F3: lineage records shell-state fallback basis");
+    ok(JSON.stringify(fallbackPayload.structural) === "{}", "F4: fallback does not fake structural sections");
+    eq(fallbackPayload.overlays, undefined, "F5: fallback does not require overlays");
 }
 
 finish();

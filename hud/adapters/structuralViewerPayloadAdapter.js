@@ -61,6 +61,9 @@ function extractBaseInput({
     requestLog = [],
     replayLog = [],
     sourceFamilyLabel = "unspecified",
+    runStatus = "idle",
+    runError = null,
+    hasActiveResult = false,
     telemetry = null,
 } = {}) {
     return {
@@ -70,7 +73,44 @@ function extractBaseInput({
         requestLog: safeArray(requestLog),
         replayLog: safeArray(replayLog),
         sourceFamilyLabel,
+        runStatus,
+        runError,
+        hasActiveResult,
         telemetry: safeObject(telemetry),
+    };
+}
+
+function deriveStateBasis(input) {
+    const hasActiveResult =
+        input?.hasActiveResult === true ||
+        !!(input?.runResult?.ok && input?.workbench);
+    const hasShellContext =
+        hasActiveResult ||
+        safeArray(input?.requestLog).length > 0 ||
+        safeArray(input?.replayLog).length > 0 ||
+        String(input?.sourceFamilyLabel ?? "") !== "unspecified" ||
+        String(input?.runStatus ?? "idle") !== "idle" ||
+        !!input?.runError;
+
+    if (hasActiveResult) {
+        return {
+            state_basis: "active_shell_state",
+            state_availability: "active runtime/workbench state visible",
+        };
+    }
+
+    if (hasShellContext) {
+        return {
+            state_basis: "shell_state_fallback",
+            state_availability: input?.runError
+                ? `no active result | ${input.runError}`
+                : `no active result | ${input?.runStatus ?? "idle"}`,
+        };
+    }
+
+    return {
+        state_basis: "viewer_route_placeholder",
+        state_availability: "awaiting exported runtime/workbench state",
     };
 }
 
@@ -79,6 +119,7 @@ function buildSourceHeader(input) {
     const a1 = safeObject(runResult?.artifacts?.a1) ?? safeObject(workbench?.runtime?.artifacts?.a1) ?? {};
     const queryPolicyId = workbench?.runtime?.artifacts?.q?.receipts?.query?.query_policy_id ?? null;
     const segmentIds = safeArray(workbench?.scope?.segment_ids);
+    const stateBasis = deriveStateBasis(input);
 
     return {
         source_id: firstDefined(
@@ -94,6 +135,8 @@ function buildSourceHeader(input) {
         lens_id: queryPolicyId ?? undefined,
         timestamp_range: toTimestampRange(workbench, runResult),
         mode_posture: `${mode}_viewer_payload`,
+        state_basis: stateBasis.state_basis,
+        state_availability: stateBasis.state_availability,
     };
 }
 
@@ -101,6 +144,7 @@ function buildLineageHeader(input) {
     const { runResult, workbench, requestLog, replayLog } = input;
     const latestRequest = requestLog[0] ?? null;
     const latestReplay = replayLog[0] ?? null;
+    const stateBasis = deriveStateBasis(input);
 
     const provenanceRefs = uniqueStrings([
         workbench?.scope?.stream_id,
@@ -116,7 +160,7 @@ function buildLineageHeader(input) {
         hasEntries(workbench?.semantic_overlay) ? "workbench.semantic_overlay" : "",
         hasEntries(workbench?.readiness_overlay) ? "workbench.readiness_overlay" : "",
         hasEntries(workbench?.review_overlay) ? "workbench.review_overlay" : "",
-        !runResult && !workbench ? "viewer_route_placeholder" : "",
+        stateBasis.state_basis,
     ]);
 
     const explicitNonClaims = uniqueStrings([

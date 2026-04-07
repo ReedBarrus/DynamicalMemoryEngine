@@ -112,6 +112,8 @@ export default function ViewerModeShellFrame({
                 >
                     <DetailRow label="route path" value={`/${payload.mode}`} />
                     <DetailRow label="source" value={`${payload.source.source_family} / ${payload.source.source_id}`} />
+                    <DetailRow label="state basis" value={payload.source.state_basis ?? "unbound"} />
+                    <DetailRow label="state status" value={payload.source.state_availability ?? "awaiting exported runtime/workbench state"} />
                     <DetailRow label="run id" value={payload.source.run_id ?? "unbound"} />
                     <DetailRow label="segment id" value={payload.source.segment_id ?? "unbound"} />
                     <DetailRow label="timestamp range" value={summarizeTimestampRange(payload.source.timestamp_range)} />

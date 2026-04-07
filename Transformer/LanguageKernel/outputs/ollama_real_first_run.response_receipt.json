@@ -1,0 +1,40 @@
+{
+  "response_receipt_id": "RR:ollama_real_first_run",
+  "receiver_version": "v0.1",
+  "kernel_contract_version": "v0.1",
+  "kernel_run_id": "KR:ollama_real_first_run",
+  "export_packet_id": "EK:first_run:v1",
+  "prompt_receipt_id": "PR:ollama_real_first_run",
+  "provider": "ollama",
+  "model_name": "Hermes 3 Llama 3.2 3B",
+  "declared_lens": "medium FFT / Hann baseline",
+  "query_class": "Q3",
+  "claim_class_ceiling": "L1",
+  "legal_posture": "Read-side Language Kernel response only. No canon authority. Not structural truth. Not primary retention substance.",
+  "raw_response_hash_sha256": "a023815ab537ba92427ed6f8ef4ddffb88a436ade3e27cca064ddb39ce3f2733",
+  "raw_response_bytes": 853,
+  "response_status": "received",
+  "parse_status": "parsed",
+  "schema_status": "nonconformant",
+  "frame_count": 1,
+  "receiver_flags": [
+    "fixed_string_failure",
+    "json_only_expected",
+    "schema_checked",
+    "what_next_missing"
+  ],
+  "conformance_outcome": "aborted_fixed_string_failure",
+  "receiver_notes": [
+    "operation_mode=contract_conformance_mode",
+    "prompt_sha256=aed565af8fb4f5fc547b6d3d5a9648c776beed902420c32e78ec356609ce0527",
+    "$: missing required property 'what_next'",
+    "One or more fixed literal fields were missing or paraphrased."
+  ],
+  "received_at": "2026-04-07T09:31:44Z",
+  "frame_ids": [
+    "LF:2v1jz5f8"
+  ],
+  "legal_claim_present": true,
+  "what_next_present": false,
+  "refusal_reason": "fixed literal failure"
+}
