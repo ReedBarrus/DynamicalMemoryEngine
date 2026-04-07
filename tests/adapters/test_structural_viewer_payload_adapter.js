@@ -45,6 +45,7 @@ function makeH1(stateId, tStart, tEnd, bandEnergy, extras = {}) {
             window_count: 1,
         },
         invariants: {
+            energy_raw: extras.energy_raw ?? 1,
             energy_norm: extras.energy_norm ?? 1,
             band_profile_norm: {
                 band_edges: extras.band_edges ?? [0, 4, 8],
@@ -122,8 +123,8 @@ const FULL_INPUT = {
                 ],
                 basin_sets: [{ basin_id: "BN:alpha" }],
                 h1s: [
-                    makeH1("H1:viewer:0", 0, 0.5, [0.92, 0.08]),
-                    makeH1("H1:viewer:1", 0.5, 1.0, [0.35, 0.65]),
+                    makeH1("H1:viewer:0", 0, 0.5, [0.92, 0.08], { energy_raw: 1.44, energy_norm: 0.72 }),
+                    makeH1("H1:viewer:1", 0.5, 1.0, [0.35, 0.65], { energy_raw: 0.81, energy_norm: 0.54 }),
                 ],
                 m1s: [{ id: "m1.1" }],
             },
@@ -236,6 +237,8 @@ section("B. Shared payload shape is present");
     eq(payload.structural.spectral.viewer_kind, "frequency_time_spectral_v0", "B14: spectral structural projection is exposed");
     eq(payload.structural.spectral.frame_count, 2, "B15: spectral projection keeps H1 frame count");
     eq(payload.structural.spectral.band_count, 2, "B16: spectral projection keeps band count");
+    eq(payload.structural.energy.viewer_kind, "energy_amplitude_view_v0", "B17: energy structural projection is exposed");
+    eq(payload.structural.energy.frame_count, 2, "B18: energy projection keeps H1 frame count");
 }
 
 section("C. Same structural base across modes");
@@ -258,6 +261,7 @@ section("C. Same structural base across modes");
     eq(inspection.telemetry, undefined, "C11: inspection telemetry omitted by default");
     eq(inspection.source.state_basis, "active_shell_state", "C12: active shell state basis preserved across modes");
     eq(live.structural.spectral.frames[0].state_id, "H1:viewer:0", "C13: spectral frames preserve state ids");
+    eq(staticPayload.structural.energy.frames[0].amplitude_basis, "energy_raw", "C14: energy frames preserve amplitude basis");
 }
 
 section("D. Overlays remain optional");
@@ -294,6 +298,7 @@ section("G. Live telemetry stays distinct from structure and overlays");
     ok(!Object.prototype.hasOwnProperty.call(payload.overlays ?? {}, "telemetry"), "G2: telemetry is not fused into overlays");
     ok(payload.telemetry.visibility_note.includes("not structural evidence or overlays"), "G3: telemetry note keeps the distinction explicit");
     ok(!Object.prototype.hasOwnProperty.call(payload.telemetry ?? {}, "spectral"), "G4: spectral structural projection is not fused into telemetry");
+    ok(!Object.prototype.hasOwnProperty.call(payload.telemetry ?? {}, "energy"), "G5: energy structural projection is not fused into telemetry");
 }
 
 finish();

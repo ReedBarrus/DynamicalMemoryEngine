@@ -255,6 +255,63 @@ function buildSpectralProjection(runtime) {
     };
 }
 
+function buildEnergyProjection(runtime) {
+    const frames = safeArray(runtime?.artifacts?.h1s)
+        .map((state, frameIndex) => {
+            const windowSpan = safeObject(state?.window_span) ?? {};
+            const energyRaw = finiteNumberOrNull(state?.invariants?.energy_raw);
+            const energyNorm = finiteNumberOrNull(state?.invariants?.energy_norm);
+            const chosenEnergy = energyRaw ?? energyNorm;
+
+            if (chosenEnergy === null) return null;
+
+            return {
+                frame_index: frameIndex,
+                state_id: state?.state_id ?? `h1_energy_${frameIndex}`,
+                segment_id: state?.segment_id ?? null,
+                t_start: finiteNumberOrNull(windowSpan.t_start),
+                t_end: finiteNumberOrNull(windowSpan.t_end),
+                duration_sec: finiteNumberOrNull(windowSpan.duration_sec),
+                window_count: finiteNumberOrNull(windowSpan.window_count),
+                energy_raw: energyRaw,
+                energy_norm: energyNorm,
+                amplitude_estimate:
+                    chosenEnergy !== null && chosenEnergy >= 0 ? Math.sqrt(chosenEnergy) : null,
+                amplitude_basis: energyRaw !== null ? "energy_raw" : "energy_norm",
+            };
+        })
+        .filter(Boolean)
+        .sort((left, right) => {
+            const leftStart = Number.isFinite(left.t_start) ? left.t_start : Number.POSITIVE_INFINITY;
+            const rightStart = Number.isFinite(right.t_start) ? right.t_start : Number.POSITIVE_INFINITY;
+            if (leftStart !== rightStart) return leftStart - rightStart;
+            const leftEnd = Number.isFinite(left.t_end) ? left.t_end : leftStart;
+            const rightEnd = Number.isFinite(right.t_end) ? right.t_end : rightStart;
+            return leftEnd - rightEnd;
+        });
+
+    if (frames.length === 0) return undefined;
+
+    const timeStarts = frames.map((frame) => frame.t_start).filter((value) => value !== null);
+    const timeEnds = frames.map((frame) => frame.t_end).filter((value) => value !== null);
+    const energyValues = frames
+        .map((frame) => frame.energy_raw ?? frame.energy_norm)
+        .filter((value) => value !== null);
+    const amplitudeValues = frames
+        .map((frame) => frame.amplitude_estimate)
+        .filter((value) => value !== null);
+
+    return {
+        viewer_kind: "energy_amplitude_view_v0",
+        frame_count: frames.length,
+        t_start: timeStarts.length > 0 ? Math.min(...timeStarts) : undefined,
+        t_end: timeEnds.length > 0 ? Math.max(...timeEnds) : undefined,
+        max_energy_value: energyValues.length > 0 ? Math.max(...energyValues) : undefined,
+        max_amplitude_estimate: amplitudeValues.length > 0 ? Math.max(...amplitudeValues) : undefined,
+        frames,
+    };
+}
+
 function buildStructuralSection(input) {
     const { workbench, replayLog } = input;
     const runtime = safeObject(workbench?.runtime) ?? {};
@@ -268,6 +325,7 @@ function buildStructuralSection(input) {
     const latestReplay = replayLog[0] ?? null;
     const structural = {};
     const spectral = buildSpectralProjection(runtime);
+    const energy = buildEnergyProjection(runtime);
 
     if (hasEntries(trajectory)) {
         structural.trajectories = {
@@ -307,6 +365,10 @@ function buildStructuralSection(input) {
 
     if (spectral) {
         structural.spectral = spectral;
+    }
+
+    if (energy) {
+        structural.energy = energy;
     }
 
     if (
