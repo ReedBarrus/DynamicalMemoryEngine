@@ -1,4 +1,4 @@
-// tests/door_two/test_hud_demo_tandem_adapter.js
+// tests/adapters/test_hud_demo_tandem_adapter.js
 //
 // Contract tests for hud/adapters/tandemAdapter.js and its wiring into shell + demo.
 //

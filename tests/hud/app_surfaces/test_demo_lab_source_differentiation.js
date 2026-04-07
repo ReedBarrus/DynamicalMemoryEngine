@@ -1,4 +1,4 @@
-// tests/door_two/test_demo_lab_source_differentiation.js
+// tests/hud/app_surfaces/test_demo_lab_source_differentiation.js
 //
 // Focused differentiation tests for the demo/lab read-side seam.
 

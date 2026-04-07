@@ -1,4 +1,4 @@
-// tests/door_two/test_reconstruction_replay_surface.js
+// tests/reconstruction/readside/test_reconstruction_replay_surface.js
 //
 // Focused contract tests for replay model reconstruction wiring and replay rendering.
 

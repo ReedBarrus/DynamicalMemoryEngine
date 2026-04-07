@@ -1,4 +1,4 @@
-// tests/door_two/test_metalayer_consultation_demo.js
+// tests/consultation/test_metalayer_consultation_demo.js
 //
 // Contract tests for hud/MetaLayerConsultationDemo.jsx
 //

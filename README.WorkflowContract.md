@@ -1,60 +1,5 @@
-# README_WorkflowContract.md
-# Dynamical Memory Engine — Workflow Contract
+# Dynamical Memory Engine - Workflow Contract
 
----
-# Metadata
-```yaml
-address_id: root.repo_placement_constitution.current
-object_class: governance_note
-object_label: Repo Placement Constitution
-file_path: README_RepoPlacementConstitution.md
-repo_zone: root/
-
-bounded_question: Where do files belong in the DME repo, how should repo growth be coordinated, and what is the canonical current target layout?
-declared_role: Authoritative repo topology and file-placement law.
-explicit_non_role: Not artifact meaning, not layer meaning, not canon semantics, not runtime ontology.
-
-scope_coverage:
-  - root vs subfolder placement
-  - canonical repo zones
-  - canonical target layout
-  - README subfolder rules
-known_omissions:
-  - runtime artifact meaning
-  - current capability-status posture
-  - full seam contract semantics
-
-authority_posture: placement_governance
-explicit_non_claims:
-  - not architecture authority
-  - not current code behavior proof by itself
-  - not surface-inventory interpretation law
-
-current_status: active
-audit_status: crosschecked_against_repo
-dominant_telemetry:
-  - drift
-known_risks:
-  - target layout can outpace live repo if not refreshed
-  - placement can be mistaken for ontology
-
-last_crosscheck_date: YYYY-MM-DD
-last_crosscheck_basis:
-  - current repo topology
-crosscheck_notes: Root/topology authority confirmed.
-
-related_objects:
-  - root.master_constitution.current
-  - root.workflow_contract.current
-  - core.address_registry_model.current
-
-what_is_now_true:
-  - governs placement and topology
-  - includes canonical current target layout
-what_is_still_not_claimed:
-  - artifact/layer meaning
-  - runtime semantics
-```
 ## Purpose
 
 This document defines the working contract for development of the Dynamical Memory Engine.
@@ -69,9 +14,9 @@ Supporting normative references: `README_SubstrateLayer.md`, `OPERATOR_CONTRACTS
 
 ## Project Intent
 
-The Dynamical Memory Engine is a physics-grounded structural memory substrate. It develops upward from signal through structure through runtime memory toward recognition, canon, and eventually higher cognition — in that order, at each layer's lawful pace.
+The Dynamical Memory Engine is a physics-grounded structural memory substrate. It develops upward from signal through structure through runtime memory toward recognition, canon, and eventually higher cognition - in that order, at each layer's lawful pace.
 
-Only the currently active layers may shape implementation unless explicitly promoted by Reed. See `README_MasterConstitution.md §3` for the full layer set and Door definitions.
+Only the currently active layers may shape implementation unless explicitly promoted by Reed. See README_MasterConstitution.md, section 3, for the full layer set and Door definitions.
 
 ---
 

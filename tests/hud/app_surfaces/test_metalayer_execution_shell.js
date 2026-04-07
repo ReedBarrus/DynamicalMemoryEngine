@@ -1,4 +1,4 @@
-// tests/door_two/test_metalayer_execution_shell.js
+// tests/hud/app_surfaces/test_metalayer_execution_shell.js
 //
 // Contract tests for hud/MetaLayerObjectExecutionShell.jsx
 

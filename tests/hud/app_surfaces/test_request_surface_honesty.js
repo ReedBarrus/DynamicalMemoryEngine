@@ -1,4 +1,4 @@
-// tests/door_two/test_request_surface_honesty.js
+// tests/hud/app_surfaces/test_request_surface_honesty.js
 //
 // Focused request-surface honesty tests for Packet C.
 

@@ -32,7 +32,7 @@
         "test:door-one-live-provenance-retention": "node tests/test_door_one_live_provenance_retention.js",
         "test:door-one-anti-bypass-contracts": "node tests/test_door_one_anti_bypass_contracts.js",
         "test:door-one-structural-memory-hud": "node tests/test_door_one_structural_memory_hud.js",
-        "test:app-surface": "node tests/door_two/test_semantic_oscilloscope_app_surface.js",
+        "test:app-surface": "node tests/hud/app_surfaces/test_semantic_oscilloscope_app_surface.js",
         "test:core": "npm run test:substrate && npm run test:orchestrator && npm run test:door-one-contracts && npm run test:door-one-workbench && npm run test:app-surface"
     },
     "dependencies": {
