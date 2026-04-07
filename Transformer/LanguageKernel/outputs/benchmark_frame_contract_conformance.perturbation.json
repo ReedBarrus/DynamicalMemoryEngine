@@ -50,7 +50,7 @@
     "response_receipt_id": "RR:run_1775479542686:017"
   },
   "final_status": "downgraded",
-  "benchmarked_at": "2026-04-06T17:31:57Z",
+  "benchmarked_at": "2026-04-07T06:38:16Z",
   "failure_notes": [
     "frame_contract_conformance remained bounded under perturbation but required downgrade review",
     "Continuity language required downgrade after perturbation pressure softened the loss description."
