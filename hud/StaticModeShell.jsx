@@ -1,4 +1,5 @@
 import ViewerModeShellFrame from "./ViewerModeShellFrame.jsx";
+import StaticSpectralViewer from "./StaticSpectralViewer.jsx";
 
 function PostureColumn({ title, note }) {
     return (
@@ -25,7 +26,7 @@ export default function StaticModeShell({ payload, onGoHome, onOpenLegacy }) {
         <ViewerModeShellFrame
             modeLabel="Static"
             modeTitle="Bounded structural mode shell"
-            modeNote="Static mode is for bounded objects, comparison, and provenance-forward reading without live pacing pressure."
+            modeNote="Static mode is for bounded objects, comparison, and provenance-forward reading without live pacing pressure or Live telemetry posture."
             payload={payload}
             onGoHome={onGoHome}
             onOpenLegacy={onOpenLegacy}
@@ -33,18 +34,31 @@ export default function StaticModeShell({ payload, onGoHome, onOpenLegacy }) {
             <div
                 style={{
                     display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
                     gap: "14px",
                 }}
             >
-                <PostureColumn
-                    title="Bounded object posture"
-                    note="Static mode is not live playback paused. It is the shell for pre-rendered or stabilized structural objects and calm comparison."
-                />
-                <PostureColumn
-                    title="Provenance-first reading"
-                    note="Source and lineage stay visible here so a bounded static object is not mistaken for the active process itself."
-                />
+                <StaticSpectralViewer payload={payload} />
+
+                <div
+                    style={{
+                        display: "grid",
+                        gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+                        gap: "14px",
+                    }}
+                >
+                    <PostureColumn
+                        title="Bounded object posture"
+                        note="Static mode is not live playback paused. It is the shell for pre-rendered or stabilized structural objects and calm comparison."
+                    />
+                    <PostureColumn
+                        title="Provenance-first reading"
+                        note="Source and lineage stay visible here so a bounded static object is not mistaken for the active process itself."
+                    />
+                    <PostureColumn
+                        title="Timing boundary"
+                        note="Live telemetry rail does not appear here by default. Static mode stays inspectable and non-live rather than importing runtime timing posture by convenience."
+                    />
+                </div>
             </div>
         </ViewerModeShellFrame>
     );
