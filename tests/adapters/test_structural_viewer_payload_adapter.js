@@ -125,6 +125,7 @@ const FULL_INPUT = {
                 h1s: [
                     makeH1("H1:viewer:0", 0, 0.5, [0.92, 0.08], { energy_raw: 1.44, energy_norm: 0.72 }),
                     makeH1("H1:viewer:1", 0.5, 1.0, [0.35, 0.65], { energy_raw: 0.81, energy_norm: 0.54 }),
+                    makeH1("H1:viewer:2", 1.0, 1.5, [0.74, 0.26], { energy_raw: 1.21, energy_norm: 0.63 }),
                 ],
                 m1s: [{ id: "m1.1" }],
             },
@@ -235,10 +236,11 @@ section("B. Shared payload shape is present");
     eq(payload.telemetry.publication_source, "execution_shell_export", "B12: live telemetry keeps export source visible");
     eq(payload.telemetry.export_age_ms, 125, "B13: live telemetry exposes export age");
     eq(payload.structural.spectral.viewer_kind, "frequency_time_spectral_v0", "B14: spectral structural projection is exposed");
-    eq(payload.structural.spectral.frame_count, 2, "B15: spectral projection keeps H1 frame count");
+    eq(payload.structural.spectral.frame_count, 3, "B15: spectral projection keeps H1 frame count");
     eq(payload.structural.spectral.band_count, 2, "B16: spectral projection keeps band count");
     eq(payload.structural.energy.viewer_kind, "energy_amplitude_view_v0", "B17: energy structural projection is exposed");
-    eq(payload.structural.energy.frame_count, 2, "B18: energy projection keeps H1 frame count");
+    eq(payload.structural.energy.frame_count, 3, "B18: energy projection keeps H1 frame count");
+    eq(payload.structural.evidence_windows.viewer_kind, "baseline_perturbation_return_windows_v0", "B19: evidence-window triptych is exposed when anomaly timing supports it");
 }
 
 section("C. Same structural base across modes");
@@ -262,6 +264,11 @@ section("C. Same structural base across modes");
     eq(inspection.source.state_basis, "active_shell_state", "C12: active shell state basis preserved across modes");
     eq(live.structural.spectral.frames[0].state_id, "H1:viewer:0", "C13: spectral frames preserve state ids");
     eq(staticPayload.structural.energy.frames[0].amplitude_basis, "energy_raw", "C14: energy frames preserve amplitude basis");
+    deepEq(
+        staticPayload.structural.evidence_windows.slots.map((slot) => slot.label),
+        ["Baseline", "Perturbation", "Return"],
+        "C15: evidence-window triptych keeps baseline / perturbation / return slot order"
+    );
 }
 
 section("D. Overlays remain optional");

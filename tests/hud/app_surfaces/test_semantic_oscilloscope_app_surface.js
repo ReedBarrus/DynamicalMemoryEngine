@@ -82,6 +82,7 @@ if (viewerAdapterSrc) {
     ok(viewerAdapterSrc.includes("one shared read-side viewer payload") || viewerAdapterSrc.includes("shared structural viewer payload"), "A17: adapter source declares shared payload posture");
     ok(viewerAdapterSrc.includes("frequency_time_spectral_v0"), "A18: adapter defines a continuous spectral structural projection");
     ok(viewerAdapterSrc.includes("energy_amplitude_view_v0"), "A19: adapter defines an energy/amplitude structural projection");
+    ok(viewerAdapterSrc.includes("baseline_perturbation_return_windows_v0"), "A20: adapter defines bounded baseline / perturbation / return evidence windows");
 }
 
 section("B. Home router shell stays thin");
@@ -131,11 +132,11 @@ if (liveModeShellSrc && staticModeShellSrc && inspectionModeShellSrc && viewerMo
     ok(liveModeShellSrc.includes("Structural priority"), "D8: live shell keeps structural-first posture");
     ok(!staticModeShellSrc.includes("Live Telemetry Rail"), "D9: static shell does not inherit live telemetry rail");
     ok(staticModeShellSrc.includes("Static mode is not live playback paused."), "D10: static shell does not fake live posture");
-    ok(staticModeShellSrc.includes("Provenance-first reading"), "D11: static shell keeps provenance posture explicit");
+    ok(staticModeShellSrc.includes("Static Evidence Body"), "D11: static shell names the evidence-first body");
     ok(staticModeShellSrc.includes("StaticSpectralViewer"), "D12: static shell mounts a real static spectral viewer");
     ok(staticModeShellSrc.includes("StaticEnergyViewer"), "D13: static shell mounts a real static energy viewer");
-    ok(staticModeShellSrc.includes("Timing boundary"), "D14: static shell keeps timing boundary explicit");
-    ok(staticModeShellSrc.includes("Energy face"), "D15: static shell keeps the second static face explicit");
+    ok(staticModeShellSrc.includes("No Live telemetry import"), "D14: static shell keeps live telemetry out of the evidence body");
+    ok(!staticModeShellSrc.includes("Provenance-first reading"), "D15: static shell no longer uses the old prose-card body");
     ok(!inspectionModeShellSrc.includes("Live Telemetry Rail"), "D16: inspection shell does not inherit live telemetry rail");
     ok(inspectionModeShellSrc.includes("does not silently become the default top-level face again"), "D17: inspection shell stays non-default");
     ok(inspectionModeShellSrc.includes("settlement, identity continuity, or canon posture"), "D18: inspection shell avoids semantic inflation");
@@ -158,16 +159,20 @@ if (liveContinuousViewerSrc) {
 if (staticSpectralViewerSrc) {
     ok(staticSpectralViewerSrc.includes("Static Spectral Viewer"), "D32: static spectral viewer declares a dedicated static face");
     ok(staticSpectralViewerSrc.includes("Bounded frequency-time object"), "D33: static spectral viewer uses bounded object posture");
-    ok(staticSpectralViewerSrc.includes("provenance-forward"), "D34: static spectral viewer keeps provenance-forward posture");
+    ok(staticSpectralViewerSrc.includes("Baseline"), "D34: static spectral viewer exposes baseline evidence panel");
     ok(staticSpectralViewerSrc.includes("No bounded spectral frames are currently visible"), "D35: static spectral viewer keeps explicit fallback");
-    ok(!staticSpectralViewerSrc.includes("Live Telemetry Rail"), "D36: static spectral viewer does not inherit the live telemetry rail");
+    ok(staticSpectralViewerSrc.includes("Perturbation") && staticSpectralViewerSrc.includes("Return"), "D36: static spectral viewer exposes perturbation and return evidence panels");
+    ok(!staticSpectralViewerSrc.includes("Static reading notes"), "D37: static spectral viewer removes the old prose side panel");
+    ok(!staticSpectralViewerSrc.includes("Live Telemetry Rail"), "D38: static spectral viewer does not inherit the live telemetry rail");
 }
 if (staticEnergyViewerSrc) {
-    ok(staticEnergyViewerSrc.includes("Static Energy Viewer"), "D37: static energy viewer declares a dedicated energy face");
-    ok(staticEnergyViewerSrc.includes("Bounded energy / amplitude object"), "D38: static energy viewer uses bounded energy posture");
-    ok(staticEnergyViewerSrc.includes("envelope and amplitude shape"), "D39: static energy viewer stays distinct from the spectral face");
-    ok(staticEnergyViewerSrc.includes("No energy-capable structural frames are currently visible"), "D40: static energy viewer keeps explicit fallback");
-    ok(!staticEnergyViewerSrc.includes("Live Telemetry Rail"), "D41: static energy viewer does not inherit the live telemetry rail");
+    ok(staticEnergyViewerSrc.includes("Static Energy Viewer"), "D39: static energy viewer declares a dedicated energy face");
+    ok(staticEnergyViewerSrc.includes("Bounded energy / amplitude object"), "D40: static energy viewer uses bounded energy posture");
+    ok(staticEnergyViewerSrc.includes("Envelope and amplitude shape remain structural only"), "D41: static energy viewer stays distinct from the spectral face");
+    ok(staticEnergyViewerSrc.includes("No energy-capable structural frames are currently visible"), "D42: static energy viewer keeps explicit fallback");
+    ok(staticEnergyViewerSrc.includes("Baseline") && staticEnergyViewerSrc.includes("Perturbation") && staticEnergyViewerSrc.includes("Return"), "D43: static energy viewer exposes the evidence triptych");
+    ok(!staticEnergyViewerSrc.includes("Energy reading notes"), "D44: static energy viewer removes the old prose side panel");
+    ok(!staticEnergyViewerSrc.includes("Live Telemetry Rail"), "D45: static energy viewer does not inherit the live telemetry rail");
 }
 
 section("E. Legacy composed app stays preserved");

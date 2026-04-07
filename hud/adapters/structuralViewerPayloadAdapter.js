@@ -312,6 +312,75 @@ function buildEnergyProjection(runtime) {
     };
 }
 
+function frameOverlapsRange(frame, tStart, tEnd) {
+    const frameStart = finiteNumberOrNull(frame?.t_start);
+    const frameEnd = finiteNumberOrNull(frame?.t_end);
+
+    if (frameStart === null || frameEnd === null || tStart === null || tEnd === null) return false;
+    return frameEnd > tStart && frameStart < tEnd;
+}
+
+function buildEvidenceWindows({ spectral, energy, anomalies }) {
+    const anomalyRows = safeArray(anomalies);
+    if (anomalyRows.length === 0) return undefined;
+
+    const anomalyStarts = anomalyRows.map((row) => finiteNumberOrNull(row?.t_start)).filter((value) => value !== null);
+    const anomalyEnds = anomalyRows.map((row) => finiteNumberOrNull(row?.t_end)).filter((value) => value !== null);
+    if (anomalyStarts.length === 0 || anomalyEnds.length === 0) return undefined;
+
+    const perturbationStart = Math.min(...anomalyStarts);
+    const perturbationEnd = Math.max(...anomalyEnds);
+    const referenceFrames = safeArray(spectral?.frames).length > 0
+        ? spectral.frames
+        : safeArray(energy?.frames);
+
+    if (referenceFrames.length === 0) return undefined;
+
+    const baselineFrames = referenceFrames.filter((frame) => {
+        const frameEnd = finiteNumberOrNull(frame?.t_end);
+        return frameEnd !== null && frameEnd <= perturbationStart;
+    });
+    const perturbationFrames = referenceFrames.filter((frame) =>
+        frameOverlapsRange(frame, perturbationStart, perturbationEnd)
+    );
+    const returnFrames = referenceFrames.filter((frame) => {
+        const frameStart = finiteNumberOrNull(frame?.t_start);
+        return frameStart !== null && frameStart >= perturbationEnd;
+    });
+
+    if (baselineFrames.length === 0 || perturbationFrames.length === 0 || returnFrames.length === 0) {
+        return undefined;
+    }
+
+    return {
+        viewer_kind: "baseline_perturbation_return_windows_v0",
+        basis: "anomaly_window_triptych",
+        slots: [
+            {
+                slot_id: "baseline",
+                label: "Baseline",
+                t_start: baselineFrames[0]?.t_start ?? undefined,
+                t_end: baselineFrames[baselineFrames.length - 1]?.t_end ?? undefined,
+                frame_count: baselineFrames.length,
+            },
+            {
+                slot_id: "perturbation",
+                label: "Perturbation",
+                t_start: perturbationStart,
+                t_end: perturbationEnd,
+                frame_count: perturbationFrames.length,
+            },
+            {
+                slot_id: "return",
+                label: "Return",
+                t_start: returnFrames[0]?.t_start ?? undefined,
+                t_end: returnFrames[returnFrames.length - 1]?.t_end ?? undefined,
+                frame_count: returnFrames.length,
+            },
+        ],
+    };
+}
+
 function buildStructuralSection(input) {
     const { workbench, replayLog } = input;
     const runtime = safeObject(workbench?.runtime) ?? {};
@@ -369,6 +438,16 @@ function buildStructuralSection(input) {
 
     if (energy) {
         structural.energy = energy;
+    }
+
+    const evidenceWindows = buildEvidenceWindows({
+        spectral,
+        energy,
+        anomalies: structural.anomalies,
+    });
+
+    if (evidenceWindows) {
+        structural.evidence_windows = evidenceWindows;
     }
 
     if (

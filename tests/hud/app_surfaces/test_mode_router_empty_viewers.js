@@ -56,24 +56,43 @@ const INPUT = {
                 h1s: [
                     {
                         state_id: "H1:mode.shell:0",
-                        segment_id: "seg-001",
+                        segment_id: "seg-baseline",
                         window_span: { t_start: 0, t_end: 0.5, duration_sec: 0.5, window_count: 1 },
                         invariants: {
                             energy_norm: 1,
+                            energy_raw: 1.21,
                             band_profile_norm: { band_edges: [0, 4, 8], band_energy: [0.85, 0.15] },
                         },
                     },
                     {
                         state_id: "H1:mode.shell:1",
-                        segment_id: "seg-001",
+                        segment_id: "seg-perturbation",
                         window_span: { t_start: 0.5, t_end: 1, duration_sec: 0.5, window_count: 1 },
                         invariants: {
                             energy_norm: 1,
+                            energy_raw: 0.64,
                             band_profile_norm: { band_edges: [0, 4, 8], band_energy: [0.3, 0.7] },
                         },
                     },
+                    {
+                        state_id: "H1:mode.shell:2",
+                        segment_id: "seg-return",
+                        window_span: { t_start: 1, t_end: 1.5, duration_sec: 0.5, window_count: 1 },
+                        invariants: {
+                            energy_norm: 1,
+                            energy_raw: 1.0,
+                            band_profile_norm: { band_edges: [0, 4, 8], band_energy: [0.68, 0.32] },
+                        },
+                    },
                 ],
-                anomaly_reports: [],
+                anomaly_reports: [
+                    {
+                        artifact_type: "anomaly",
+                        comparison_window: {
+                            window_span: { t_start: 0.5, t_end: 1.0 },
+                        },
+                    },
+                ],
             },
         },
     },
@@ -131,11 +150,11 @@ if (liveSrc) {
 if (staticSrc) {
     ok(staticSrc.includes("Bounded structural mode shell"), "B7: static shell title is explicit");
     ok(staticSrc.includes("Static mode is not live playback paused."), "B8: static shell avoids fake live posture");
-    ok(staticSrc.includes("Provenance-first reading"), "B9: static shell keeps provenance visible");
+    ok(staticSrc.includes("Static Evidence Body"), "B9: static shell now names the evidence-first body");
     ok(staticSrc.includes("StaticSpectralViewer"), "B10: static shell mounts the static spectral viewer");
     ok(staticSrc.includes("StaticEnergyViewer"), "B11: static shell mounts the static energy viewer");
-    ok(staticSrc.includes("Timing boundary"), "B12: static shell keeps timing boundary explicit");
-    ok(staticSrc.includes("Energy face"), "B13: static shell keeps the second static face explicit");
+    ok(staticSrc.includes("No Live telemetry import"), "B12: static shell keeps live telemetry out of the evidence body");
+    ok(!staticSrc.includes("Provenance-first reading"), "B13: static shell no longer uses the old prose-card body");
     ok(!staticSrc.includes("Live Telemetry Rail"), "B14: static shell does not inherit live telemetry rail");
 }
 if (inspectionSrc) {
@@ -153,16 +172,20 @@ if (liveContinuousViewerSrc) {
 if (staticSpectralViewerSrc) {
     ok(staticSpectralViewerSrc.includes("Static Spectral Viewer"), "B23: static viewer declares a dedicated static structural face");
     ok(staticSpectralViewerSrc.includes("Bounded frequency-time object"), "B24: static viewer uses bounded object posture");
-    ok(staticSpectralViewerSrc.includes("provenance-forward"), "B25: static viewer keeps provenance-forward posture explicit");
+    ok(staticSpectralViewerSrc.includes("Baseline"), "B25: static spectral viewer exposes baseline evidence panel");
     ok(staticSpectralViewerSrc.includes("No bounded spectral frames are currently visible"), "B26: static viewer keeps explicit fallback");
-    ok(!staticSpectralViewerSrc.includes("Live Telemetry Rail"), "B27: static viewer does not inherit the live telemetry rail");
+    ok(staticSpectralViewerSrc.includes("Perturbation") && staticSpectralViewerSrc.includes("Return"), "B27: static spectral viewer exposes perturbation and return evidence panels");
+    ok(!staticSpectralViewerSrc.includes("Static reading notes"), "B28: static spectral viewer removes the old prose side panel");
+    ok(!staticSpectralViewerSrc.includes("Live Telemetry Rail"), "B29: static viewer does not inherit the live telemetry rail");
 }
 if (staticEnergyViewerSrc) {
-    ok(staticEnergyViewerSrc.includes("Static Energy Viewer"), "B28: energy viewer declares a dedicated static energy face");
-    ok(staticEnergyViewerSrc.includes("Bounded energy / amplitude object"), "B29: energy viewer uses bounded energy posture");
-    ok(staticEnergyViewerSrc.includes("envelope and amplitude shape"), "B30: energy viewer stays distinct from the spectral face");
-    ok(staticEnergyViewerSrc.includes("No energy-capable structural frames are currently visible"), "B31: energy viewer keeps explicit fallback");
-    ok(!staticEnergyViewerSrc.includes("Live Telemetry Rail"), "B32: energy viewer does not inherit the live telemetry rail");
+    ok(staticEnergyViewerSrc.includes("Static Energy Viewer"), "B30: energy viewer declares a dedicated static energy face");
+    ok(staticEnergyViewerSrc.includes("Bounded energy / amplitude object"), "B31: energy viewer uses bounded energy posture");
+    ok(staticEnergyViewerSrc.includes("Envelope and amplitude shape remain structural only"), "B32: energy viewer stays distinct from the spectral face");
+    ok(staticEnergyViewerSrc.includes("No energy-capable structural frames are currently visible"), "B33: energy viewer keeps explicit fallback");
+    ok(staticEnergyViewerSrc.includes("Baseline") && staticEnergyViewerSrc.includes("Perturbation") && staticEnergyViewerSrc.includes("Return"), "B34: energy viewer exposes the evidence triptych");
+    ok(!staticEnergyViewerSrc.includes("Energy reading notes"), "B35: energy viewer removes the old prose side panel");
+    ok(!staticEnergyViewerSrc.includes("Live Telemetry Rail"), "B36: energy viewer does not inherit the live telemetry rail");
 }
 
 section("C. Shared payload seam remains the common base");
@@ -209,13 +232,14 @@ section("E. Adapter output still feeds the shells honestly");
     eq(livePayload.telemetry?.placeholder_status, "timing_metrics_partially_unwired", "E6: live telemetry keeps unwired metrics explicit");
     ok(Array.isArray(livePayload.telemetry?.unavailable_fields), "E7: live telemetry lists unavailable metrics");
     eq(livePayload.structural.spectral.viewer_kind, "frequency_time_spectral_v0", "E8: live payload exposes a real spectral projection");
-    eq(livePayload.structural.spectral.frame_count, 2, "E9: live payload keeps real spectral frame count");
+    eq(livePayload.structural.spectral.frame_count, 3, "E9: live payload keeps real spectral frame count");
     eq(staticPayload.structural.spectral.viewer_kind, "frequency_time_spectral_v0", "E10: static payload exposes the shared spectral projection");
     eq(staticPayload.structural.energy.viewer_kind, "energy_amplitude_view_v0", "E11: static payload exposes the shared energy projection");
-    eq(staticPayload.telemetry, undefined, "E12: static telemetry remains optional");
-    eq(inspectionPayload.telemetry, undefined, "E13: inspection telemetry remains optional");
-    ok(!JSON.stringify(inspectionPayload).includes('"settlement_report"'), "E14: settlement_report remains non-required");
-    ok(!JSON.stringify(inspectionPayload).includes('"identity_audit"'), "E15: identity_audit remains non-required");
+    eq(staticPayload.structural.evidence_windows.viewer_kind, "baseline_perturbation_return_windows_v0", "E12: static payload exposes comparison evidence windows when anomaly timing supports it");
+    eq(staticPayload.telemetry, undefined, "E13: static telemetry remains optional");
+    eq(inspectionPayload.telemetry, undefined, "E14: inspection telemetry remains optional");
+    ok(!JSON.stringify(inspectionPayload).includes('"settlement_report"'), "E15: settlement_report remains non-required");
+    ok(!JSON.stringify(inspectionPayload).includes('"identity_audit"'), "E16: identity_audit remains non-required");
 }
 
 section("F. Fallback posture remains explicit when real state is absent");
