@@ -1,4 +1,4 @@
-// tests/door_two/test_ingest_adapter_seam.js
+// tests/adapters/test_ingest_adapter_seam.js
 //
 // Contract tests for hud/adapters/ingestAdapters.js
 //

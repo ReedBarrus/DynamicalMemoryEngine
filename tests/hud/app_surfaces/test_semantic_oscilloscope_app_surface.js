@@ -1,4 +1,4 @@
-// tests/door_two/test_semantic_oscilloscope_app_surface.js
+// tests/hud/app_surfaces/test_semantic_oscilloscope_app_surface.js
 //
 // Contract tests for the top-level app surface after the Home / Router shell split.
 

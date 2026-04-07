@@ -369,7 +369,7 @@ The registry is not meant to be an autonomous planning engine.
   "files_in_scope": [
     "hud/replayModel.js",
     "hud/ReplayRegion.jsx",
-    "tests/door_two/test_reconstruction_replay_surface.js"
+    "tests/reconstruction/readside/test_reconstruction_replay_surface.js"
   ],
   "governing_notes": [
     "README.MechanizationClosureGate.md",

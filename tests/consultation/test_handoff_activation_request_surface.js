@@ -1,4 +1,4 @@
-// tests/door_two/test_handoff_activation_request_surface.js
+// tests/consultation/test_handoff_activation_request_surface.js
 //
 // Contract tests for the handoff / activation request surface.
 //

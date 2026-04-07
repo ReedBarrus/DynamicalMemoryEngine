@@ -1,4 +1,4 @@
-// tests/door_two/test_execution_shell_state_routing.js
+// tests/hud/app_surfaces/test_execution_shell_state_routing.js
 //
 // Focused routing/coherence tests for the execution shell state-routing seam.
 

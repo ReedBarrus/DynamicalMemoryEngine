@@ -1,4 +1,4 @@
-// tests/door_two/test_drag_drop_file_intake_surface.js
+// tests/hud/app_surfaces/test_drag_drop_file_intake_surface.js
 //
 // Contract tests for the drag-drop file intake surface.
 //
