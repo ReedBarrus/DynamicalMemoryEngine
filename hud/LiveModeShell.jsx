@@ -1,4 +1,5 @@
 import ViewerModeShellFrame from "./ViewerModeShellFrame.jsx";
+import LiveContinuousStructuralViewer from "./LiveContinuousStructuralViewer.jsx";
 
 function SignalCard({ title, note }) {
     return (
@@ -142,7 +143,7 @@ export default function LiveModeShell({ payload, onGoHome, onOpenLegacy }) {
         <ViewerModeShellFrame
             modeLabel="Live"
             modeTitle="Runtime-facing mode shell"
-            modeNote="Live mode is timing-aware and runtime-facing. This shell now exposes a bounded telemetry rail while keeping telemetry secondary to structure."
+            modeNote="Live mode is timing-aware and runtime-facing. This shell now exposes a bounded telemetry rail while keeping telemetry secondary to a real continuous structural surface."
             payload={payload}
             onGoHome={onGoHome}
             onOpenLegacy={onOpenLegacy}
@@ -155,6 +156,8 @@ export default function LiveModeShell({ payload, onGoHome, onOpenLegacy }) {
             >
                 <LiveTelemetryRail telemetry={payload.telemetry} />
 
+                <LiveContinuousStructuralViewer payload={payload} />
+
                 <div
                     style={{
                         display: "grid",
@@ -164,15 +167,15 @@ export default function LiveModeShell({ payload, onGoHome, onOpenLegacy }) {
                 >
                 <SignalCard
                     title="Live identity"
-                    note="Use this shell for runtime-facing viewing. Motion and pacing belong here later; they do not belong in Static or Inspection by implication."
+                    note="Use this shell for runtime-facing viewing. Motion and pacing belong here, and the continuous surface now projects shared structural windows without creating a second truth seam."
                 />
                 <SignalCard
                     title="Telemetry honesty"
-                    note="Telemetry now has a bounded rail in Live mode only. It stays operational and secondary rather than turning into a dense dashboard or semantic layer."
+                    note="Telemetry now has a bounded rail in Live mode only. It stays operational and secondary rather than turning into a dense dashboard or replacing the structural face."
                 />
                 <SignalCard
                     title="Structural priority"
-                    note="The shared structural payload remains primary. Live mode changes pacing and display posture, not the truth object."
+                    note="The shared structural payload remains primary. The frequency-time surface reads H1 structure directly and does not imply settlement, identity continuity, or semantic closure."
                 />
                 </div>
             </div>

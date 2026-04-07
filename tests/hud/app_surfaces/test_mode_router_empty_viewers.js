@@ -53,6 +53,26 @@ const INPUT = {
                 state_count: 2,
             },
             artifacts: {
+                h1s: [
+                    {
+                        state_id: "H1:mode.shell:0",
+                        segment_id: "seg-001",
+                        window_span: { t_start: 0, t_end: 0.5, duration_sec: 0.5, window_count: 1 },
+                        invariants: {
+                            energy_norm: 1,
+                            band_profile_norm: { band_edges: [0, 4, 8], band_energy: [0.85, 0.15] },
+                        },
+                    },
+                    {
+                        state_id: "H1:mode.shell:1",
+                        segment_id: "seg-001",
+                        window_span: { t_start: 0.5, t_end: 1, duration_sec: 0.5, window_count: 1 },
+                        invariants: {
+                            energy_norm: 1,
+                            band_profile_norm: { band_edges: [0, 4, 8], band_energy: [0.3, 0.7] },
+                        },
+                    },
+                ],
                 anomaly_reports: [],
             },
         },
@@ -66,6 +86,7 @@ let inspectionSrc = null;
 let frameSrc = null;
 let shellStateRouterSrc = null;
 let executionShellSrc = null;
+let liveContinuousViewerSrc = null;
 
 try { routerSrc = await readFile(path.join(ROOT, "hud/HomeRouterShell.jsx"), "utf8"); } catch (_) {}
 try { liveSrc = await readFile(path.join(ROOT, "hud/LiveModeShell.jsx"), "utf8"); } catch (_) {}
@@ -74,6 +95,7 @@ try { inspectionSrc = await readFile(path.join(ROOT, "hud/InspectionModeShell.js
 try { frameSrc = await readFile(path.join(ROOT, "hud/ViewerModeShellFrame.jsx"), "utf8"); } catch (_) {}
 try { shellStateRouterSrc = await readFile(path.join(ROOT, "hud/shellStateRouter.js"), "utf8"); } catch (_) {}
 try { executionShellSrc = await readFile(path.join(ROOT, "hud/MetaLayerObjectExecutionShell.jsx"), "utf8"); } catch (_) {}
+try { liveContinuousViewerSrc = await readFile(path.join(ROOT, "hud/LiveContinuousStructuralViewer.jsx"), "utf8"); } catch (_) {}
 
 section("A. Mode shell files exist and are wired");
 ok(routerSrc !== null, "A1: HomeRouterShell exists");
@@ -82,12 +104,13 @@ ok(staticSrc !== null, "A3: StaticModeShell exists");
 ok(inspectionSrc !== null, "A4: InspectionModeShell exists");
 ok(frameSrc !== null, "A5: ViewerModeShellFrame exists");
 ok(shellStateRouterSrc !== null, "A6: shellStateRouter exists");
+ok(liveContinuousViewerSrc !== null, "A7: LiveContinuousStructuralViewer exists");
 if (routerSrc) {
-    ok(routerSrc.includes('import LiveModeShell from "./LiveModeShell.jsx";'), "A7: router imports LiveModeShell");
-    ok(routerSrc.includes('import StaticModeShell from "./StaticModeShell.jsx";'), "A8: router imports StaticModeShell");
-    ok(routerSrc.includes('import InspectionModeShell from "./InspectionModeShell.jsx";'), "A9: router imports InspectionModeShell");
-    ok(routerSrc.includes("readPublishedShellState"), "A10: router reads published shell state");
-    ok(routerSrc.includes("ACTIVE_SHELL_STATE_EVENT"), "A11: router listens for published shell-state updates");
+    ok(routerSrc.includes('import LiveModeShell from "./LiveModeShell.jsx";'), "A8: router imports LiveModeShell");
+    ok(routerSrc.includes('import StaticModeShell from "./StaticModeShell.jsx";'), "A9: router imports StaticModeShell");
+    ok(routerSrc.includes('import InspectionModeShell from "./InspectionModeShell.jsx";'), "A10: router imports InspectionModeShell");
+    ok(routerSrc.includes("readPublishedShellState"), "A11: router reads published shell state");
+    ok(routerSrc.includes("ACTIVE_SHELL_STATE_EVENT"), "A12: router listens for published shell-state updates");
 }
 
 section("B. Distinct mode posture stays explicit");
@@ -96,19 +119,26 @@ if (liveSrc) {
     ok(liveSrc.includes("Live Telemetry Rail"), "B2: live shell includes compact telemetry rail");
     ok(liveSrc.includes("Runtime/view timing posture"), "B3: live shell labels telemetry as timing posture");
     ok(liveSrc.includes("Unwired metrics:"), "B4: live shell keeps unavailable telemetry explicit");
-    ok(liveSrc.includes("Structural priority"), "B5: live shell keeps structural-first posture");
+    ok(liveSrc.includes("LiveContinuousStructuralViewer"), "B5: live shell mounts the continuous structural viewer");
+    ok(liveSrc.includes("Structural priority"), "B6: live shell keeps structural-first posture");
 }
 if (staticSrc) {
-    ok(staticSrc.includes("Bounded structural mode shell"), "B6: static shell title is explicit");
-    ok(staticSrc.includes("Static mode is not live playback paused."), "B7: static shell avoids fake live posture");
-    ok(staticSrc.includes("Provenance-first reading"), "B8: static shell keeps provenance visible");
-    ok(!staticSrc.includes("Live Telemetry Rail"), "B9: static shell does not inherit live telemetry rail");
+    ok(staticSrc.includes("Bounded structural mode shell"), "B7: static shell title is explicit");
+    ok(staticSrc.includes("Static mode is not live playback paused."), "B8: static shell avoids fake live posture");
+    ok(staticSrc.includes("Provenance-first reading"), "B9: static shell keeps provenance visible");
+    ok(!staticSrc.includes("Live Telemetry Rail"), "B10: static shell does not inherit live telemetry rail");
 }
 if (inspectionSrc) {
-    ok(inspectionSrc.includes("Audit-facing mode shell"), "B10: inspection shell title is explicit");
-    ok(inspectionSrc.includes("does not silently become the default top-level face again"), "B11: inspection shell stays non-default");
-    ok(inspectionSrc.includes("settlement, identity continuity, or canon posture"), "B12: inspection shell avoids semantic inflation");
-    ok(!inspectionSrc.includes("Live Telemetry Rail"), "B13: inspection shell does not inherit live telemetry rail");
+    ok(inspectionSrc.includes("Audit-facing mode shell"), "B11: inspection shell title is explicit");
+    ok(inspectionSrc.includes("does not silently become the default top-level face again"), "B12: inspection shell stays non-default");
+    ok(inspectionSrc.includes("settlement, identity continuity, or canon posture"), "B13: inspection shell avoids semantic inflation");
+    ok(!inspectionSrc.includes("Live Telemetry Rail"), "B14: inspection shell does not inherit live telemetry rail");
+}
+if (liveContinuousViewerSrc) {
+    ok(liveContinuousViewerSrc.includes("Frequency-time structural surface"), "B15: continuous viewer names the frequency-time structural surface");
+    ok(liveContinuousViewerSrc.includes("shared structural payload seam"), "B16: continuous viewer keeps the shared payload seam explicit");
+    ok(liveContinuousViewerSrc.includes("settlement, identity continuity, or semantic closure"), "B17: continuous viewer avoids semantic overclosure");
+    ok(liveContinuousViewerSrc.includes("No H1 spectral frames are currently visible"), "B18: continuous viewer keeps fallback explicit");
 }
 
 section("C. Shared payload seam remains the common base");
@@ -154,10 +184,12 @@ section("E. Adapter output still feeds the shells honestly");
     eq(livePayload.telemetry?.rail_status, "live_runtime_attached", "E5: live telemetry rail reports attached live runtime");
     eq(livePayload.telemetry?.placeholder_status, "timing_metrics_partially_unwired", "E6: live telemetry keeps unwired metrics explicit");
     ok(Array.isArray(livePayload.telemetry?.unavailable_fields), "E7: live telemetry lists unavailable metrics");
-    eq(staticPayload.telemetry, undefined, "E8: static telemetry remains optional");
-    eq(inspectionPayload.telemetry, undefined, "E9: inspection telemetry remains optional");
-    ok(!JSON.stringify(inspectionPayload).includes('"settlement_report"'), "E10: settlement_report remains non-required");
-    ok(!JSON.stringify(inspectionPayload).includes('"identity_audit"'), "E11: identity_audit remains non-required");
+    eq(livePayload.structural.spectral.viewer_kind, "frequency_time_spectral_v0", "E8: live payload exposes a real spectral projection");
+    eq(livePayload.structural.spectral.frame_count, 2, "E9: live payload keeps real spectral frame count");
+    eq(staticPayload.telemetry, undefined, "E10: static telemetry remains optional");
+    eq(inspectionPayload.telemetry, undefined, "E11: inspection telemetry remains optional");
+    ok(!JSON.stringify(inspectionPayload).includes('"settlement_report"'), "E12: settlement_report remains non-required");
+    ok(!JSON.stringify(inspectionPayload).includes('"identity_audit"'), "E13: identity_audit remains non-required");
 }
 
 section("F. Fallback posture remains explicit when real state is absent");

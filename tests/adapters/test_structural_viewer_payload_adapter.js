@@ -32,6 +32,28 @@ function finish() {
     if (FAIL > 0) process.exit(1);
 }
 
+function makeH1(stateId, tStart, tEnd, bandEnergy, extras = {}) {
+    return {
+        artifact_class: "H1",
+        state_id: stateId,
+        stream_id: "stream.viewer.001",
+        segment_id: extras.segment_id ?? "seg-001",
+        window_span: {
+            t_start: tStart,
+            t_end: tEnd,
+            duration_sec: tEnd - tStart,
+            window_count: 1,
+        },
+        invariants: {
+            energy_norm: extras.energy_norm ?? 1,
+            band_profile_norm: {
+                band_edges: extras.band_edges ?? [0, 4, 8],
+                band_energy: bandEnergy,
+            },
+        },
+    };
+}
+
 const FULL_INPUT = {
     mode: "live",
     runId: "shell.run.001",
@@ -99,7 +121,10 @@ const FULL_INPUT = {
                     },
                 ],
                 basin_sets: [{ basin_id: "BN:alpha" }],
-                h1s: [{ id: "h1.1" }],
+                h1s: [
+                    makeH1("H1:viewer:0", 0, 0.5, [0.92, 0.08]),
+                    makeH1("H1:viewer:1", 0.5, 1.0, [0.35, 0.65]),
+                ],
                 m1s: [{ id: "m1.1" }],
             },
         },
@@ -208,6 +233,9 @@ section("B. Shared payload shape is present");
     eq(payload.telemetry.rail_status, "live_runtime_attached", "B11: live telemetry rail reports attached runtime");
     eq(payload.telemetry.publication_source, "execution_shell_export", "B12: live telemetry keeps export source visible");
     eq(payload.telemetry.export_age_ms, 125, "B13: live telemetry exposes export age");
+    eq(payload.structural.spectral.viewer_kind, "frequency_time_spectral_v0", "B14: spectral structural projection is exposed");
+    eq(payload.structural.spectral.frame_count, 2, "B15: spectral projection keeps H1 frame count");
+    eq(payload.structural.spectral.band_count, 2, "B16: spectral projection keeps band count");
 }
 
 section("C. Same structural base across modes");
@@ -229,6 +257,7 @@ section("C. Same structural base across modes");
     eq(staticPayload.telemetry, undefined, "C10: static telemetry omitted by default");
     eq(inspection.telemetry, undefined, "C11: inspection telemetry omitted by default");
     eq(inspection.source.state_basis, "active_shell_state", "C12: active shell state basis preserved across modes");
+    eq(live.structural.spectral.frames[0].state_id, "H1:viewer:0", "C13: spectral frames preserve state ids");
 }
 
 section("D. Overlays remain optional");
@@ -264,6 +293,7 @@ section("G. Live telemetry stays distinct from structure and overlays");
     ok(!Object.prototype.hasOwnProperty.call(payload.structural, "telemetry"), "G1: telemetry is not fused into structural section");
     ok(!Object.prototype.hasOwnProperty.call(payload.overlays ?? {}, "telemetry"), "G2: telemetry is not fused into overlays");
     ok(payload.telemetry.visibility_note.includes("not structural evidence or overlays"), "G3: telemetry note keeps the distinction explicit");
+    ok(!Object.prototype.hasOwnProperty.call(payload.telemetry ?? {}, "spectral"), "G4: spectral structural projection is not fused into telemetry");
 }
 
 finish();

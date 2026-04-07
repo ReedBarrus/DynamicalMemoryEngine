@@ -44,6 +44,10 @@ function uniqueStrings(values) {
     return [...new Set(safeArray(values).filter((value) => typeof value === "string" && value.length > 0))];
 }
 
+function finiteNumberOrNull(value) {
+    return Number.isFinite(value) ? value : null;
+}
+
 function toTimestampRange(workbench, runResult) {
     const timestamps =
         safeArray(runResult?.artifacts?.a1?.timestamps).length > 0
@@ -194,6 +198,63 @@ function buildLineageHeader(input) {
     };
 }
 
+function buildSpectralProjection(runtime) {
+    const frames = safeArray(runtime?.artifacts?.h1s)
+        .map((state, frameIndex) => {
+            const bandProfile = safeObject(state?.invariants?.band_profile_norm);
+            const bandEnergy = safeArray(bandProfile?.band_energy)
+                .map((value) => finiteNumberOrNull(value))
+                .filter((value) => value !== null);
+
+            if (bandEnergy.length === 0) return null;
+
+            const windowSpan = safeObject(state?.window_span) ?? {};
+
+            return {
+                frame_index: frameIndex,
+                state_id: state?.state_id ?? `h1_frame_${frameIndex}`,
+                segment_id: state?.segment_id ?? null,
+                t_start: finiteNumberOrNull(windowSpan.t_start),
+                t_end: finiteNumberOrNull(windowSpan.t_end),
+                duration_sec: finiteNumberOrNull(windowSpan.duration_sec),
+                window_count: finiteNumberOrNull(windowSpan.window_count),
+                energy_norm: finiteNumberOrNull(state?.invariants?.energy_norm),
+                band_energy: bandEnergy,
+                band_edges: safeArray(bandProfile?.band_edges)
+                    .map((value) => finiteNumberOrNull(value))
+                    .filter((value) => value !== null),
+            };
+        })
+        .filter(Boolean)
+        .sort((left, right) => {
+            const leftStart = Number.isFinite(left.t_start) ? left.t_start : Number.POSITIVE_INFINITY;
+            const rightStart = Number.isFinite(right.t_start) ? right.t_start : Number.POSITIVE_INFINITY;
+            if (leftStart !== rightStart) return leftStart - rightStart;
+            const leftEnd = Number.isFinite(left.t_end) ? left.t_end : leftStart;
+            const rightEnd = Number.isFinite(right.t_end) ? right.t_end : rightStart;
+            return leftEnd - rightEnd;
+        });
+
+    if (frames.length === 0) return undefined;
+
+    const bandCount = Math.max(...frames.map((frame) => frame.band_energy.length));
+    const maxEnergy = Math.max(1, ...frames.flatMap((frame) => frame.band_energy));
+    const bandEdges = frames.find((frame) => frame.band_edges.length >= bandCount + 1)?.band_edges;
+    const timeStarts = frames.map((frame) => frame.t_start).filter((value) => value !== null);
+    const timeEnds = frames.map((frame) => frame.t_end).filter((value) => value !== null);
+
+    return {
+        viewer_kind: "frequency_time_spectral_v0",
+        frame_count: frames.length,
+        band_count: bandCount,
+        band_edges: bandEdges ?? undefined,
+        t_start: timeStarts.length > 0 ? Math.min(...timeStarts) : undefined,
+        t_end: timeEnds.length > 0 ? Math.max(...timeEnds) : undefined,
+        max_band_energy: maxEnergy,
+        frames,
+    };
+}
+
 function buildStructuralSection(input) {
     const { workbench, replayLog } = input;
     const runtime = safeObject(workbench?.runtime) ?? {};
@@ -201,10 +262,12 @@ function buildStructuralSection(input) {
     const attentionMemory = readAttentionMemoryOverlay(workbench);
     const anomalyReports = safeArray(runtime?.artifacts?.anomaly_reports);
     const basinSets = safeArray(runtime?.artifacts?.basin_sets);
+    const h1States = safeArray(runtime?.artifacts?.h1s);
     const segmentTransitions = safeArray(runtime?.substrate?.segment_transitions);
     const transitionReport = safeObject(runtime?.substrate?.transition_report);
     const latestReplay = replayLog[0] ?? null;
     const structural = {};
+    const spectral = buildSpectralProjection(runtime);
 
     if (hasEntries(trajectory)) {
         structural.trajectories = {
@@ -242,13 +305,17 @@ function buildStructuralSection(input) {
         };
     }
 
+    if (spectral) {
+        structural.spectral = spectral;
+    }
+
     if (
-        safeArray(runtime?.artifacts?.h1s).length > 0 ||
+        h1States.length > 0 ||
         safeArray(runtime?.artifacts?.m1s).length > 0 ||
         hasEntries(attentionMemory)
     ) {
         structural.retained = {
-            h1_count: safeArray(runtime?.artifacts?.h1s).length,
+            h1_count: h1States.length,
             m1_count: safeArray(runtime?.artifacts?.m1s).length,
             attention_memory: hasEntries(attentionMemory) ? attentionMemory : undefined,
         };
