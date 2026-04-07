@@ -1,11 +1,11 @@
 {
-  "prompt_receipt_id": "PR:ollama_real_first_run",
+  "prompt_receipt_id": "PR:ollama_real_first_run_meta",
   "invoker_version": "v0.1",
   "kernel_contract_version": "v0.1",
   "export_packet_id": "EK:first_run:v1",
-  "kernel_run_id": "KR:ollama_real_first_run",
+  "kernel_run_id": "KR:ollama_real_first_run_meta",
   "provider": "ollama",
-  "model_name": "Hermes 3 Llama 3.2 3B",
+  "model_name": "Meta Llama 3.1 8B Instruct",
   "declared_lens": "medium FFT / Hann baseline",
   "query_class": "Q3",
   "claim_class_ceiling": "L1",
@@ -35,11 +35,13 @@
     "no_authority_inflation"
   ],
   "legal_posture": "Read-side Language Kernel prompt only. No canon authority. Not structural truth. Not primary retention substance.",
-  "prompt_status": "assembled",
-  "invoked_at": "2026-04-07T10:11:37Z",
-  "prompt_hash_sha256": "fd388283f6ffcca7ac3721388ad203a9124343d6ae3d77ba66fc04289f624db1",
+  "prompt_status": "blocked",
+  "invoked_at": "2026-04-07T10:22:51Z",
   "prompt_notes": [
     "operation_mode=contract_conformance_mode",
-    "ollama_model=hermes3:3b"
+    "ollama_model=llama3.1:8b"
+  ],
+  "block_reasons": [
+    "provider_unavailable"
   ]
 }

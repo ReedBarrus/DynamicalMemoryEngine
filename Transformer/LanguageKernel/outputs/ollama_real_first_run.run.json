@@ -19,7 +19,7 @@
   "recursion_depth": 1,
   "language_frames": [
     {
-      "frame_id": "LF:0e5f8b6a",
+      "frame_id": "LF:8d7e1f2g3h4",
       "frame_type": "reasoning_overlay",
       "what_object_am_i": "Bounded reasoning frame over RET:first_run:001",
       "how_produced": "Prompted read-side overlay over export packet EK:first_run:v1 with no prior language frames.",
@@ -39,7 +39,7 @@
         "not canon",
         "not source restoration"
       ],
-      "reasoning_overlay": "Moderately stable, 12.5% structure loss retained reference for first_run:001 case in medium FFT / Hann baseline.",
+      "reasoning_overlay": "Moderately stable retention artifact of SPC first run, suitable for support review or reasoning overlay benchmark.",
       "what_next": "Await explicit operator request for next recursion turn or new retained signature reference."
     }
   ],
@@ -65,7 +65,7 @@
       "prompt_receipt_id": "PR:ollama_real_first_run",
       "response_receipt_id": "RR:ollama_real_first_run",
       "frame_ids": [
-        "LF:0e5f8b6a"
+        "LF:8d7e1f2g3h4"
       ]
     },
     "invariant_results": [
@@ -74,7 +74,7 @@
         "status": "pass",
         "score": 1.0,
         "checked_frames": [
-          "LF:0e5f8b6a"
+          "LF:8d7e1f2g3h4"
         ]
       },
       {
@@ -87,7 +87,7 @@
         "status": "pass",
         "score": 1.0,
         "checked_frames": [
-          "LF:0e5f8b6a"
+          "LF:8d7e1f2g3h4"
         ]
       },
       {
@@ -100,7 +100,7 @@
         "status": "pass",
         "score": 1.0,
         "checked_frames": [
-          "LF:0e5f8b6a"
+          "LF:8d7e1f2g3h4"
         ]
       }
     ],
@@ -120,7 +120,7 @@
       "downgraded_invariants": 0
     },
     "overall_status": "valid",
-    "validated_at": "2026-04-07T09:38:54Z",
+    "validated_at": "2026-04-07T10:12:18Z",
     "validator_notes": [
       "v0 validation used exact export-row grounding, fixed-string checks, and first-turn reasoning-frame invariants only."
     ]
@@ -129,7 +129,7 @@
     "Run assembled only from a clean parsed response whose language_frames array already satisfied the reasoning-frame contract."
   ],
   "timestamps": {
-    "invoked_at": "2026-04-07T09:38:28Z",
-    "validated_at": "2026-04-07T09:38:54Z"
+    "invoked_at": "2026-04-07T10:11:37Z",
+    "validated_at": "2026-04-07T10:12:18Z"
   }
 }

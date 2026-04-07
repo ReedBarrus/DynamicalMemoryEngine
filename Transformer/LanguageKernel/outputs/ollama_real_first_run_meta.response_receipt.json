@@ -1,0 +1,28 @@
+{
+  "response_receipt_id": "RR:ollama_real_first_run_meta",
+  "receiver_version": "v0.1",
+  "kernel_contract_version": "v0.1",
+  "kernel_run_id": "KR:ollama_real_first_run_meta",
+  "export_packet_id": "EK:first_run:v1",
+  "prompt_receipt_id": "PR:ollama_real_first_run_meta",
+  "provider": "ollama",
+  "model_name": "Meta Llama 3.1 8B Instruct",
+  "declared_lens": "medium FFT / Hann baseline",
+  "query_class": "Q3",
+  "claim_class_ceiling": "L1",
+  "legal_posture": "Read-side Language Kernel response only. No canon authority. Not structural truth. Not primary retention substance.",
+  "response_status": "blocked",
+  "parse_status": "not_attempted",
+  "schema_status": "not_checked",
+  "frame_count": 0,
+  "conformance_outcome": "aborted_contract_failure",
+  "receiver_flags": [
+    "json_only_expected"
+  ],
+  "refusal_reason": "llama3.1:8b is not present in local ollama list",
+  "receiver_notes": [
+    "operation_mode=contract_conformance_mode",
+    "ollama model was not locally available, so no response body was captured."
+  ],
+  "received_at": "2026-04-07T10:22:51Z"
+}
