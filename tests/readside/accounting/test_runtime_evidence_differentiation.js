@@ -4,10 +4,10 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { workbenchToStructuralHudModel } from "../../hud/DoorOneStructuralMemoryHudModel.js";
+import { workbenchToStructuralHudModel } from "../../../hud/DoorOneStructuralMemoryHudModel.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ROOT = path.resolve(__dirname, "../..");
+const ROOT = path.resolve(__dirname, "../../..");
 
 let PASS = 0;
 let FAIL = 0;

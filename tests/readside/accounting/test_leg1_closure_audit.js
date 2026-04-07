@@ -11,13 +11,13 @@ import { fileURLToPath } from "node:url";
 
 import {
     buildRuntimeReconstructionReplay,
-} from "../../hud/replayModel.js";
+} from "../../../hud/replayModel.js";
 import {
     buildConsultationRequest,
-} from "../../hud/requestModel.js";
+} from "../../../hud/requestModel.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ROOT = path.resolve(__dirname, "../..");
+const ROOT = path.resolve(__dirname, "../../..");
 
 let PASS = 0;
 let FAIL = 0;

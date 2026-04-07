@@ -299,7 +299,7 @@ section("H. Shell wiring — real model replaces stubs");
 section("I. Separation from other surfaces");
 {
     let labHudSrc = null, demoSrc = null;
-    try { labHudSrc = await readFile(path.join(ROOT, "DoorOneStructuralMemoryHud.jsx"), "utf8"); } catch(_){}
+    try { labHudSrc = await readFile(path.join(ROOT, "hud/DoorOneStructuralMemoryHud.jsx"), "utf8"); } catch(_){}
     try { demoSrc   = await readFile(path.join(ROOT, "hud/MetaLayerConsultationDemo.jsx"), "utf8"); } catch(_){}
 
     if (labHudSrc) {

@@ -1,4 +1,4 @@
-import { deriveOperatorThresholdPosture, deriveOperatorFidelityPosture } from "../../hud/replayThresholdFidelityPosture.js";
+import { deriveOperatorThresholdPosture, deriveOperatorFidelityPosture } from "../../../hud/replayThresholdFidelityPosture.js";
 
 let PASS = 0;
 let FAIL = 0;

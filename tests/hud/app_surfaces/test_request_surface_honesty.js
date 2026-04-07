@@ -9,11 +9,11 @@ import { fileURLToPath } from "node:url";
 import {
     buildConsultationRequest,
     buildActivationReviewRequest,
-} from "../../hud/requestModel.js";
-import { annotateShellRecord, buildActiveShellState } from "../../hud/shellStateRouter.js";
+} from "../../../hud/requestModel.js";
+import { annotateShellRecord, buildActiveShellState } from "../../../hud/shellStateRouter.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ROOT = path.resolve(__dirname, "../..");
+const ROOT = path.resolve(__dirname, "../../..");
 
 let PASS = 0;
 let FAIL = 0;

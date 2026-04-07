@@ -192,6 +192,24 @@ If those become unclear, stop and summarize the ambiguity.
 
 ---
 
+## Packet Workflow
+
+For bounded implementation work, use the packet workflow defined in:
+
+- `README.WorkflowContract.md`
+- `README/Operational/README.PacketTemplates.md`
+
+Default behavior:
+
+- prefer compact packet prompts that reference the canonical templates
+- use the standard Engineer Implementation Return Packet shape unless the packet explicitly requests a different form
+- update operational workflow surfaces when the packet changes placement, lineage, topology, or path/reference posture:
+  - `README/Operational/README.RepoAccountingSurface.md`
+  - `README/Operational/README.PacketLineage.md`
+  - `README.RepoPlacementConstitution.md` when folder/subfolder topology changes
+
+Do not treat packet workflow instruments as runtime meaning, architectural truth, or canon posture.
+
 ## 5. File-scope discipline
 
 Unless explicitly requested, modify only:

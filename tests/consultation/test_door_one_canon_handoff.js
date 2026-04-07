@@ -1,4 +1,4 @@
-// tests/test_door_one_canon_handoff.js
+// tests/consultation/test_door_one_canon_handoff.js
 //
 // Fail-closed test suite for the C1 consultation handoff seam.
 //
@@ -17,10 +17,10 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { consultC1 } from "../canon/consultC1.js";
+import { consultC1 } from "../../operators/consensus/consultC1.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const C1_PATH   = path.resolve(__dirname, "../canon/C1_BASELINE_SINE400_001.json");
+const C1_PATH   = path.resolve(__dirname, "../../canon/C1_BASELINE_SINE400_001.json");
 
 // ─── Minimal test harness (matches existing repo style) ───────────────────
 

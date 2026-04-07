@@ -1,5 +1,5 @@
-import { deriveOperatorThresholdPosture, deriveOperatorFidelityPosture } from "../../hud/replayThresholdFidelityPosture.js";
-import { buildRuntimeReconstructionReplay } from "../../hud/replayModel.js";
+import { deriveOperatorThresholdPosture, deriveOperatorFidelityPosture } from "../../../hud/replayThresholdFidelityPosture.js";
+import { buildRuntimeReconstructionReplay } from "../../../hud/replayModel.js";
 
 let PASS = 0;
 let FAIL = 0;

@@ -2,12 +2,12 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { deriveStructuralIdentityPosture } from "../../hud/structuralIdentityPosture.js";
-import { buildOperatorLegibilityModel } from "../../hud/operatorLegibilityModel.js";
-import { buildRuntimeReconstructionReplay } from "../../hud/replayModel.js";
+import { deriveStructuralIdentityPosture } from "../../../hud/structuralIdentityPosture.js";
+import { buildOperatorLegibilityModel } from "../../../hud/operatorLegibilityModel.js";
+import { buildRuntimeReconstructionReplay } from "../../../hud/replayModel.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ROOT = path.resolve(__dirname, "../..");
+const ROOT = path.resolve(__dirname, "../../..");
 
 let PASS = 0;
 let FAIL = 0;

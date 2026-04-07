@@ -848,6 +848,78 @@ At minimum, Reed should be able to answer:
 
 If a packet and branch drift apart, that should be treated as workflow drift rather than ignored.
 
+## I. Standard Packet Templates
+
+This project uses two standard workflow templates for bounded implementation work:
+
+1. **Architect Task Spec Packet**
+2. **Engineer Implementation Return Packet**
+
+The canonical template definitions live in:
+
+- `README/Operational/README.PacketTemplates.md`
+
+These templates are workflow instruments.
+They do **not** create a new authority layer.
+They exist to reduce handoff ambiguity, preserve bounded seam discipline, and keep implementation reviewable.
+
+### Default usage rule
+
+For normal bounded implementation work:
+
+- Architect/Requester should provide a compact packet prompt that identifies:
+  - packet id
+  - task title
+  - active seam
+  - bounded goal
+  - files in scope
+  - explicit non-goals
+  - acceptance target
+  - escalation triggers where relevant
+
+- Engineer should return work using the standard **Engineer Implementation Return Packet** shape defined in:
+  - `README/Operational/README.PacketTemplates.md`
+
+The full Architect and Engineer templates do **not** need to be pasted into every packet request if the packet clearly references the canonical template source.
+
+### Heavy-template rule
+
+The full expanded packet templates should be pasted directly into a packet request only when one or more of the following are true:
+
+- the seam is new
+- the workflow rule is new
+- the packet is unusually high-risk
+- the packet touches multiple governance surfaces
+- prior similar packets have drifted or returned incomplete receipts
+
+Otherwise, prefer the thinner packet form plus explicit reference to the canonical templates.
+
+### Required Engineer return posture
+
+Unless a packet explicitly says otherwise, Engineer return packets should include at minimum:
+
+- result status
+- summary of change
+- files created / moved / modified
+- folders created if any
+- tests or checks run
+- accounting updates performed
+- packet lineage updates performed
+- placement-law updates performed if topology changed
+- path/reference repairs performed or explicitly left unresolved
+- remaining issues
+- escalation-qualified open questions only if needed
+
+### Operational hygiene rule
+
+When a packet materially changes workflow-visible structure, Engineer must update the relevant operational surfaces as part of the same packet closure, not as a detached follow-up, unless the packet is explicitly audit-only or blocked.
+
+This includes where applicable:
+
+- `README/Operational/README.RepoAccountingSurface.md`
+- `README/Operational/README.PacketLineage.md`
+- `README.RepoPlacementConstitution.md` when folder/subfolder topology changes
+
 ### Default local execution loop
 
 The normal loop is:

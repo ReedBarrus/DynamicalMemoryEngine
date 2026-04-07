@@ -1,11 +1,11 @@
-import { workbenchToStructuralHudModel } from "../../hud/DoorOneStructuralMemoryHudModel.js";
-import { buildRuntimeReconstructionReplay } from "../../hud/replayModel.js";
+import { workbenchToStructuralHudModel } from "../../../hud/DoorOneStructuralMemoryHudModel.js";
+import { buildRuntimeReconstructionReplay } from "../../../hud/replayModel.js";
 import {
     buildConsultationRequest,
     buildActivationReviewRequest,
-} from "../../hud/requestModel.js";
-import { buildOperatorLegibilityModel } from "../../hud/operatorLegibilityModel.js";
-import { projectForHUD, projectForDemo } from "../../hud/adapters/tandemAdapter.js";
+} from "../../../hud/requestModel.js";
+import { buildOperatorLegibilityModel } from "../../../hud/operatorLegibilityModel.js";
+import { projectForHUD, projectForDemo } from "../../../hud/adapters/tandemAdapter.js";
 
 let PASS = 0;
 let FAIL = 0;

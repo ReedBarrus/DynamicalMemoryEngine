@@ -12,10 +12,10 @@ import {
     replaySummaryLine,
     declareLens,
     declareRetainedTier,
-} from "../../hud/replayModel.js";
+} from "../../../hud/replayModel.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ROOT = path.resolve(__dirname, "../..");
+const ROOT = path.resolve(__dirname, "../../..");
 
 let PASS = 0;
 let FAIL = 0;

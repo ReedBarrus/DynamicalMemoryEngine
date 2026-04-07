@@ -982,3 +982,21 @@ README/
   Cleanup/                    (kept provisional pending later compression)
   Transformer/LanguageKernel/ (kept provisional pending later compression)
 ```
+
+### 12.5 Legitimized test subgroup classes
+
+Packet `PKT-TEST-GROUPING-003` legitimizes the following function-first test subgroup classes:
+
+- `tests/consultation/`
+- `tests/hud/app_surfaces/`
+- `tests/reconstruction/readside/`
+- `tests/readside/accounting/`
+- `tests/source_registry/`
+
+These subgroup names describe verification function.
+They do not create a new authority layer.
+They do not imply Door Two activation.
+
+`tests/door_two/` should not be treated as a canonical organizing principle for future test placement.
+
+If a test family remains ambiguous, leave it outside these subgroup classes until a later cleanup packet can classify it honestly.

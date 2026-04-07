@@ -22,7 +22,7 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // REPO_ROOT = the working directory where all files live (/home/Engineer)
-const REPO_ROOT = __dirname;
+const REPO_ROOT = path.resolve(__dirname, "../..");
 
 // ─── Test harness ─────────────────────────────────────────────────────────────
 let PASS = 0, FAIL = 0;
@@ -132,7 +132,7 @@ section("D. HUD component file integrity");
 
 let hudSrc = null;
 try {
-    hudSrc = await readFile(path.join(REPO_ROOT, "DoorOneStructuralMemoryHud.jsx"), "utf8");
+    hudSrc = await readFile(path.join(REPO_ROOT, "hud", "DoorOneStructuralMemoryHud.jsx"), "utf8");
     ok(true, "D1: DoorOneStructuralMemoryHud.jsx readable");
 } catch (_) {
     ok(false, "D1: DoorOneStructuralMemoryHud.jsx readable — FILE MISSING");
@@ -165,7 +165,7 @@ section("E. Demo file integrity");
 
 let demoSrc = null;
 try {
-    demoSrc = await readFile(path.join(REPO_ROOT, "DoorOneStructuralMemoryHudDemo.jsx"), "utf8");
+    demoSrc = await readFile(path.join(REPO_ROOT, "hud", "DoorOneStructuralMemoryHudDemo.jsx"), "utf8");
     ok(true, "E1: DoorOneStructuralMemoryHudDemo.jsx readable");
 } catch (_) {
     ok(false, "E1: DoorOneStructuralMemoryHudDemo.jsx readable — FILE MISSING");

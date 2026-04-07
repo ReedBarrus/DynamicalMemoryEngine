@@ -2,13 +2,13 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { deriveMemorySupportClassification } from "../../hud/memorySupportClassification.js";
-import { buildOperatorLegibilityModel } from "../../hud/operatorLegibilityModel.js";
-import { buildRuntimeReconstructionReplay } from "../../hud/replayModel.js";
-import { buildConsultationRequest } from "../../hud/requestModel.js";
+import { deriveMemorySupportClassification } from "../../../hud/memorySupportClassification.js";
+import { buildOperatorLegibilityModel } from "../../../hud/operatorLegibilityModel.js";
+import { buildRuntimeReconstructionReplay } from "../../../hud/replayModel.js";
+import { buildConsultationRequest } from "../../../hud/requestModel.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ROOT = path.resolve(__dirname, "../..");
+const ROOT = path.resolve(__dirname, "../../..");
 
 let PASS = 0;
 let FAIL = 0;
