@@ -1227,3 +1227,73 @@ In this workflow:
 - and neither should be collapsed into the other
 
 The workflow should therefore preserve explicit task intent and explicit composition lineage whenever artifact authorship materially matters.
+
+## H. Packet Hygiene and Operational Accounting Updates
+
+This section defines the minimum workflow-hygiene updates expected when a packet materially changes repo/workflow accounting posture.
+
+These updates are workflow instruments only.
+They do not create a new authority layer.
+
+### H.1 Current-state accounting update rule
+
+When a packet:
+
+- creates a file
+- moves a file
+- materially changes a file's status
+- materially changes zone classification
+- materially changes README grouping
+- or materially changes test grouping
+
+Engineer should update:
+
+- `README/Operational/README.RepoAccountingSurface.md`
+
+with the new path/location/classification posture, or explicitly report why no update was made.
+
+### H.2 Packet-lineage update rule
+
+When a packet closes with a meaningful route result, Engineer should update:
+
+- `README/Operational/README.PacketLineage.md`
+
+to record:
+
+- packet identity
+- route outcome
+- created files/folders
+- updated docs
+- follow-on packet relations where relevant
+- and notable path/reference repairs or unresolved path/reference drift
+
+### H.3 Placement-constitution append rule
+
+Append `README.RepoPlacementConstitution.md` only when:
+
+- a new canonical folder class is legitimized
+- a recurring README subzone is legitimized
+- or canonical folder/subfolder topology changes materially
+
+Do not append the placement constitution merely to mirror ordinary packet churn, file-status changes, or per-file current-state accounting.
+
+### H.4 Path and reference drift rule
+
+If a packet touches a seam with affected path/reference drift, Engineer should:
+
+- repair the affected references where that repair remains inside packet scope
+- or report the unresolved drift explicitly in the return packet
+
+Silence is not an acceptable substitute for path/reference honesty.
+
+### H.5 Return-packet receipt rule
+
+Engineer Implementation Return Packets should include, when relevant:
+
+- accounting surface updates performed
+- packet-lineage updates performed
+- placement-constitution append status
+- path/reference repairs performed
+- and unresolved path/reference drift still left open
+
+These receipts exist to keep workflow accounting honest after bounded packets close.

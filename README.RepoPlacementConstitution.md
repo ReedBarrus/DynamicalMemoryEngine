@@ -880,3 +880,105 @@ What is this file’s primary responsibility, and what repo zone preserves that 
 ## 11. One-line summary
 
 This document governs repo topology and file placement for DME, while treating the GitHub repo main branch as the authority for current file reality and using the target layout as a placement/accounting aid rather than as a substitute for live repo contact.
+
+## 12. Operational Accounting Clarification and Projected Hierarchy Posture
+
+This constitution governs:
+
+- folder hierarchy
+- repo zones
+- placement law
+- and when canonical folder/subfolder classes are legitimate
+
+It does **not** serve as exhaustive current-state accounting.
+
+Current-state operational accounting should instead live in:
+
+- `README/Operational/README.RepoAccountingSurface.md`
+
+Packet-history continuity should instead live in:
+
+- `README/Operational/README.PacketLineage.md`
+
+Those surfaces are workflow instruments only.
+They do not replace placement law, runtime evidence, or constitutional meaning.
+
+### 12.1 Canonical Operational subzone
+
+`README/Operational/` is a lawful README subzone for:
+
+- current-state operational accounting
+- packet lineage continuity
+- and compact workflow hygiene surfaces whose primary role is keeping repo/workflow position legible over time
+
+It is not a runtime layer.
+It is not an architecture authority.
+
+### 12.2 Current live-zone acknowledgment
+
+The following README zones are currently real in the repo and should be treated honestly in placement review:
+
+- `README/Cleanup/`
+- `README/Transformer/LanguageKernel/`
+
+Their current existence does not by itself settle their long-term compression or regrouping posture.
+They may remain provisional until later cleanup packets decide otherwise.
+
+### 12.3 Constitution append rule
+
+Append this constitution when a new canonical folder or recurring subfolder class is legitimized.
+
+Do not append it merely to mirror every current file or transient status change.
+
+### 12.4 Projected target hierarchy posture
+
+The sketches below are design-level grouping posture only.
+
+They do **not** approve immediate file moves.
+They do **not** overrule live repo reality.
+
+Projected tests posture:
+
+```text
+tests/
+  runtime/
+    core/
+    substrate/
+    reporting/
+  operators/
+    contracts/
+    posture/
+  adapters/
+  hud/
+    door_one/
+    app_surfaces/
+    optional adapters/
+  reconstruction/
+    backend/
+    readside/
+  provenance/
+  probes/
+    diagnostics/
+    replay_real_source/
+    identity_calibration/
+  consultation/
+  readside/
+    accounting/
+  source_registry/
+  workflow/
+```
+
+Projected README posture:
+
+```text
+README/
+  Core/
+  Operational/
+  WorkflowMechanization/
+  Diagnostics/
+  Experiments/
+  ResultInterpretation/
+  Roadmap/
+  Cleanup/                    (kept provisional pending later compression)
+  Transformer/LanguageKernel/ (kept provisional pending later compression)
+```
