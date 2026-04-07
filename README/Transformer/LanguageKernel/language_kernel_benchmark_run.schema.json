@@ -92,6 +92,22 @@
         "benchmark_receipt_refs": {
             "$ref": "#/$defs/benchmarkReceiptRefs"
         },
+        "panel_outcome": {
+            "type": "string",
+            "enum": [
+                "contract_conformant",
+                "downgraded_conformance_gap",
+                "aborted_contract_failure",
+                "aborted_empty_first_turn_output",
+                "aborted_empty_first_turn_frame_list",
+                "aborted_nested_wrong_shape_output",
+                "aborted_metadata_summary_pseudo_frame",
+                "aborted_extra_prose_leakage",
+                "aborted_fixed_string_failure",
+                "downgraded_partial_frame_conformance",
+                "downgraded_near_valid_incomplete_frame"
+            ]
+        },
         "failure_notes": {
             "type": "array",
             "minItems": 1,
@@ -549,6 +565,7 @@
                 "response_receipt_id": "RR:run_1775479542686:001",
                 "validation_receipt_id": "VR:run_1775479542686:001"
             },
+            "panel_outcome": "downgraded_conformance_gap",
             "failure_notes": [
                 "one frame softened structural loss wording while preserving explicit non-authority posture"
             ],

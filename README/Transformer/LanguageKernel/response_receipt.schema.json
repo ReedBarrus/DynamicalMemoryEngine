@@ -195,6 +195,23 @@
             "minimum": 0,
             "description": "Optional immediate count of detected unsupported references before full validation."
         },
+        "conformance_outcome": {
+            "type": "string",
+            "enum": [
+                "contract_conformant",
+                "downgraded_conformance_gap",
+                "aborted_contract_failure",
+                "aborted_empty_first_turn_output",
+                "aborted_empty_first_turn_frame_list",
+                "aborted_nested_wrong_shape_output",
+                "aborted_metadata_summary_pseudo_frame",
+                "aborted_extra_prose_leakage",
+                "aborted_fixed_string_failure",
+                "downgraded_partial_frame_conformance",
+                "downgraded_near_valid_incomplete_frame"
+            ],
+            "description": "Normalized conformance outcome for current local-model first-turn testing. This is an audit/evaluation label only, not an authority uplift."
+        },
         "receiver_flags": {
             "type": "array",
             "minItems": 1,
@@ -213,7 +230,14 @@
                     "possible_refusal",
                     "possible_authority_bleed",
                     "possible_graph_collapse",
-                    "unsupported_references_detected"
+                    "unsupported_references_detected",
+                    "extra_prose_leakage",
+                    "empty_first_turn_frame_list",
+                    "nested_wrong_shape_output",
+                    "metadata_summary_pseudo_frame",
+                    "fixed_string_failure",
+                    "partial_frame_conformance",
+                    "near_valid_incomplete_frame"
                 ]
             }
         },
@@ -470,6 +494,7 @@
             "legal_claim_present": true,
             "what_next_present": true,
             "unsupported_reference_count": 0,
+            "conformance_outcome": "contract_conformant",
             "receiver_flags": [
                 "json_only_expected",
                 "parsed_cleanly",

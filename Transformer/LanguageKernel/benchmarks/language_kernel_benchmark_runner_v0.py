@@ -341,6 +341,17 @@ def determine_final_status(run_object: dict[str, Any], regime: str) -> str:
     return "valid"
 
 
+def determine_panel_outcome(run_object: dict[str, Any], final_status: str) -> str:
+    exact_strings = exact_string_adherence(run_object)
+    if final_status == "valid":
+        return "contract_conformant"
+    if final_status == "aborted":
+        return "aborted_contract_failure"
+    if exact_strings == 1.0:
+        return "downgraded_conformance_gap"
+    return "downgraded_partial_frame_conformance"
+
+
 def build_observed_notes(run_object: dict[str, Any], family: str, regime: str, final_status: str) -> list[str]:
     notes: list[str] = []
     if regime == "perturbation":
@@ -389,6 +400,7 @@ def build_benchmark_run(
     raw_metrics = build_raw_metrics(run_object, family)
     derived_scores = build_derived_scores(raw_metrics)
     final_status = determine_final_status(run_object, regime)
+    panel_outcome = determine_panel_outcome(run_object, final_status)
     observed_notes = build_observed_notes(run_object, family, regime, final_status)
     benchmark_contract_version = benchmark_contract_version or run_object["kernel_contract_version"]
 
@@ -416,6 +428,7 @@ def build_benchmark_run(
         "raw_metrics": raw_metrics,
         "derived_scores": derived_scores,
         "benchmark_receipt_refs": build_benchmark_receipt_refs(run_object),
+        "panel_outcome": panel_outcome,
         "final_status": final_status,
         "benchmarked_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
     }
