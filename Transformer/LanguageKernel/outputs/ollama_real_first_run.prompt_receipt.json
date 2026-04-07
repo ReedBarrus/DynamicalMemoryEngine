@@ -36,13 +36,8 @@
   ],
   "legal_posture": "Read-side Language Kernel prompt only. No canon authority. Not structural truth. Not primary retention substance.",
   "prompt_status": "assembled",
-  "invoked_at": "2026-04-07T09:31:23Z",
-  "prompt_hash_sha256": "aed565af8fb4f5fc547b6d3d5a9648c776beed902420c32e78ec356609ce0527",
-  "sampling_config": {
-    "temperature": 0.2,
-    "top_p": 0.9,
-    "max_tokens": 1200
-  },
+  "invoked_at": "2026-04-07T09:38:28Z",
+  "prompt_hash_sha256": "fd388283f6ffcca7ac3721388ad203a9124343d6ae3d77ba66fc04289f624db1",
   "prompt_notes": [
     "operation_mode=contract_conformance_mode",
     "ollama_model=hermes3:3b"

@@ -14,12 +14,14 @@
     "benchmark": "C:\\Users\\Admin\\OneDrive\\Desktop\\Dynamical_Project\\Dynamical_Memory_Engine\\Root\\Transformer\\LanguageKernel\\outputs\\ollama_real_first_run.benchmark.json",
     "summary": "C:\\Users\\Admin\\OneDrive\\Desktop\\Dynamical_Project\\Dynamical_Memory_Engine\\Root\\Transformer\\LanguageKernel\\outputs\\ollama_real_first_run.invocation_summary.json"
   },
-  "run_assembled": false,
-  "benchmark_emitted": false,
-  "status": "partial",
+  "run_assembled": true,
+  "benchmark_emitted": true,
+  "status": "complete",
   "notes": [
-    "ollama stderr: \u2819 \u2839",
-    "Run assembly was skipped because the raw response did not satisfy the reasoning-frame contract."
+    "ollama stderr: \u2819 \u2839"
   ],
-  "response_conformance_outcome": "aborted_fixed_string_failure"
+  "response_conformance_outcome": "contract_conformant",
+  "run_status": "valid",
+  "benchmark_regime": "stable",
+  "benchmark_final_status": "valid"
 }

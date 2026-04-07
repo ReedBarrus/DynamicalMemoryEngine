@@ -94,7 +94,26 @@ def build_prompt(template_path: Path, export_packet: dict[str, Any]) -> str:
     export_blob = json.dumps(export_packet, indent=2)
     if "<EXPORT_PACKET_JSON>" not in template_text:
         raise ValidationError("Prompt template did not contain <EXPORT_PACKET_JSON> placeholder.")
-    return template_text.replace("<EXPORT_PACKET_JSON>", export_blob)
+    prompt_text = template_text.replace("<EXPORT_PACKET_JSON>", export_blob)
+    first_row = export_packet["rows"][0]
+    resolved_lines = [
+        "",
+        "Resolved first-turn anchors for this exact export packet:",
+        f'- what_object_am_i must include "{first_row["object_handle"]}" without angle-bracket placeholders.',
+        f'- how_produced must include export packet id "{export_packet["export_packet_id"]}".',
+        f'- depends_on must include "{first_row["object_handle"]}".',
+        f'- query_class must be "{export_packet["query_class"]}".',
+        f'- claim_class_ceiling must be "{export_packet["claim_class_ceiling"]}".',
+        f'- current_status.continuity must be "{first_row["continuity_status"]}".',
+        f'- current_status.structural_loss_percent must be {first_row["structural_loss_percent"]}.',
+        f'- current_status.support_tier must be "{export_packet["support_tier"]}".',
+        '- reasoning_overlay must be one concise sentence grounded in the export packet, not placeholder text.',
+        '- what_next must be present exactly as shown in the template.',
+        '- Remove all angle-bracket placeholder tokens before you return JSON.',
+    ]
+    if first_row.get("upstream_handles"):
+        resolved_lines.insert(4, f'- depends_on may also include "{first_row["upstream_handles"][0]}".')
+    return prompt_text + "\n".join(resolved_lines) + "\n"
 
 
 def build_prompt_receipt(
@@ -106,7 +125,6 @@ def build_prompt_receipt(
     model_name: str,
     prompt_status: str,
     invoked_at: str,
-    sampling_config: dict[str, Any] | None,
     prompt_notes: list[str],
     block_reasons: list[str] | None = None,
 ) -> dict[str, Any]:
@@ -144,8 +162,6 @@ def build_prompt_receipt(
     }
     if prompt_status in {"assembled", "submitted"}:
         receipt["prompt_hash_sha256"] = sha256_hex(prompt_text)
-    if sampling_config:
-        receipt["sampling_config"] = sampling_config
     if prompt_notes:
         receipt["prompt_notes"] = prompt_notes
     if block_reasons:
@@ -467,7 +483,6 @@ def build_run_object(
     response_receipt: dict[str, Any],
     frames: list[dict[str, Any]],
     model_name: str,
-    sampling_config: dict[str, Any] | None,
 ) -> dict[str, Any]:
     validation_receipt = build_validation_receipt(
         kernel_run_id=kernel_run_id,
@@ -480,10 +495,6 @@ def build_run_object(
         "provider": "ollama",
         "model_name": model_name,
     }
-    if sampling_config:
-        for key in ("temperature", "top_p"):
-            if key in sampling_config:
-                model_info[key] = sampling_config[key]
 
     payload = {
         "kernel_run_id": kernel_run_id,
@@ -583,7 +594,6 @@ def invoke_once(
     operation_mode: str,
     timeout_seconds: int,
     benchmark_family: str,
-    sampling_config: dict[str, Any] | None,
 ) -> tuple[int, dict[str, Any]]:
     resolver = SchemaResolver()
     export_packet = validate_export_packet(export_packet_file, resolver)
@@ -604,7 +614,6 @@ def invoke_once(
         model_name=model_name,
         prompt_status="assembled",
         invoked_at=utc_now(),
-        sampling_config=sampling_config,
         prompt_notes=[
             f"operation_mode={operation_mode}",
             f"ollama_model={ollama_model}",
@@ -635,7 +644,6 @@ def invoke_once(
             model_name=model_name,
             prompt_status="blocked",
             invoked_at=utc_now(),
-            sampling_config=sampling_config,
             prompt_notes=[
                 f"operation_mode={operation_mode}",
                 f"ollama_model={ollama_model}",
@@ -714,7 +722,6 @@ def invoke_once(
         response_receipt=response_receipt,
         frames=frames,
         model_name=model_name,
-        sampling_config=sampling_config,
     )
     write_json(paths["run"], run_object)
     regime = determine_regime(run_object)
@@ -749,11 +756,6 @@ def run_smoke_test(
         operation_mode="contract_conformance_mode",
         timeout_seconds=timeout_seconds,
         benchmark_family=benchmark_family,
-        sampling_config={
-            "temperature": 0.2,
-            "top_p": 0.9,
-            "max_tokens": 1200,
-        },
     )
     if exit_code == 0:
         print(f"[PASS] invocation-smoke-test: assembled run and benchmark for {model_name}")
@@ -803,11 +805,6 @@ def main(argv: list[str] | None = None) -> int:
             operation_mode=args.operation_mode,
             timeout_seconds=args.timeout_seconds,
             benchmark_family=args.benchmark_family,
-            sampling_config={
-                "temperature": 0.2,
-                "top_p": 0.9,
-                "max_tokens": 1200,
-            },
         )
         print(json.dumps(summary, indent=2))
         return exit_code

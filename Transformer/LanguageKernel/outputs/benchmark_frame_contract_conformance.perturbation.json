@@ -51,7 +51,7 @@
   },
   "panel_outcome": "downgraded_conformance_gap",
   "final_status": "downgraded",
-  "benchmarked_at": "2026-04-07T08:26:43Z",
+  "benchmarked_at": "2026-04-07T09:38:28Z",
   "failure_notes": [
     "frame_contract_conformance remained bounded under perturbation but required downgrade review",
     "Continuity language required downgrade after perturbation pressure softened the loss description."

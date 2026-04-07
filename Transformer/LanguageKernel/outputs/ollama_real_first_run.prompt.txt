@@ -36,6 +36,8 @@ Hard rules:
 - Do not return an empty language_frames list unless the export packet is missing or unusable.
 - Do not nest frames under language_frames.frames.
 - Do not emit export-packet metadata summaries as substitute frames.
+- Do not leave angle-bracket placeholder text in any field.
+- Every frame must include every key shown above, including what_next as the final field before the frame closes.
 - Do not paraphrase legal_claim.
 - Do not paraphrase what_next.
 - Do not invent handles, statuses, or fields not grounded in the export packet.
@@ -97,3 +99,17 @@ Paste the export packet JSON after this line:
     }
   ]
 }
+
+Resolved first-turn anchors for this exact export packet:
+- what_object_am_i must include "RET:first_run:001" without angle-bracket placeholders.
+- how_produced must include export packet id "EK:first_run:v1".
+- depends_on may also include "SPC:first_run:001".
+- depends_on must include "RET:first_run:001".
+- query_class must be "Q3".
+- claim_class_ceiling must be "L1".
+- current_status.continuity must be "Stable".
+- current_status.structural_loss_percent must be 12.5.
+- current_status.support_tier must be "RETAINED_ONLY".
+- reasoning_overlay must be one concise sentence grounded in the export packet, not placeholder text.
+- what_next must be present exactly as shown in the template.
+- Remove all angle-bracket placeholder tokens before you return JSON.

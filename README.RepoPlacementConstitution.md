@@ -920,6 +920,7 @@ The following README zones are currently real in the repo and should be treated 
 
 - `README/Cleanup/`
 - `README/Transformer/LanguageKernel/`
+- `Transformer/LanguageKernel/`
 
 Their current existence does not by itself settle their long-term compression or regrouping posture.
 They may remain provisional until later cleanup packets decide otherwise.
@@ -1000,3 +1001,31 @@ They do not imply Door Two activation.
 `tests/door_two/` should not be treated as a canonical organizing principle for future test placement.
 
 If a test family remains ambiguous, leave it outside these subgroup classes until a later cleanup packet can classify it honestly.
+
+### 12.6 Transformer executable seam acknowledgment
+
+`Transformer/LanguageKernel/` is a lawful top-level executable seam for the bounded Language Kernel experiment.
+
+Its role is narrow:
+
+- seam-local validator code
+- seam-local benchmark runner code
+- seam-local invocation/mechanization helpers
+- seam-local examples and generated verification outputs
+
+It is not:
+
+- runtime integration
+- HUD integration
+- repo-global model orchestration
+- canon or truth authority
+
+`README/Transformer/LanguageKernel/` remains the companion contract/spec zone.
+
+`Transformer/LanguageKernel/` remains the executable companion zone.
+
+This split is lawful because it preserves:
+
+- README-side contract posture
+- executable seam-local mechanization
+- bounded adjacency without smuggling the seam into runtime/

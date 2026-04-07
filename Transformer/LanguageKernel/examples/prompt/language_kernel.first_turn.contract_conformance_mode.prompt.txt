@@ -36,6 +36,8 @@ Hard rules:
 - Do not return an empty language_frames list unless the export packet is missing or unusable.
 - Do not nest frames under language_frames.frames.
 - Do not emit export-packet metadata summaries as substitute frames.
+- Do not leave angle-bracket placeholder text in any field.
+- Every frame must include every key shown above, including what_next as the final field before the frame closes.
 - Do not paraphrase legal_claim.
 - Do not paraphrase what_next.
 - Do not invent handles, statuses, or fields not grounded in the export packet.

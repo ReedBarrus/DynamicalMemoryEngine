@@ -11,30 +11,27 @@
   "query_class": "Q3",
   "claim_class_ceiling": "L1",
   "legal_posture": "Read-side Language Kernel response only. No canon authority. Not structural truth. Not primary retention substance.",
-  "raw_response_hash_sha256": "a023815ab537ba92427ed6f8ef4ddffb88a436ade3e27cca064ddb39ce3f2733",
-  "raw_response_bytes": 853,
+  "raw_response_hash_sha256": "8c50357f4f7b6d50925a7fc07899b33b021e63948d6fb43df5106f6b31ba5471",
+  "raw_response_bytes": 981,
   "response_status": "received",
   "parse_status": "parsed",
-  "schema_status": "nonconformant",
+  "schema_status": "conformant",
   "frame_count": 1,
   "receiver_flags": [
-    "fixed_string_failure",
     "json_only_expected",
-    "schema_checked",
-    "what_next_missing"
+    "parsed_cleanly",
+    "schema_checked"
   ],
-  "conformance_outcome": "aborted_fixed_string_failure",
+  "conformance_outcome": "contract_conformant",
   "receiver_notes": [
     "operation_mode=contract_conformance_mode",
-    "prompt_sha256=aed565af8fb4f5fc547b6d3d5a9648c776beed902420c32e78ec356609ce0527",
-    "$: missing required property 'what_next'",
-    "One or more fixed literal fields were missing or paraphrased."
+    "prompt_sha256=fd388283f6ffcca7ac3721388ad203a9124343d6ae3d77ba66fc04289f624db1",
+    "Response parsed cleanly and satisfied the reasoning frame contract."
   ],
-  "received_at": "2026-04-07T09:31:44Z",
+  "received_at": "2026-04-07T09:38:54Z",
   "frame_ids": [
-    "LF:2v1jz5f8"
+    "LF:0e5f8b6a"
   ],
   "legal_claim_present": true,
-  "what_next_present": false,
-  "refusal_reason": "fixed literal failure"
+  "what_next_present": true
 }

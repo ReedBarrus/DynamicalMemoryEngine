@@ -51,7 +51,7 @@
   },
   "panel_outcome": "aborted_contract_failure",
   "final_status": "aborted",
-  "benchmarked_at": "2026-04-07T08:26:43Z",
+  "benchmarked_at": "2026-04-07T09:38:28Z",
   "failure_notes": [
     "claim_discipline hit a bounded failure-path posture and stayed non-authoritative",
     "Validation aborted after unsupported reference pressure exceeded the bounded v0 allowance."
