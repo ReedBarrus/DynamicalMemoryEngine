@@ -88,6 +88,7 @@ let shellStateRouterSrc = null;
 let executionShellSrc = null;
 let liveContinuousViewerSrc = null;
 let staticSpectralViewerSrc = null;
+let staticEnergyViewerSrc = null;
 
 try { routerSrc = await readFile(path.join(ROOT, "hud/HomeRouterShell.jsx"), "utf8"); } catch (_) {}
 try { liveSrc = await readFile(path.join(ROOT, "hud/LiveModeShell.jsx"), "utf8"); } catch (_) {}
@@ -98,6 +99,7 @@ try { shellStateRouterSrc = await readFile(path.join(ROOT, "hud/shellStateRouter
 try { executionShellSrc = await readFile(path.join(ROOT, "hud/MetaLayerObjectExecutionShell.jsx"), "utf8"); } catch (_) {}
 try { liveContinuousViewerSrc = await readFile(path.join(ROOT, "hud/LiveContinuousStructuralViewer.jsx"), "utf8"); } catch (_) {}
 try { staticSpectralViewerSrc = await readFile(path.join(ROOT, "hud/StaticSpectralViewer.jsx"), "utf8"); } catch (_) {}
+try { staticEnergyViewerSrc = await readFile(path.join(ROOT, "hud/StaticEnergyViewer.jsx"), "utf8"); } catch (_) {}
 
 section("A. Mode shell files exist and are wired");
 ok(routerSrc !== null, "A1: HomeRouterShell exists");
@@ -108,12 +110,13 @@ ok(frameSrc !== null, "A5: ViewerModeShellFrame exists");
 ok(shellStateRouterSrc !== null, "A6: shellStateRouter exists");
 ok(liveContinuousViewerSrc !== null, "A7: LiveContinuousStructuralViewer exists");
 ok(staticSpectralViewerSrc !== null, "A8: StaticSpectralViewer exists");
+ok(staticEnergyViewerSrc !== null, "A9: StaticEnergyViewer exists");
 if (routerSrc) {
-    ok(routerSrc.includes('import LiveModeShell from "./LiveModeShell.jsx";'), "A9: router imports LiveModeShell");
-    ok(routerSrc.includes('import StaticModeShell from "./StaticModeShell.jsx";'), "A10: router imports StaticModeShell");
-    ok(routerSrc.includes('import InspectionModeShell from "./InspectionModeShell.jsx";'), "A11: router imports InspectionModeShell");
-    ok(routerSrc.includes("readPublishedShellState"), "A12: router reads published shell state");
-    ok(routerSrc.includes("ACTIVE_SHELL_STATE_EVENT"), "A13: router listens for published shell-state updates");
+    ok(routerSrc.includes('import LiveModeShell from "./LiveModeShell.jsx";'), "A10: router imports LiveModeShell");
+    ok(routerSrc.includes('import StaticModeShell from "./StaticModeShell.jsx";'), "A11: router imports StaticModeShell");
+    ok(routerSrc.includes('import InspectionModeShell from "./InspectionModeShell.jsx";'), "A12: router imports InspectionModeShell");
+    ok(routerSrc.includes("readPublishedShellState"), "A13: router reads published shell state");
+    ok(routerSrc.includes("ACTIVE_SHELL_STATE_EVENT"), "A14: router listens for published shell-state updates");
 }
 
 section("B. Distinct mode posture stays explicit");
@@ -130,27 +133,36 @@ if (staticSrc) {
     ok(staticSrc.includes("Static mode is not live playback paused."), "B8: static shell avoids fake live posture");
     ok(staticSrc.includes("Provenance-first reading"), "B9: static shell keeps provenance visible");
     ok(staticSrc.includes("StaticSpectralViewer"), "B10: static shell mounts the static spectral viewer");
-    ok(staticSrc.includes("Timing boundary"), "B11: static shell keeps timing boundary explicit");
-    ok(!staticSrc.includes("Live Telemetry Rail"), "B12: static shell does not inherit live telemetry rail");
+    ok(staticSrc.includes("StaticEnergyViewer"), "B11: static shell mounts the static energy viewer");
+    ok(staticSrc.includes("Timing boundary"), "B12: static shell keeps timing boundary explicit");
+    ok(staticSrc.includes("Energy face"), "B13: static shell keeps the second static face explicit");
+    ok(!staticSrc.includes("Live Telemetry Rail"), "B14: static shell does not inherit live telemetry rail");
 }
 if (inspectionSrc) {
-    ok(inspectionSrc.includes("Audit-facing mode shell"), "B13: inspection shell title is explicit");
-    ok(inspectionSrc.includes("does not silently become the default top-level face again"), "B14: inspection shell stays non-default");
-    ok(inspectionSrc.includes("settlement, identity continuity, or canon posture"), "B15: inspection shell avoids semantic inflation");
-    ok(!inspectionSrc.includes("Live Telemetry Rail"), "B16: inspection shell does not inherit live telemetry rail");
+    ok(inspectionSrc.includes("Audit-facing mode shell"), "B15: inspection shell title is explicit");
+    ok(inspectionSrc.includes("does not silently become the default top-level face again"), "B16: inspection shell stays non-default");
+    ok(inspectionSrc.includes("settlement, identity continuity, or canon posture"), "B17: inspection shell avoids semantic inflation");
+    ok(!inspectionSrc.includes("Live Telemetry Rail"), "B18: inspection shell does not inherit live telemetry rail");
 }
 if (liveContinuousViewerSrc) {
-    ok(liveContinuousViewerSrc.includes("Frequency-time structural surface"), "B17: continuous viewer names the frequency-time structural surface");
-    ok(liveContinuousViewerSrc.includes("shared structural payload seam"), "B18: continuous viewer keeps the shared payload seam explicit");
-    ok(liveContinuousViewerSrc.includes("settlement, identity continuity, or semantic closure"), "B19: continuous viewer avoids semantic overclosure");
-    ok(liveContinuousViewerSrc.includes("No H1 spectral frames are currently visible"), "B20: continuous viewer keeps fallback explicit");
+    ok(liveContinuousViewerSrc.includes("Frequency-time structural surface"), "B19: continuous viewer names the frequency-time structural surface");
+    ok(liveContinuousViewerSrc.includes("shared structural payload seam"), "B20: continuous viewer keeps the shared payload seam explicit");
+    ok(liveContinuousViewerSrc.includes("settlement, identity continuity, or semantic closure"), "B21: continuous viewer avoids semantic overclosure");
+    ok(liveContinuousViewerSrc.includes("No H1 spectral frames are currently visible"), "B22: continuous viewer keeps fallback explicit");
 }
 if (staticSpectralViewerSrc) {
-    ok(staticSpectralViewerSrc.includes("Static Spectral Viewer"), "B21: static viewer declares a dedicated static structural face");
-    ok(staticSpectralViewerSrc.includes("Bounded frequency-time object"), "B22: static viewer uses bounded object posture");
-    ok(staticSpectralViewerSrc.includes("provenance-forward"), "B23: static viewer keeps provenance-forward posture explicit");
-    ok(staticSpectralViewerSrc.includes("No bounded spectral frames are currently visible"), "B24: static viewer keeps explicit fallback");
-    ok(!staticSpectralViewerSrc.includes("Live Telemetry Rail"), "B25: static viewer does not inherit the live telemetry rail");
+    ok(staticSpectralViewerSrc.includes("Static Spectral Viewer"), "B23: static viewer declares a dedicated static structural face");
+    ok(staticSpectralViewerSrc.includes("Bounded frequency-time object"), "B24: static viewer uses bounded object posture");
+    ok(staticSpectralViewerSrc.includes("provenance-forward"), "B25: static viewer keeps provenance-forward posture explicit");
+    ok(staticSpectralViewerSrc.includes("No bounded spectral frames are currently visible"), "B26: static viewer keeps explicit fallback");
+    ok(!staticSpectralViewerSrc.includes("Live Telemetry Rail"), "B27: static viewer does not inherit the live telemetry rail");
+}
+if (staticEnergyViewerSrc) {
+    ok(staticEnergyViewerSrc.includes("Static Energy Viewer"), "B28: energy viewer declares a dedicated static energy face");
+    ok(staticEnergyViewerSrc.includes("Bounded energy / amplitude object"), "B29: energy viewer uses bounded energy posture");
+    ok(staticEnergyViewerSrc.includes("envelope and amplitude shape"), "B30: energy viewer stays distinct from the spectral face");
+    ok(staticEnergyViewerSrc.includes("No energy-capable structural frames are currently visible"), "B31: energy viewer keeps explicit fallback");
+    ok(!staticEnergyViewerSrc.includes("Live Telemetry Rail"), "B32: energy viewer does not inherit the live telemetry rail");
 }
 
 section("C. Shared payload seam remains the common base");
@@ -199,10 +211,11 @@ section("E. Adapter output still feeds the shells honestly");
     eq(livePayload.structural.spectral.viewer_kind, "frequency_time_spectral_v0", "E8: live payload exposes a real spectral projection");
     eq(livePayload.structural.spectral.frame_count, 2, "E9: live payload keeps real spectral frame count");
     eq(staticPayload.structural.spectral.viewer_kind, "frequency_time_spectral_v0", "E10: static payload exposes the shared spectral projection");
-    eq(staticPayload.telemetry, undefined, "E11: static telemetry remains optional");
-    eq(inspectionPayload.telemetry, undefined, "E12: inspection telemetry remains optional");
-    ok(!JSON.stringify(inspectionPayload).includes('"settlement_report"'), "E13: settlement_report remains non-required");
-    ok(!JSON.stringify(inspectionPayload).includes('"identity_audit"'), "E14: identity_audit remains non-required");
+    eq(staticPayload.structural.energy.viewer_kind, "energy_amplitude_view_v0", "E11: static payload exposes the shared energy projection");
+    eq(staticPayload.telemetry, undefined, "E12: static telemetry remains optional");
+    eq(inspectionPayload.telemetry, undefined, "E13: inspection telemetry remains optional");
+    ok(!JSON.stringify(inspectionPayload).includes('"settlement_report"'), "E14: settlement_report remains non-required");
+    ok(!JSON.stringify(inspectionPayload).includes('"identity_audit"'), "E15: identity_audit remains non-required");
 }
 
 section("F. Fallback posture remains explicit when real state is absent");

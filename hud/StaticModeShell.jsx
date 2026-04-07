@@ -1,4 +1,5 @@
 import ViewerModeShellFrame from "./ViewerModeShellFrame.jsx";
+import StaticEnergyViewer from "./StaticEnergyViewer.jsx";
 import StaticSpectralViewer from "./StaticSpectralViewer.jsx";
 
 function PostureColumn({ title, note }) {
@@ -38,11 +39,12 @@ export default function StaticModeShell({ payload, onGoHome, onOpenLegacy }) {
                 }}
             >
                 <StaticSpectralViewer payload={payload} />
+                <StaticEnergyViewer payload={payload} />
 
                 <div
                     style={{
                         display: "grid",
-                        gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+                        gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
                         gap: "14px",
                     }}
                 >
@@ -57,6 +59,10 @@ export default function StaticModeShell({ payload, onGoHome, onOpenLegacy }) {
                     <PostureColumn
                         title="Timing boundary"
                         note="Live telemetry rail does not appear here by default. Static mode stays inspectable and non-live rather than importing runtime timing posture by convenience."
+                    />
+                    <PostureColumn
+                        title="Energy face"
+                        note="The second static face emphasizes RMS/envelope/amplitude posture over the same shared structural frames, without replacing the spectral view or widening into semantic narration."
                     />
                 </div>
             </div>
