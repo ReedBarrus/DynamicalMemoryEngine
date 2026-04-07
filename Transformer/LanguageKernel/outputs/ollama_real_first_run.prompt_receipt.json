@@ -1,0 +1,50 @@
+{
+  "prompt_receipt_id": "PR:ollama_real_first_run",
+  "invoker_version": "v0.1",
+  "kernel_contract_version": "v0.1",
+  "export_packet_id": "EK:first_run:v1",
+  "kernel_run_id": "KR:ollama_real_first_run",
+  "provider": "ollama",
+  "model_name": "Hermes 3 Llama 3.2 3B",
+  "declared_lens": "medium FFT / Hann baseline",
+  "query_class": "Q3",
+  "claim_class_ceiling": "L1",
+  "operator_mode": "explicit_only",
+  "legal_claim_string": "Bounded interpretation overlay only. No canon authority. Not structural truth. Read-side recursion experiment.",
+  "what_next_string": "Await explicit operator request for next recursion turn or new retained signature reference.",
+  "allowed_reference_scope": "export_packet_only",
+  "allowed_frame_types": [
+    "reasoning_overlay"
+  ],
+  "allowed_uses": [
+    "support_review",
+    "reasoning_overlay_benchmark"
+  ],
+  "non_claims": [
+    "not canon",
+    "not source restoration",
+    "not identity proof",
+    "not primary memory substrate"
+  ],
+  "prompt_flags": [
+    "json_only",
+    "explicit_recursion_only",
+    "fixed_legal_claim",
+    "fixed_what_next",
+    "bounded_export_only",
+    "no_authority_inflation"
+  ],
+  "legal_posture": "Read-side Language Kernel prompt only. No canon authority. Not structural truth. Not primary retention substance.",
+  "prompt_status": "assembled",
+  "invoked_at": "2026-04-07T09:31:23Z",
+  "prompt_hash_sha256": "aed565af8fb4f5fc547b6d3d5a9648c776beed902420c32e78ec356609ce0527",
+  "sampling_config": {
+    "temperature": 0.2,
+    "top_p": 0.9,
+    "max_tokens": 1200
+  },
+  "prompt_notes": [
+    "operation_mode=contract_conformance_mode",
+    "ollama_model=hermes3:3b"
+  ]
+}

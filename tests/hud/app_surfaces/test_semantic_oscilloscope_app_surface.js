@@ -34,6 +34,7 @@ let liveModeShellSrc = null;
 let staticModeShellSrc = null;
 let inspectionModeShellSrc = null;
 let viewerModeShellFrameSrc = null;
+let shellStateRouterSrc = null;
 
 try { routerSrc = await readFile(path.join(ROOT, "hud/HomeRouterShell.jsx"), "utf8"); } catch (_) {}
 try { viewerAdapterSrc = await readFile(path.join(ROOT, "hud/adapters/structuralViewerPayloadAdapter.js"), "utf8"); } catch (_) {}
@@ -48,6 +49,7 @@ try { liveModeShellSrc = await readFile(path.join(ROOT, "hud/LiveModeShell.jsx")
 try { staticModeShellSrc = await readFile(path.join(ROOT, "hud/StaticModeShell.jsx"), "utf8"); } catch (_) {}
 try { inspectionModeShellSrc = await readFile(path.join(ROOT, "hud/InspectionModeShell.jsx"), "utf8"); } catch (_) {}
 try { viewerModeShellFrameSrc = await readFile(path.join(ROOT, "hud/ViewerModeShellFrame.jsx"), "utf8"); } catch (_) {}
+try { shellStateRouterSrc = await readFile(path.join(ROOT, "hud/shellStateRouter.js"), "utf8"); } catch (_) {}
 
 section("A. App surface file placement");
 ok(routerSrc !== null, "A1: HomeRouterShell exists");
@@ -59,15 +61,16 @@ ok(liveModeShellSrc !== null, "A6: LiveModeShell exists");
 ok(staticModeShellSrc !== null, "A7: StaticModeShell exists");
 ok(inspectionModeShellSrc !== null, "A8: InspectionModeShell exists");
 ok(viewerModeShellFrameSrc !== null, "A9: ViewerModeShellFrame exists");
+ok(shellStateRouterSrc !== null, "A10: shellStateRouter exists");
 if (appMainSrc) {
-    ok(appMainSrc.includes("HomeRouterShell"), "A10: app_main imports HomeRouterShell");
+    ok(appMainSrc.includes("HomeRouterShell"), "A11: app_main imports HomeRouterShell");
 }
 if (appHtmlSrc) {
-    ok(appHtmlSrc.includes("app_main.jsx"), "A11: app.html points to app_main.jsx");
-    ok(appHtmlSrc.includes("Home Router Shell"), "A12: app.html names the home router shell");
+    ok(appHtmlSrc.includes("app_main.jsx"), "A12: app.html points to app_main.jsx");
+    ok(appHtmlSrc.includes("Home Router Shell"), "A13: app.html names the home router shell");
 }
 if (viewerAdapterSrc) {
-    ok(viewerAdapterSrc.includes("one shared read-side viewer payload") || viewerAdapterSrc.includes("shared structural viewer payload"), "A13: adapter source declares shared payload posture");
+    ok(viewerAdapterSrc.includes("one shared read-side viewer payload") || viewerAdapterSrc.includes("shared structural viewer payload"), "A14: adapter source declares shared payload posture");
 }
 
 section("B. Home router shell stays thin");
@@ -80,8 +83,10 @@ if (routerSrc) {
     ok(!routerSrc.includes("PlaceholderRoute"), "B6: old generic placeholder route is removed");
     ok(routerSrc.includes("buildStructuralViewerPayload"), "B7: top-level shell uses shared viewer payload adapter");
     ok(routerSrc.includes("<LiveModeShell") && routerSrc.includes("<StaticModeShell") && routerSrc.includes("<InspectionModeShell"), "B8: router dispatches explicit mode shells");
-    ok(!routerSrc.includes("MetaLayerObjectExecutionShell"), "B9: top-level shell does not embed execution controls directly");
-    ok(!routerSrc.includes("DoorOneStructuralMemoryHUD"), "B10: top-level shell is not itself the dense inspection HUD");
+    ok(routerSrc.includes("readPublishedShellState"), "B9: shell reads published execution state");
+    ok(routerSrc.includes("ACTIVE_SHELL_STATE_EVENT"), "B10: shell listens for published state updates");
+    ok(!routerSrc.includes("MetaLayerObjectExecutionShell"), "B11: top-level shell does not embed execution controls directly");
+    ok(!routerSrc.includes("DoorOneStructuralMemoryHUD"), "B12: top-level shell is not itself the dense inspection HUD");
 }
 
 section("C. Route choices and reachability remain explicit");
@@ -96,6 +101,9 @@ if (routerSrc) {
     ok(routerSrc.includes("Live / Static / Inspection entry points"), "C8: home shell presents explicit viewer-family entry points");
     ok(routerSrc.includes("onGoHome={() => navigate(ROUTES.home)}"), "C9: mode shells can return to home");
     ok(routerSrc.includes("onOpenLegacy={() => navigate(ROUTES.legacy)}"), "C10: mode shells can open transitional legacy route");
+    ok(routerSrc.includes("runResult: activeShellState?.hasActiveResult ? activeShellState.runResult : null"), "C11: router only threads real runResult when active state exists");
+    ok(routerSrc.includes("workbench: activeShellState?.hasActiveResult ? activeShellState.workbench : null"), "C12: router only threads real workbench when active state exists");
+    ok(routerSrc.includes('sourceFamilyLabel: activeShellState?.sourceFamilyLabel ?? "unspecified"'), "C13: router threads real source family label with explicit fallback");
 }
 
 section("D. Mode shells stay distinct over one shared payload seam");
@@ -112,8 +120,10 @@ if (liveModeShellSrc && staticModeShellSrc && inspectionModeShellSrc && viewerMo
     ok(viewerModeShellFrameSrc.includes("All mode shells consume the same shared payload seam."), "D10: shared frame preserves one payload seam");
     ok(viewerModeShellFrameSrc.includes("payload.structural"), "D11: shared frame reads structural section");
     ok(viewerModeShellFrameSrc.includes("payload.overlays"), "D12: shared frame keeps overlays optional");
-    ok(!viewerModeShellFrameSrc.includes("settlement_report"), "D13: shared frame does not require settlement_report");
-    ok(!viewerModeShellFrameSrc.includes("identity_audit"), "D14: shared frame does not require identity_audit");
+    ok(viewerModeShellFrameSrc.includes("payload.source.state_basis"), "D13: shared frame shows state basis explicitly");
+    ok(viewerModeShellFrameSrc.includes("payload.source.state_availability"), "D14: shared frame shows fallback or active state posture explicitly");
+    ok(!viewerModeShellFrameSrc.includes("settlement_report"), "D15: shared frame does not require settlement_report");
+    ok(!viewerModeShellFrameSrc.includes("identity_audit"), "D16: shared frame does not require identity_audit");
 }
 
 section("E. Legacy composed app stays preserved");
@@ -144,14 +154,20 @@ if (appSrc) {
 section("G. Shell state export path remains explicit");
 if (shellSrc) {
     ok(shellSrc.includes("buildActiveShellState"), "G1: shell builds explicit active shell state");
-    ok(shellSrc.includes("annotateShellRecord"), "G2: shell annotates request and replay records");
-    ok(shellSrc.includes("const activeShellState = useMemo"), "G3: active shell state memoized at shell seam");
-    ok(shellSrc.includes("onStateChange(activeShellState)"), "G4: shell exports active shell state to app");
-    ok(shellSrc.includes("activeRequest={activeShellState.activeRequest}"), "G5: request pane receives the active request from shell state");
-    ok(shellSrc.includes("downloadRequestJson(activeRequest)"), "G6: request export uses the same active request object shown in-pane");
-    ok(shellSrc.includes("activeShellState.requestLog"), "G7: request pane reads active-context request state");
-    ok(shellSrc.includes("activeShellState.replayLog"), "G8: replay pane reads active-context replay state");
-    ok(shellSrc.includes("setRunResult(null);") && shellSrc.includes("setWorkbench(null);"), "G9: shell clears stale active result on rerun/error path");
+    ok(shellSrc.includes("publishActiveShellState(activeShellState)"), "G2: shell publishes active shell state for viewer routes");
+    ok(shellSrc.includes("annotateShellRecord"), "G3: shell annotates request and replay records");
+    ok(shellSrc.includes("const activeShellState = useMemo"), "G4: active shell state memoized at shell seam");
+    ok(shellSrc.includes("onStateChange(activeShellState)"), "G5: shell exports active shell state to app");
+    ok(shellSrc.includes("activeRequest={activeShellState.activeRequest}"), "G6: request pane receives the active request from shell state");
+    ok(shellSrc.includes("downloadRequestJson(activeRequest)"), "G7: request export uses the same active request object shown in-pane");
+    ok(shellSrc.includes("activeShellState.requestLog"), "G8: request pane reads active-context request state");
+    ok(shellSrc.includes("activeShellState.replayLog"), "G9: replay pane reads active-context replay state");
+    ok(shellSrc.includes("setRunResult(null);") && shellSrc.includes("setWorkbench(null);"), "G10: shell clears stale active result on rerun/error path");
+}
+if (shellStateRouterSrc) {
+    ok(shellStateRouterSrc.includes('ACTIVE_SHELL_STATE_EVENT = "dme:active-shell-state"'), "G11: shellStateRouter declares active-shell-state event");
+    ok(shellStateRouterSrc.includes("readPublishedShellState"), "G12: shellStateRouter can read published shell state");
+    ok(shellStateRouterSrc.includes("publishActiveShellState"), "G13: shellStateRouter can publish shell state");
 }
 
 section("H. Downstream surfaces remain bounded");

@@ -60,6 +60,7 @@ import {
 import {
     annotateShellRecord,
     buildActiveShellState,
+    publishActiveShellState,
 } from "./shellStateRouter.js";
 
 // ─── Policies (mirrors run_door_one_workbench.js) ─────────────────────────────
@@ -1489,6 +1490,7 @@ export default function MetaLayerObjectExecutionShell({ onStateChange = null } =
     // the live state into other read-side surfaces (lab HUD, demo pane).
     // The shell remains the state owner; this is a read-side callback only.
     useEffect(() => {
+        publishActiveShellState(activeShellState);
         if (typeof onStateChange === "function") {
             onStateChange(activeShellState);
         }

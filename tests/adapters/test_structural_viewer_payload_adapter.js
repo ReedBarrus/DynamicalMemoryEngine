@@ -165,6 +165,14 @@ const NO_OVERLAY_INPUT = {
     },
 };
 
+const SHELL_STATE_FALLBACK_INPUT = {
+    mode: "inspection",
+    sourceFamilyLabel: "Recorded Source (WAV fixture)",
+    runStatus: "error",
+    runError: "adapter failed",
+    hasActiveResult: false,
+};
+
 section("A. File placement and source posture");
 {
     let src = null;
@@ -190,6 +198,7 @@ section("B. Shared payload shape is present");
     ok(payload.telemetry && typeof payload.telemetry === "object", "B7: live telemetry placeholder present");
     eq(payload.source.source_id, "synthetic.viewer", "B8: source_id mapped");
     eq(payload.source.source_family, "Synthetic Signal", "B9: source_family mapped");
+    eq(payload.source.state_basis, "active_shell_state", "B10: active shell state basis exposed when runResult/workbench are present");
 }
 
 section("C. Same structural base across modes");
@@ -209,6 +218,7 @@ section("C. Same structural base across modes");
     ok(live.telemetry?.placeholder_status === "live_telemetry_unwired", "C8: live telemetry placeholder is explicit");
     eq(staticPayload.telemetry, undefined, "C9: static telemetry omitted by default");
     eq(inspection.telemetry, undefined, "C10: inspection telemetry omitted by default");
+    eq(inspection.source.state_basis, "active_shell_state", "C11: active shell state basis preserved across modes");
 }
 
 section("D. Overlays remain optional");
@@ -226,6 +236,16 @@ section("E. Future optional seams remain non-required");
     ok(!payloadJson.includes('"settlement_report"'), "E1: settlement_report not required");
     ok(!payloadJson.includes('"identity_audit"'), "E2: identity_audit not required");
     ok(Array.isArray(payload.lineage.explicit_non_claims), "E3: explicit_non_claims remains available");
+}
+
+section("F. Fallback posture remains explicit");
+{
+    const payload = buildStructuralViewerPayload(SHELL_STATE_FALLBACK_INPUT);
+    eq(payload.source.state_basis, "shell_state_fallback", "F1: shell-state fallback basis exposed");
+    ok(String(payload.source.state_availability).includes("adapter failed"), "F2: fallback status carries the current error posture");
+    ok(payload.lineage.generated_from.includes("shell_state_fallback"), "F3: lineage records shell-state fallback basis");
+    ok(payload.structural && typeof payload.structural === "object", "F4: structural section remains present even when empty");
+    eq(payload.overlays, undefined, "F5: overlays remain optional during fallback");
 }
 
 finish();

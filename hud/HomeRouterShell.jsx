@@ -3,6 +3,7 @@ import { buildStructuralViewerPayload } from "./adapters/structuralViewerPayload
 import InspectionModeShell from "./InspectionModeShell.jsx";
 import LiveModeShell from "./LiveModeShell.jsx";
 import SemanticOscilloscopeApp from "./SemanticOscilloscopeApp.jsx";
+import { ACTIVE_SHELL_STATE_EVENT, readPublishedShellState } from "./shellStateRouter.js";
 import StaticModeShell from "./StaticModeShell.jsx";
 
 const ROUTES = {
@@ -77,6 +78,21 @@ function navigate(path) {
 
 function openStandalone(path) {
     window.location.href = path;
+}
+
+function buildRoutePayload(mode, shellState) {
+    const activeShellState = shellState && typeof shellState === "object" ? shellState : null;
+    return buildStructuralViewerPayload({
+        mode,
+        runResult: activeShellState?.hasActiveResult ? activeShellState.runResult : null,
+        workbench: activeShellState?.hasActiveResult ? activeShellState.workbench : null,
+        requestLog: activeShellState?.requestLog ?? [],
+        replayLog: activeShellState?.replayLog ?? [],
+        sourceFamilyLabel: activeShellState?.sourceFamilyLabel ?? "unspecified",
+        runStatus: activeShellState?.runStatus ?? "idle",
+        runError: activeShellState?.runError ?? null,
+        hasActiveResult: activeShellState?.hasActiveResult ?? false,
+    });
 }
 
 function NavPill({ label, active, onClick }) {
@@ -223,7 +239,16 @@ function RouteCard({ title, note, path, onOpen }) {
     );
 }
 
-function HomeRoute() {
+function HomeRoute({ shellState }) {
+    const currentSourceContext = shellState?.hasActiveResult
+        ? `${shellState.sourceFamilyLabel} / ${shellState.activeRunLabel ?? "active run"}`
+        : "Awaiting exported runtime/workbench state from execution surfaces.";
+    const currentRunPosture = shellState?.hasActiveResult
+        ? "Active runtime/workbench state is available to viewer routes through the shared payload seam."
+        : shellState?.runError
+        ? `No active result. Last shell state reported error: ${shellState.runError}`
+        : `No active result. Current shell state posture: ${shellState?.runStatus ?? "idle"}`;
+
     return (
         <div style={{ display: "grid", gap: "18px" }}>
             <SectionCard
@@ -251,11 +276,15 @@ function HomeRoute() {
                         </div>
                         <DetailRow
                             label="Source context"
-                            value="Selected in downstream execution or viewer surfaces. This shell preserves routing posture instead of replacing source and lineage inspection."
+                            value={currentSourceContext}
                         />
                         <DetailRow
                             label="Mode choices"
                             value="Live, Static, and Inspection remain explicit route families rather than being collapsed into one mixed top-level page."
+                        />
+                        <DetailRow
+                            label="Current state"
+                            value={currentRunPosture}
                         />
                         <DetailRow
                             label="Overlay posture"
@@ -383,12 +412,9 @@ function LegacyRoute() {
     );
 }
 
-function RouteBody({ route }) {
+function RouteBody({ route, shellState }) {
     if (route === ROUTES.live) {
-        const payload = buildStructuralViewerPayload({
-            mode: "live",
-            sourceFamilyLabel: "unspecified",
-        });
+        const payload = buildRoutePayload("live", shellState);
         return (
             <LiveModeShell
                 payload={payload}
@@ -399,10 +425,7 @@ function RouteBody({ route }) {
     }
 
     if (route === ROUTES.static) {
-        const payload = buildStructuralViewerPayload({
-            mode: "static",
-            sourceFamilyLabel: "unspecified",
-        });
+        const payload = buildRoutePayload("static", shellState);
         return (
             <StaticModeShell
                 payload={payload}
@@ -413,10 +436,7 @@ function RouteBody({ route }) {
     }
 
     if (route === ROUTES.inspection) {
-        const payload = buildStructuralViewerPayload({
-            mode: "inspection",
-            sourceFamilyLabel: "unspecified",
-        });
+        const payload = buildRoutePayload("inspection", shellState);
         return (
             <InspectionModeShell
                 payload={payload}
@@ -430,11 +450,12 @@ function RouteBody({ route }) {
         return <LegacyRoute />;
     }
 
-    return <HomeRoute />;
+    return <HomeRoute shellState={shellState} />;
 }
 
 export default function HomeRouterShell() {
     const [route, setRoute] = useState(() => normalizeHash(window.location.hash));
+    const [shellState, setShellState] = useState(() => readPublishedShellState());
 
     useEffect(() => {
         if (!window.location.hash) {
@@ -448,6 +469,16 @@ export default function HomeRouterShell() {
         window.addEventListener("hashchange", handleHashChange);
         handleHashChange();
         return () => window.removeEventListener("hashchange", handleHashChange);
+    }, []);
+
+    useEffect(() => {
+        function handlePublishedShellState(event) {
+            setShellState(event?.detail ?? readPublishedShellState());
+        }
+
+        window.addEventListener(ACTIVE_SHELL_STATE_EVENT, handlePublishedShellState);
+        setShellState(readPublishedShellState());
+        return () => window.removeEventListener(ACTIVE_SHELL_STATE_EVENT, handlePublishedShellState);
     }, []);
 
     const navRoutes = [
@@ -575,7 +606,7 @@ export default function HomeRouterShell() {
                 </header>
 
                 <main>
-                    <RouteBody route={route} />
+                    <RouteBody route={route} shellState={shellState} />
                 </main>
 
                 <footer
