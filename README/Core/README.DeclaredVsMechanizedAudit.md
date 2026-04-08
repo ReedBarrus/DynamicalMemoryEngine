@@ -1,45 +1,8 @@
 # README.DeclaredVsMechanizedAudit.md
 # Dynamical Memory Engine — Declared vs Mechanized Audit
 
-## Metadata
-```yaml
-address_id: core.declared_vs_mechanized_audit.current
-object_class: audit_note
-object_label: Declared vs Mechanized Audit
-file_path: README/Core/README.DeclaredVsMechanizedAudit.md
-repo_zone: README/Core/
 
-bounded_question: What DME capabilities are only declared, only displayed, partially mechanized, or truly mechanized at their bounded seam?
-declared_role: Capability-status audit note for preventing surface clarity from being mistaken for functional attainment.
-explicit_non_role: Not a full current surface inventory, not runtime truth, not a replacement for the Surface Map.
-
-scope_coverage:
-  - capability-status vocabulary
-  - bounded status map for active Door One surfaces/seams
-  - anti-overclaim distortion classes
-  - stronger-claim admission posture
-known_omissions:
-  - full seam inventory and full repo topology
-  - deep per-file seam contracts
-  - complete product-surface narrative
-  - full retention/canon workflow details
-
-authority_posture: supporting_audit
-explicit_non_claims:
-  - not full inventory proof
-  - not runtime meaning
-  - not canon policy
-  - not closure proof by itself
-
-current_status: active_but_partial
-audit_status: crosschecked_against_repo
-dominant_telemetry:
-  - drift
-known_risks:
-  - audit entries can drift into duplicate surface accounting
-  - partially mechanized seams can be overread as mature if inventory language grows too rich
-  ```
-Status
+## Status
 
 This note is a structural audit reference.
 
@@ -74,9 +37,6 @@ the full app-surface map,
 the runtime boundary,
 or a promotion/canon note.
 
-For current compact structural accounting of active Door One surfaces, see:
-
-README_DoorOneSurfaceMap.md
 ## 1. Why this note exists
 
 DME now has enough execution surfaces, helper models, request objects, replay objects, review objects, and app composition that some capabilities can appear more complete than they actually are.
@@ -156,366 +116,29 @@ README.MechanizationClosureGate.md
 
 This section classifies active seams by current status.
 It is not the full current surface inventory.
-For structural inventory and governing-note index, see:
 
-README_DoorOneSurfaceMap.md
 ### 4.1 Door One runtime orchestration
 
-Status: mechanized
+Status: Null
 
-Includes the active Door One runtime path:
+##### Not yet fully mechanized in the current operator loop
 
-ingest acceptance,
-lawful single-run orchestration,
-repeated-run accumulation,
-workbench assembly,
-current-run query artifact generation,
-substrate commit / basin formation,
-runtime result assembly.
+All 
 
-Caveat:
-“query” here means bounded current Door One query artifact support, not a broad structural query subsystem.
 
-### 4.2 Workbench integration view
-
-Status: mechanized
-
-DoorOneWorkbench is a real integration / inspection assembly surface for runtime outputs and bounded review-adjacent surfaces. It remains explicitly below canon, promotion, and truth.
-
-### 4.3 Browser execution shell
-
-Status: mechanized
-
-The execution shell is now a real operator harness for:
-
-source selection,
-intake,
-explicit run,
-workbench assembly,
-request preparation,
-replay preparation.
-
-Important:
-This is an execution surface only.
-It does not define runtime meaning.
-
-### 4.4 Lab structural HUD
-
-Status: mechanized
-
-The lab HUD reads real workbench/runtime state and exposes provenance, runtime evidence, structure/transitions, and bounded review posture. It remains a read-side inspection surface below canon.
-
-### 4.5 Tandem adapter
-
-Status: partially mechanized
-
-Mechanized:
-
-same-source shaping across internal/public-facing surfaces
-summary parity posture across surfaces
-
-Not yet fully mechanized:
-
-full deep-inspection parity
-full reconstruction-backed replay semantics
-full retention-tier-aware shaping
-
-Important:
-This is a shaping layer, not a truth engine.
-
-### 4.6 Request surface / request objects
-
-Status: partially mechanized
-
-Mechanized:
-
-consultation/review request preparation
-lineage-bearing request JSON
-request log
-browser export
-
-Not yet mechanized:
-
-actual consultation fulfillment protocol
-actual review acceptance protocol
-durable request lifecycle beyond current local/browser flow
-canon handoff as real protocol
-
-Important:
-A prepared request is not a fulfilled request.
-
-### 4.7 Replay surface / replay objects
-
-Status: partially mechanized
-
-Mechanized:
-
-replay object preparation
-lens declaration
-retained-tier declaration
-support basis extraction
-replay panel display
-replay JSON export
-
-Important update:
-The old “replay-shaped only” posture has narrowed because the provenance reconstruction backend now exists and the replay model/rendering path has been wired. The active replay surface can now render reconstruction-backed fields under explicit bounded posture.
-
-Still not yet broad or mature:
-
-higher-tier replay support
-full retention-aware replay retrieval across broader app flow
-any claim of raw restoration or truth
-any replay inflation beyond support-trace boundedness.
-### 4.8 Reconstruction pipeline
-
-Status: partially mechanized
-
-The provenance reconstruction backend now exists as a real seam and supports support-trace reconstruction. That closes the earlier declared-only structural void.
-
-Still not mechanized:
-
-source-adjacent reconstitution by default
-broad retained-tier replay maturity
-stronger reconstruction claims beyond support-trace boundedness.
-### 4.9 Retained-tier / retention ladder
-
-Status: declared only / partially mechanized in surrounding infrastructure
-
-This seam requires an explicit distinction between:
-
-- retention mechanics
-- retention posture
-
-These are related, but not identical.
-
-#### Retention mechanics
-
-Retention mechanics are the actual structural means by which support is preserved, bounded, degraded, retrieved, replayed, reconstructed, pruned, or surfaced.
-
-Retention mechanics answer questions such as:
-
-- what support actually survives?
-- what receipts, traces, or retained objects exist?
-- what retrieval path exists?
-- what replay or reconstruction path exists?
-- what pruning or degradation behavior is real?
-- what tier-specific support can actually be surfaced end-to-end?
-
-Retention mechanics are therefore mechanization questions.
-
-#### Retention posture
-
-Retention posture is the declared and operator-facing language used to describe:
-
-- what retention tier an object is in
-- what that tier is allowed to claim
-- what it is not allowed to claim
-- what downgrade or insufficiency remains visible
-- and what kind of replay/reconstruction/support language is lawful at that tier
-
-Retention posture is therefore a semantic and review-honesty layer.
-
-Retention posture may be useful and necessary before full retention mechanics are complete.
-But posture must not be mistaken for mechanism.
-
-#### Current status breakdown
-
-##### Declared
-
-Currently declared:
-
-- tier language
-- replay retained-tier posture
-- retention ladder concepts
-- broad replay-legitimacy framing by retained level
-
-This means the repo can name retention distinctions.
-It does **not** mean all tier behaviors are yet fully mechanized.
-
-##### Partially present in surrounding infrastructure
-
-Currently partially present:
-
-- provenance receipts
-- live output bounding
-- pin/archive posture
-- preserved packet / bundle posture
-- bounded replay-legitimacy framing
-- some surrounding retention-support surfaces
-
-This means pieces of the retention system exist around the seam.
-It does **not** yet mean the full tiered retention ladder is mechanized end-to-end.
-
-##### Not yet fully mechanized in the current app/operator loop
-
-Not yet fully mechanized:
-
-- coherent retained-tier retrieval and navigation
-- explicit tier-specific replay retrieval in the active app flow
-- explicit tier-specific reconstruction behavior surfaced end-to-end
-- pruning surfaced coherently through product-facing flow
-- operationally clear “what this tier can still justify” behavior across the primary shell
-
-#### Governing distinction
-
-The key rule is:
-
-**Retention posture may describe what a retained object appears to preserve or what a retained tier is intended to mean. Retention mechanics determine what support actually survives and what replay, reconstruction, or identity claims can still be justified.**
-
-Corollaries:
-
-- tier language is not tier retrieval
-- replay-legitimacy framing is not replay support
-- archive posture is not archive retrieval mechanics
-- retention naming is not retained-support sufficiency
-- declared tier semantics are not mechanized tier behavior
-
-#### Practical meaning of the tiers
-
-The retention tiers should be understood as a graded support ladder, not a binary “have it / do not have it” model.
-
-The point of the ladder is to make visible:
-
-- how much structural support survives
-- what kind of replay or reconstruction remains lawful
-- where identity support weakens
-- and where downgrade posture must become explicit
-
-The tiers therefore exist to bind claim strength to surviving support.
-
-They should not be treated as:
-- decorative labels
-- authority classes
-- proof of memory-bearing status by name alone
-- or evidence that retrieval/replay/reconstruction mechanics are already complete
-
-#### What a tightened retention tier should eventually answer
-
-For each tier, the system should eventually be able to answer explicitly:
-
-1. what support survives at this tier?
-2. what can this tier still replay?
-3. what can this tier only reconstruct?
-4. what can this tier no longer justify?
-5. what downgrade posture must remain visible?
-6. what identity claims weaken at this tier?
-7. what retrieval path is actually mechanized?
-
-Until those answers are mechanized, retention tier language should remain visibly below stronger completion claims.
-
-#### Important
-
-Retention posture should not be mistaken for retention mechanics.
-
-A retained object may have lawful posture before its full retrieval, replay, reconstruction, or pruning behavior is mechanized.
-
-Likewise, a partially mechanized retrieval path does not by itself justify stronger replay, identity, or memory-bearing claims than the surviving support can honestly carry.
-
-### 4.10 Structural query engine (beyond current-run query artifact)
-
-Status: declared only / weakly mechanized
-
-Mechanized:
-
-current-run Q artifact support within Door One runtime
-
-Not yet mechanized:
-
-family/session/history search
-retained-tier-aware query
-replay-query relationship
-bounded broad structural query subsystem.
-
-Important:
-Current query artifact support does not equal a broad structural query engine.
-
-### 4.11 Consultation protocol
-
-Status: declared only / partially mechanized
-
-Mechanized:
-
-consultation request preparation
-
-Not yet mechanized:
-
-explicit consultation resolution protocol
-tracked consultation decision object
-consultation-to-canon boundary procedure
-durable consultation lifecycle.
-
-Important:
-Prepared consultation is not completed consultation.
 
 ### 4.12 Canon candidate / readiness surfaces
 
-Status: partially mechanized
-
-Mechanized:
-
-readiness report
-canon candidate dossier
-bounded review posture
-blocker/insufficiency visibility
-
-Not yet mechanized:
-
-explicit acceptance protocol
-explicit promotion execution
-hard separation enforcement into canon authority objects
-stable operator-governed handoff mechanism.
-
-Important:
-Candidate is not canon.
+Status: Null
 
 ### 4.13 Canonization seam
 
-Status: declared only / not yet mechanized
-
-Canon remains intentionally fenced and should not be implied by runtime success, workbench visibility, or dossier preparation. This seam should remain inactive until replay honesty, retention posture, consultation protocol, and review acceptance are stronger and explicit.
+Status: Null
 
 ### 4.14 Adapter clarity / source-family semantics
 
-Status: partially mechanized
+Status: Null
 
-Mechanized:
-
-file import adapter seam
-JSON / CSV / WAV normalization
-execution-side intake
-
-Not yet fully mechanized:
-
-broader family-specific semantics
-richer declared source-family/workflow handling beyond current emphasis
-broader event/web/meta-layer trace families.
-
-Important:
-Successful normalization does not equal successful family interpretation.
-
-### 4.15 App surface composition
-
-Status: partially mechanized
-
-Mechanized:
-
-composed app environment
-mode posture
-execution pane
-lab HUD pane
-demo pane
-tandem summary seam
-
-Not yet fully mechanized:
-
-full cross-session continuity
-retention-aware navigation
-query-backed browsing
-full parity across all panes
-mature continuity through the whole product surface.
-
-Important:
-Composed surface does not imply full backend maturity.
 
 ## 5. Distortion classes to watch for
 
@@ -545,16 +168,7 @@ Readiness, dossier, or review visibility is treated as promotion.
 
 A coherent app environment feels more mature than the seams beneath it actually are. This is one of the biggest current product-surface risks.
 
-## 6. Relationship to other notes
 
-Use this note together with:
-
-README_DoorOneSurfaceMap.md for compact current structural inventory.
-README_DoorOneInspectionSurfacePosture.md for provenance-first read-side ordering and anti-overread law.
-README.DeterministicInvarianceThreshold.md for replay, retention, reconstruction, and continuity downgrade law.
-README.MechanizationClosureGate.md for the workflow closure criteria by which bounded capabilities may be called mechanized.
-README_DoorOneAcceptanceChecklist.md for the current Door One freeze-line.
-README_DoorOneDevelopmentalOutline.md for the current growth-line and next-leg sequence.
 ## 7. One-line review question
 
 Before calling any seam or surface “real,” ask:

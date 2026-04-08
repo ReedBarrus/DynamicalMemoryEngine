@@ -1,2 +1,0 @@
-object_handle,provenance_receipt_hash,artifact_class,t_start,t_end,continuity_status,structural_loss_percent,source_family
-RET:first_run:001,aabbccddeeff00112233445566778899,RET,0.0,1.0,Stable,12.5,stable_case

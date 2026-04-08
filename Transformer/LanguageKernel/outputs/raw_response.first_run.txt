@@ -1,8 +1,0 @@
-{
-  "language_frames": {
-    "frames": []
-  }
-}
-This is the base JSON object that represents the language frames, with an empty list of frames. Since there's no explicit recursive call yet, we can't populate the list of frames.
-
-Please paste previous frames to continue the recursion and I'll help you add them to the JSON response.

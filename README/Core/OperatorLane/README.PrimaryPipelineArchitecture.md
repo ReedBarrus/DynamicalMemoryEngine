@@ -14,7 +14,6 @@ It does **not** override:
 * `README.DeclaredVsMechanizedAudit.md`
 * `README.MechanizationClosureGate.md`
 * `README.PacketWorkflowChain.md`
-* `README_DoorOneDevelopmentalOutline.md`
 * `README/core/OperatorLane/README.OperatorLanesContract.md`
 * `README/core/OperatorLane/README.PrimaryTemporalLaneContract.md`
 * `README/core/OperatorLane/README.PrimaryTransformLaneContract.md`
@@ -83,10 +82,10 @@ Corollary rules:
 
 The active rebuilt-floor scope is exactly:
 
-* `IngestOp`
-* `ClockAlignOp`
-* `WindowOp`
-* `TransformOp`
+* `IngestFloor`
+* `ClockAlignFloor`
+* `WindowFloor`
+* `TransformFloor`
 
 The active primary artifact classes are exactly:
 
@@ -107,10 +106,10 @@ The current rebuilt-floor primary chain is:
 
 Expanded by operator:
 
-* `IngestOp` emits `P0_IngestFrame`
-* `ClockAlignOp` consumes `P0_IngestFrame` and emits `P1_AlignedFrame`
-* `WindowOp` consumes `P1_AlignedFrame` and emits `P2_WindowFrame` (one or more bounded window frames)
-* `TransformOp` consumes `P2_WindowFrame` and emits `P3_SpectralFrame`
+* `IngestFloor` emits `P0_IngestFrame`
+* `ClockAlignFloor` consumes `P0_IngestFrame` and emits `P1_AlignedFrame`
+* `WindowFloor` consumes `P1_AlignedFrame` and emits `P2_WindowFrame` (one or more bounded window frames)
+* `TransformFloor` consumes `P2_WindowFrame` and emits `P3_SpectralFrame`
 
 This is the only active primary chain at v0.
 
@@ -373,9 +372,9 @@ Transform remains in the primary lane, but it is the first representational rema
 
 The rebuilt-floor active primary edges are:
 
-* `IngestOp -> ClockAlignOp`
-* `ClockAlignOp -> WindowOp`
-* `WindowOp -> TransformOp`
+* `IngestFloor` -> `ClockAlignFloor`
+* `ClockAlignFloor` -> `WindowFloor`
+* `WindowFloor` -> `TransformFloor`
 
 Each active primary edge must obey all of the following:
 
@@ -387,7 +386,7 @@ Each active primary edge must obey all of the following:
 
 Windowing is the only multiplicity exception:
 
-* `WindowOp` may emit multiple `P2_WindowFrame` objects from one `P1_AlignedFrame`
+* `WindowFloor` may emit multiple `P2_WindowFrame` objects from one `P1_AlignedFrame`
 * each emitted `P2_WindowFrame` must still remain individually primary-pure
 
 ---
@@ -414,42 +413,7 @@ No deferred operator or deferred semantic/review seam may shape the rebuilt floo
 
 ---
 
-## 12. Deferred scope
-
-The following are explicitly deferred from Primary Pipeline Architecture v0:
-
-* `CompressOp`
-* `AnomalyOp`
-* `MergeOp`
-* `ReconstructOp`
-* `QueryOp`
-* substrate surfaces
-* workbench/orchestrator rebuild decisions
-* semantic overlay integration
-* review/readiness/posture lanes
-* any full forward-chain definition beyond `P3`
-
-These are not denied.
-They are simply outside the active rebuilt floor.
-
----
-### Deferred downstream structural pressure
-
-The first major deferred downstream structural pressure after `P3` is `MergeOp`.
-
-`MergeOp` is not active in Primary Pipeline Architecture v0 because:
-
-- the rebuilt floor has not yet defined post-transform primary object law beyond `P3`,
-- merge depends on downstream decisions about what may count as lawful primary input after transform,
-- and previous emission mapping showed that merge was one of the first points where structural output and review-like posture became entangled.
-
-Accordingly, `MergeOp` is recognized as an anticipated downstream operator, but it is explicitly not part of the active rebuilt floor.
-
-## 13. Deferred pressure notes
-
-The rebuilt floor intentionally excludes certain convenience or support-bearing quantities from the primary lane.
-
-### 13.1 Raw temporal vector at WindowOp
+### 13.1 Raw temporal vector at WindowFloor
 
 The raw pre-window vector is excluded from `P2`.
 
@@ -461,7 +425,7 @@ Reason:
 
 If retained, the raw vector must live in a lawful companion lane.
 
-### 13.2 Magnitude / phase at TransformOp
+### 13.2 Magnitude / phase at TransformFloor
 
 Magnitude and phase are excluded from `P3`.
 
@@ -518,9 +482,9 @@ This note does not yet define:
 
 Those require later packets.
 
-## Deferred admission note — MergeOp
+## Deferred admission note — MergeFloor
 
-`MergeOp` is the first major downstream operator expected to pressure the rebuilt primary architecture after `TransformOp`.
+`MergeFloor` is the first major downstream operator expected to pressure the rebuilt primary architecture after `TransformOp`.
 
 Its admission is deferred until all of the following exist:
 
