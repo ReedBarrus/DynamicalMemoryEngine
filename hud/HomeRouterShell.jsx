@@ -430,10 +430,9 @@ function RouteBody({ route, shellState }) {
     }
 
     if (route === ROUTES.static) {
-        const payload = buildRoutePayload("static", shellState);
         return (
             <StaticModeShell
-                payload={payload}
+                shellState={shellState}
                 onGoHome={() => navigate(ROUTES.home)}
                 onOpenLegacy={() => navigate(ROUTES.legacy)}
             />
