@@ -33,6 +33,6 @@
     "Nested wrong-shape payload also carried an empty first-turn frame list.",
     "Wrong-shape envelope also leaked prose outside JSON."
   ],
-  "received_at": "2026-04-07T09:38:28Z",
+  "received_at": "2026-04-07T10:11:32Z",
   "refusal_reason": "nested wrong-shape language_frames envelope"
 }

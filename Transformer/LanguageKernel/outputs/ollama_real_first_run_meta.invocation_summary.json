@@ -1,0 +1,23 @@
+{
+  "kernel_run_id": "KR:ollama_real_first_run_meta",
+  "model_name": "Meta Llama 3.1 8B Instruct",
+  "ollama_model": "llama3.1:8b",
+  "operation_mode": "contract_conformance_mode",
+  "export_packet_path": "C:\\Users\\Admin\\OneDrive\\Desktop\\Dynamical_Project\\Dynamical_Memory_Engine\\dme-LK\\Transformer\\LanguageKernel\\outputs\\export_packet.first_run.json",
+  "prompt_template_path": "C:\\Users\\Admin\\OneDrive\\Desktop\\Dynamical_Project\\Dynamical_Memory_Engine\\dme-LK\\Transformer\\LanguageKernel\\examples\\prompt\\language_kernel.first_turn.contract_conformance_mode.prompt.txt",
+  "artifact_paths": {
+    "prompt_text": "C:\\Users\\Admin\\OneDrive\\Desktop\\Dynamical_Project\\Dynamical_Memory_Engine\\dme-LK\\Transformer\\LanguageKernel\\outputs\\ollama_real_first_run_meta.prompt.txt",
+    "prompt_receipt": "C:\\Users\\Admin\\OneDrive\\Desktop\\Dynamical_Project\\Dynamical_Memory_Engine\\dme-LK\\Transformer\\LanguageKernel\\outputs\\ollama_real_first_run_meta.prompt_receipt.json",
+    "raw_response": "C:\\Users\\Admin\\OneDrive\\Desktop\\Dynamical_Project\\Dynamical_Memory_Engine\\dme-LK\\Transformer\\LanguageKernel\\outputs\\ollama_real_first_run_meta.raw_response.txt",
+    "response_receipt": "C:\\Users\\Admin\\OneDrive\\Desktop\\Dynamical_Project\\Dynamical_Memory_Engine\\dme-LK\\Transformer\\LanguageKernel\\outputs\\ollama_real_first_run_meta.response_receipt.json",
+    "run": "C:\\Users\\Admin\\OneDrive\\Desktop\\Dynamical_Project\\Dynamical_Memory_Engine\\dme-LK\\Transformer\\LanguageKernel\\outputs\\ollama_real_first_run_meta.run.json",
+    "benchmark": "C:\\Users\\Admin\\OneDrive\\Desktop\\Dynamical_Project\\Dynamical_Memory_Engine\\dme-LK\\Transformer\\LanguageKernel\\outputs\\ollama_real_first_run_meta.benchmark.json",
+    "summary": "C:\\Users\\Admin\\OneDrive\\Desktop\\Dynamical_Project\\Dynamical_Memory_Engine\\dme-LK\\Transformer\\LanguageKernel\\outputs\\ollama_real_first_run_meta.invocation_summary.json"
+  },
+  "run_assembled": false,
+  "benchmark_emitted": false,
+  "status": "blocked",
+  "notes": [
+    "llama3.1:8b is not present in local ollama list"
+  ]
+}
