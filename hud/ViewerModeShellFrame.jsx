@@ -85,6 +85,8 @@ export default function ViewerModeShellFrame({
     payload,
     onGoHome,
     onOpenLegacy,
+    showPayloadPanels = true,
+    showRouteActions = true,
     children,
 }) {
     return (
@@ -97,85 +99,89 @@ export default function ViewerModeShellFrame({
                 {children}
             </ShellCard>
 
-            <div
-                style={{
-                    display: "grid",
-                    gridTemplateColumns: "1.1fr 0.9fr",
-                    gap: "18px",
-                    alignItems: "start",
-                }}
-            >
-                <ShellCard
-                    eyebrow="Shared Payload"
-                    title="Source, lineage, and structural base"
-                    note="All mode shells consume the same shared payload seam. Mode changes posture, not truth source."
+            {showPayloadPanels ? (
+                <div
+                    style={{
+                        display: "grid",
+                        gridTemplateColumns: "1.1fr 0.9fr",
+                        gap: "18px",
+                        alignItems: "start",
+                    }}
                 >
-                    <DetailRow label="route path" value={`/${payload.mode}`} />
-                    <DetailRow label="source" value={`${payload.source.source_family} / ${payload.source.source_id}`} />
-                    <DetailRow label="state basis" value={payload.source.state_basis ?? "unbound"} />
-                    <DetailRow label="state status" value={payload.source.state_availability ?? "awaiting exported runtime/workbench state"} />
-                    <DetailRow label="run id" value={payload.source.run_id ?? "unbound"} />
-                    <DetailRow label="segment id" value={payload.source.segment_id ?? "unbound"} />
-                    <DetailRow label="timestamp range" value={summarizeTimestampRange(payload.source.timestamp_range)} />
-                    <DetailRow label="lineage" value={summarizeList(payload.lineage.generated_from, "generated_from pending")} />
-                    <DetailRow label="provenance refs" value={summarizeList(payload.lineage.provenance_refs, "none visible")} />
-                    <DetailRow label="structural sections" value={summarizeKeys(payload.structural, "structural payload present with no active sections yet")} />
-                </ShellCard>
-
-                <ShellCard
-                    eyebrow="Optional Layers"
-                    title="Overlay and telemetry posture"
-                    note="Overlays remain optional and subordinate. Telemetry belongs only where mode posture lawfully requires it."
-                >
-                    <DetailRow label="overlays" value={summarizeKeys(payload.overlays, "optional and currently absent")} />
-                    <DetailRow
-                        label="telemetry"
-                        value={
-                            payload.telemetry?.placeholder_status ??
-                            (payload.telemetry ? "telemetry attached" : "not required for this mode")
-                        }
-                    />
-                    <DetailRow
-                        label="non-claims"
-                        value={summarizeList(payload.lineage.explicit_non_claims, "none declared")}
-                    />
-                </ShellCard>
-            </div>
-
-            <ShellCard
-                eyebrow="Route Actions"
-                title="Next lawful move"
-                note="These shells stay shallow so later viewer packets can grow inside them without changing the shared payload seam."
-            >
-                <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-                    <button
-                        onClick={onGoHome}
-                        style={{
-                            padding: "10px 14px",
-                            borderRadius: "12px",
-                            border: "1px solid #334155",
-                            background: "#121a2b",
-                            color: "#e2e8f0",
-                            cursor: "pointer",
-                        }}
+                    <ShellCard
+                        eyebrow="Shared Payload"
+                        title="Source, lineage, and structural base"
+                        note="All mode shells consume the same shared payload seam. Mode changes posture, not truth source."
                     >
-                        Return to home shell
-                    </button>
-                    <button
-                        onClick={onOpenLegacy}
-                        style={{
-                            padding: "10px 14px",
-                            borderRadius: "12px",
-                            border: "1px solid #334155",
-                            background: "#121a2b",
-                            color: "#e2e8f0",
-                            cursor: "pointer",
-                        }}
+                        <DetailRow label="route path" value={`/${payload.mode}`} />
+                        <DetailRow label="source" value={`${payload.source.source_family} / ${payload.source.source_id}`} />
+                        <DetailRow label="state basis" value={payload.source.state_basis ?? "unbound"} />
+                        <DetailRow label="state status" value={payload.source.state_availability ?? "awaiting exported runtime/workbench state"} />
+                        <DetailRow label="run id" value={payload.source.run_id ?? "unbound"} />
+                        <DetailRow label="segment id" value={payload.source.segment_id ?? "unbound"} />
+                        <DetailRow label="timestamp range" value={summarizeTimestampRange(payload.source.timestamp_range)} />
+                        <DetailRow label="lineage" value={summarizeList(payload.lineage.generated_from, "generated_from pending")} />
+                        <DetailRow label="provenance refs" value={summarizeList(payload.lineage.provenance_refs, "none visible")} />
+                        <DetailRow label="structural sections" value={summarizeKeys(payload.structural, "structural payload present with no active sections yet")} />
+                    </ShellCard>
+
+                    <ShellCard
+                        eyebrow="Optional Layers"
+                        title="Overlay and telemetry posture"
+                        note="Overlays remain optional and subordinate. Telemetry belongs only where mode posture lawfully requires it."
                     >
-                        Open transitional legacy route
-                    </button>
+                        <DetailRow label="overlays" value={summarizeKeys(payload.overlays, "optional and currently absent")} />
+                        <DetailRow
+                            label="telemetry"
+                            value={
+                                payload.telemetry?.placeholder_status ??
+                                (payload.telemetry ? "telemetry attached" : "not required for this mode")
+                            }
+                        />
+                        <DetailRow
+                            label="non-claims"
+                            value={summarizeList(payload.lineage.explicit_non_claims, "none declared")}
+                        />
+                    </ShellCard>
                 </div>
-            </ShellCard>
+            ) : null}
+
+            {showRouteActions ? (
+                <ShellCard
+                    eyebrow="Route Actions"
+                    title="Next lawful move"
+                    note="These shells stay shallow so later viewer packets can grow inside them without changing the shared payload seam."
+                >
+                    <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+                        <button
+                            onClick={onGoHome}
+                            style={{
+                                padding: "10px 14px",
+                                borderRadius: "12px",
+                                border: "1px solid #334155",
+                                background: "#121a2b",
+                                color: "#e2e8f0",
+                                cursor: "pointer",
+                            }}
+                        >
+                            Return to home shell
+                        </button>
+                        <button
+                            onClick={onOpenLegacy}
+                            style={{
+                                padding: "10px 14px",
+                                borderRadius: "12px",
+                                border: "1px solid #334155",
+                                background: "#121a2b",
+                                color: "#e2e8f0",
+                                cursor: "pointer",
+                            }}
+                        >
+                            Open transitional legacy route
+                        </button>
+                    </div>
+                </ShellCard>
+            ) : null}
         </div>
     );
 }
