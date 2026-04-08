@@ -11,8 +11,8 @@
   "query_class": "Q3",
   "claim_class_ceiling": "L1",
   "legal_posture": "Read-side Language Kernel response only. No canon authority. Not structural truth. Not primary retention substance.",
-  "raw_response_hash_sha256": "8c50357f4f7b6d50925a7fc07899b33b021e63948d6fb43df5106f6b31ba5471",
-  "raw_response_bytes": 981,
+  "raw_response_hash_sha256": "b19da8a73b139bbdc3d2f924833f91d119fe05d9ab617c426bc3e3cae0e6cd6f",
+  "raw_response_bytes": 990,
   "response_status": "received",
   "parse_status": "parsed",
   "schema_status": "conformant",
@@ -28,9 +28,9 @@
     "prompt_sha256=fd388283f6ffcca7ac3721388ad203a9124343d6ae3d77ba66fc04289f624db1",
     "Response parsed cleanly and satisfied the reasoning frame contract."
   ],
-  "received_at": "2026-04-07T09:38:54Z",
+  "received_at": "2026-04-07T10:12:18Z",
   "frame_ids": [
-    "LF:0e5f8b6a"
+    "LF:8d7e1f2g3h4"
   ],
   "legal_claim_present": true,
   "what_next_present": true

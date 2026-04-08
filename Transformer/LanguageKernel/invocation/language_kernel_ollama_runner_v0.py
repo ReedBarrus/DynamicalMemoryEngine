@@ -82,6 +82,202 @@ def artifact_paths(output_root: Path, id_base: str) -> dict[str, Path]:
     }
 
 
+def load_optional_json(path: Path) -> Any | None:
+    if not path.exists():
+        return None
+    return load_json(path)
+
+
+def same_or_none(values: list[str | None]) -> str | None:
+    present = {value for value in values if value is not None}
+    if len(present) > 1:
+        raise ValidationError(f"Expected one shared value, observed {sorted(present)!r}")
+    return next(iter(present), None)
+
+
+def first_turn_frame_emission_status(response_receipt: dict[str, Any] | None) -> str:
+    if response_receipt is None:
+        return "not_captured"
+    if response_receipt.get("response_status") == "blocked":
+        return "blocked_before_capture"
+    if int(response_receipt.get("frame_count", 0)) <= 0:
+        if response_receipt.get("conformance_outcome") == "aborted_empty_first_turn_frame_list":
+            return "empty_first_turn_frame_list"
+        return "no_frame_emitted"
+    if response_receipt.get("conformance_outcome") == "contract_conformant":
+        return "emitted_contract_conformant_frame"
+    return "emitted_nonconformant_frame"
+
+
+def collect_failure_notes(
+    summary: dict[str, Any] | None,
+    response_receipt: dict[str, Any] | None,
+    benchmark_payload: dict[str, Any] | None,
+) -> list[str]:
+    notes: list[str] = []
+    if response_receipt and response_receipt.get("refusal_reason"):
+        notes.append(str(response_receipt["refusal_reason"]))
+    if benchmark_payload and benchmark_payload.get("failure_notes"):
+        notes.extend(str(item) for item in benchmark_payload["failure_notes"])
+    if summary:
+        for item in summary.get("notes", []):
+            text = str(item)
+            if summary.get("status") == "complete" and text.startswith("ollama stderr:"):
+                continue
+            notes.append(text)
+        if not summary.get("run_assembled"):
+            notes.append("run object was not assembled")
+        if not summary.get("benchmark_emitted"):
+            notes.append("benchmark object was not emitted")
+    deduped: list[str] = []
+    for note in notes:
+        if note and note not in deduped:
+            deduped.append(note)
+    return deduped
+
+
+def build_panel_result(output_root: Path, output_prefix: str) -> dict[str, Any]:
+    paths = artifact_paths(output_root, output_prefix)
+    summary = load_json(paths["summary"])
+    prompt_receipt = load_json(paths["prompt_receipt"])
+    response_receipt = load_json(paths["response_receipt"])
+    benchmark_payload = load_optional_json(paths["benchmark"])
+    run_payload = load_optional_json(paths["run"])
+
+    receiver_flags = response_receipt.get("receiver_flags", [])
+    legal_claim_present = response_receipt.get("legal_claim_present")
+    what_next_present = response_receipt.get("what_next_present")
+
+    return {
+        "model_name": summary["model_name"],
+        "ollama_model": summary["ollama_model"],
+        "output_prefix": output_prefix,
+        "status": summary["status"],
+        "export_packet_id": response_receipt["export_packet_id"],
+        "export_packet_path": summary["export_packet_path"],
+        "prompt_template_path": summary["prompt_template_path"],
+        "operation_mode": summary["operation_mode"],
+        "prompt_status": prompt_receipt["prompt_status"],
+        "response_conformance_outcome": response_receipt.get("conformance_outcome", "not_captured"),
+        "run_status": (
+            run_payload["run_metrics"]["overall_status"]
+            if run_payload is not None
+            else summary.get("run_status", "not_assembled")
+        ),
+        "benchmark_family": benchmark_payload.get("benchmark_family") if benchmark_payload else None,
+        "benchmark_regime": summary.get("benchmark_regime"),
+        "benchmark_final_status": (
+            benchmark_payload["final_status"] if benchmark_payload is not None else "not_emitted"
+        ),
+        "json_obedience": {
+            "parse_status": response_receipt.get("parse_status", "not_attempted"),
+            "schema_status": response_receipt.get("schema_status", "not_checked"),
+            "clean_json_only": response_receipt.get("parse_status") == "parsed"
+            and "extra_prose_leakage" not in receiver_flags,
+            "extra_prose_leakage": "extra_prose_leakage" in receiver_flags,
+        },
+        "fixed_string_compliance": {
+            "legal_claim_present": legal_claim_present,
+            "what_next_present": what_next_present,
+            "fully_compliant": legal_claim_present is True and what_next_present is True,
+        },
+        "first_turn_frame_emission_posture": {
+            "status": first_turn_frame_emission_status(response_receipt),
+            "frame_count": int(response_receipt.get("frame_count", 0)),
+            "frame_ids": response_receipt.get("frame_ids", []),
+        },
+        "receiver_flags": receiver_flags,
+        "failures": collect_failure_notes(summary, response_receipt, benchmark_payload),
+        "artifact_paths": summary["artifact_paths"],
+    }
+
+
+def determine_panel_comparison_status(results: list[dict[str, Any]]) -> str:
+    statuses = {result["status"] for result in results}
+    if statuses == {"complete"}:
+        return "complete"
+    if "partial" in statuses or "blocked" in statuses:
+        return "partial"
+    return "blocked"
+
+
+def build_comparative_panel_summary(
+    *,
+    output_root: Path,
+    left_prefix: str,
+    right_prefix: str,
+) -> dict[str, Any]:
+    results = [
+        build_panel_result(output_root, left_prefix),
+        build_panel_result(output_root, right_prefix),
+    ]
+
+    if len({result["model_name"] for result in results}) != len(results):
+        raise ValidationError("Comparative panel requires distinct model identities.")
+
+    shared_export_packet_id = same_or_none([result["export_packet_id"] for result in results])
+    shared_prompt_template_path = same_or_none([result["prompt_template_path"] for result in results])
+    shared_operation_mode = same_or_none([result["operation_mode"] for result in results])
+    shared_benchmark_family = same_or_none([result["benchmark_family"] for result in results])
+
+    same_input_checks = {
+        "same_export_packet": shared_export_packet_id is not None,
+        "same_prompt_template": shared_prompt_template_path is not None,
+        "same_operation_mode": shared_operation_mode is not None,
+        "same_benchmark_family_when_emitted": shared_benchmark_family is not None
+        or any(result["benchmark_family"] is None for result in results),
+    }
+
+    if not same_input_checks["same_export_packet"]:
+        raise ValidationError("Comparative panel requires the same export packet id for both model entries.")
+    if not same_input_checks["same_prompt_template"]:
+        raise ValidationError("Comparative panel requires the same prompt template for both model entries.")
+    if not same_input_checks["same_operation_mode"]:
+        raise ValidationError("Comparative panel requires the same operation mode for both model entries.")
+
+    comparative_notes = [
+        "Comparative evaluation artifact only. No canon authority. No memory or identity uplift.",
+        "Failures remain explicitly classed per model; no blocked or partial posture is normalized upward.",
+    ]
+    if shared_benchmark_family is None:
+        comparative_notes.append("At least one model did not emit a benchmark object, so benchmark-family sameness is only partial.")
+    else:
+        comparative_notes.append(f"Shared benchmark family for emitted benchmark artifacts: {shared_benchmark_family}.")
+
+    return {
+        "comparative_panel_summary_version": "v0.1",
+        "comparison_scope": "bounded_two_model_panel_same_export_packet",
+        "comparison_status": determine_panel_comparison_status(results),
+        "generated_at": utc_now(),
+        "panel_models": [result["model_name"] for result in results],
+        "shared_context": {
+            "export_packet_id": shared_export_packet_id,
+            "prompt_template_path": shared_prompt_template_path,
+            "operation_mode": shared_operation_mode,
+            "benchmark_family": shared_benchmark_family,
+        },
+        "same_input_checks": same_input_checks,
+        "model_results": results,
+        "comparative_notes": comparative_notes,
+    }
+
+
+def write_comparative_panel_summary(
+    *,
+    output_root: Path,
+    left_prefix: str,
+    right_prefix: str,
+    output_path: Path,
+) -> dict[str, Any]:
+    payload = build_comparative_panel_summary(
+        output_root=output_root,
+        left_prefix=left_prefix,
+        right_prefix=right_prefix,
+    )
+    write_json(output_path, payload)
+    return payload
+
+
 def validate_export_packet(export_packet_file: Path, resolver: SchemaResolver) -> dict[str, Any]:
     export_packet = load_json(export_packet_file)
     schema_path = SCHEMA_ROOT / "language_overlay_export.schema.json"
@@ -787,6 +983,15 @@ def build_parser() -> argparse.ArgumentParser:
     smoke_parser.add_argument("--output-prefix", default="ollama_real_first_run")
     smoke_parser.add_argument("--timeout-seconds", type=int, default=180)
     smoke_parser.add_argument("--benchmark-family", default=DEFAULT_FAMILY)
+
+    compare_parser = subparsers.add_parser(
+        "compare-panel",
+        help="Build one bounded comparative panel summary from two emitted invocation artifact sets.",
+    )
+    compare_parser.add_argument("--output-root", default=str(OUTPUT_ROOT))
+    compare_parser.add_argument("--left-prefix", required=True)
+    compare_parser.add_argument("--right-prefix", required=True)
+    compare_parser.add_argument("--output", required=True)
     return parser
 
 
@@ -818,6 +1023,16 @@ def main(argv: list[str] | None = None) -> int:
             timeout_seconds=args.timeout_seconds,
             benchmark_family=args.benchmark_family,
         )
+
+    if args.command == "compare-panel":
+        payload = write_comparative_panel_summary(
+            output_root=Path(args.output_root).resolve(),
+            left_prefix=args.left_prefix,
+            right_prefix=args.right_prefix,
+            output_path=Path(args.output).resolve(),
+        )
+        print(json.dumps(payload, indent=2))
+        return 0
 
     parser.print_help()
     return 2

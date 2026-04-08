@@ -32,6 +32,6 @@
     "Wrong-shape envelope also leaked prose outside JSON.",
     "Nonconformant frame identifiers observed in raw model output: EK:first_run:v1"
   ],
-  "received_at": "2026-04-07T09:38:28Z",
+  "received_at": "2026-04-07T10:11:32Z",
   "refusal_reason": "nested wrong-shape language_frames envelope"
 }

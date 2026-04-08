@@ -10,7 +10,7 @@
     "export_packet_id": "EK:first_run:v1",
     "validation_receipt_id": "VR:ollama_real_first_run",
     "frame_ids": [
-      "LF:0e5f8b6a"
+      "LF:8d7e1f2g3h4"
     ],
     "prompt_receipt_id": "PR:ollama_real_first_run",
     "response_receipt_id": "RR:ollama_real_first_run"
@@ -50,5 +50,5 @@
   },
   "panel_outcome": "contract_conformant",
   "final_status": "valid",
-  "benchmarked_at": "2026-04-07T09:38:54Z"
+  "benchmarked_at": "2026-04-07T10:12:18Z"
 }
