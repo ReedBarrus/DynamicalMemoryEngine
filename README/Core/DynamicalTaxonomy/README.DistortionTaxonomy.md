@@ -327,6 +327,112 @@ Hard rule:
 
 No minting allowed if D4 is present without explicit downgrade.
 
+## 13. Symbolic and structural-exposure distortion
+
+DME now recognizes a bounded distortion family in which symbolic or semantic material deforms first-order structural exposure before the active bounded structural question has been directly inspected.
+
+This distortion family does not replace the existing distortion staircase.
+It refines how distortion may arise in exposure-first seams.
+
+### Core rule
+
+A symbolic or semantic element becomes distortive when it causes required numeric, geometric, or relation-bearing structure to become less directly inspectable for the active bounded question.
+
+This means:
+
+- semantic helpfulness can be distortive,
+- labels can be distortive,
+- counts can be distortive,
+- support/accounting can be distortive,
+- naming can be distortive,
+- and mixed surfaces can be distortive
+
+when they substitute for, overshadow, compress, or gate first-order structure.
+
+### Distortion forms
+
+#### D2-S — Semantic occlusion
+
+A semantic label, summary, or posture appears structurally relevant, but shifts interpretation enough that the operator is no longer seeing the underlying structure directly.
+
+Typical examples:
+
+- structure shown primarily through labels such as "stable", "anomalous", or "returning"
+- semantic overlay becoming the first visible form of a nominally structural surface
+- prose replacing direct transform-space exposure
+
+One-line summary:
+
+**D2-S is interpretive closure that hides still-relevant lower-order structure.**
+
+#### D2-C — Compression camouflage
+
+A surface becomes cleaner, more compact, or more readable by flattening distinctions required for the active structural question.
+
+Typical examples:
+
+- counts replacing bins
+- compact object summaries replacing field values
+- a cleaner dashboard that exposes less raw structure
+
+One-line summary:
+
+**D2-C is a cleaner surface that preserves less inspectable structure.**
+
+#### D3-S — Symbolic overwrite
+
+A symbolic or semantic layer replaces the geometric, numeric, or relation-bearing layer it was supposed to annotate.
+
+Typical examples:
+
+- state labels replacing direct arrays or traces
+- support/accounting standing in for structural exposure
+- "viewer" surfaces that expose mostly semantic or bookkeeping objects
+
+One-line summary:
+
+**D3-S is symbolic material replacing the structure itself as the primary visible artifact.**
+
+#### D3-N — Naming-induced distortion
+
+A name, title, or role label silently changes what the seam optimizes to expose.
+
+Typical examples:
+
+- "viewer", "inspector", or "dashboard" applied to a raw structural surface
+- packet titles that pull structural asks toward semantic or review posture
+- artifact names that imply stronger authority than the seam supports
+
+One-line summary:
+
+**D3-N is distortion introduced by symbolic framing before or during implementation.**
+
+#### D4-X — Cross-layer semantic inflation
+
+A surface remains nominally structural while importing support, memory, identity, review, or readiness language strongly enough that the same-object or same-layer continuity claim becomes unsafe.
+
+Typical examples:
+
+- raw structural surfaces carrying memory-bearing or identity-bearing labels
+- replay exposure surfaces carrying review or readiness posture as if it were first-order structure
+- mixed surfaces where semantic or evaluative closure captures the seam
+
+One-line summary:
+
+**D4-X is identity- or authority-relevant distortion caused by semantic lift across layers.**
+
+### Interaction with existing distortion staircase
+
+These symbolic/exposure distortion forms should be read as refinements inside the existing staircase:
+
+- D2-S and D2-C typically sit inside interpretive distortion
+- D3-S and D3-N typically sit inside structural distortion
+- D4-X typically sits inside identity distortion
+
+The practical rule is:
+
+**if symbolic material changes what the operator can directly inspect at the active structural seam, distortion is already active even if the surface still looks coherent.**
+
 ## 14. Key Insight (Capstone)
 
 This completes a critical 4-part system:

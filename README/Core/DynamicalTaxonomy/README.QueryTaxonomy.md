@@ -512,9 +512,36 @@ A bounded question asking what risks, readiness conditions, or blockers remain f
 - readiness mistaken for minting,
 - candidate mistaken for canon.
 
+
 #### One-line summary
 
 **Q7 asks about consultation and readiness without silently promoting.**
+
+## 6.9 Q8 Structural exposure query posture
+
+DME now recognizes a special exposure-first posture inside early query work.
+
+A structural exposure ask should remain inside the lowest lawful query classes and should not silently drift upward into support, memory, review, or consultation just because a more "helpful" answer is available.
+
+### Rule
+
+If the user or packet asks to expose raw structure directly, the system should prefer:
+
+- Q0 — presence / observation query
+- Q1 — structural query
+- sometimes Q2 — continuity query in narrowly declared form
+
+and should not silently substitute:
+
+- Q3 support / lineage
+- Q4 memory
+- Q5 identity
+- Q6 review
+- Q7 consultation
+
+### One-line summary
+
+**A structural exposure ask is a structure-first query, not a request for semantic, support, or review closure.**
 
 ---
 

@@ -157,13 +157,13 @@ if (liveContinuousViewerSrc) {
     ok(liveContinuousViewerSrc.includes("settlement, identity continuity, or semantic closure"), "D31: live continuous viewer avoids semantic overclosure");
 }
 if (staticSpectralViewerSrc) {
-    ok(staticSpectralViewerSrc.includes("Static Spectral Viewer"), "D32: static spectral viewer declares a dedicated static face");
-    ok(staticSpectralViewerSrc.includes("Bounded frequency-time object"), "D33: static spectral viewer uses bounded object posture");
-    ok(staticSpectralViewerSrc.includes("Baseline"), "D34: static spectral viewer exposes baseline evidence panel");
-    ok(staticSpectralViewerSrc.includes("No bounded spectral frames are currently visible"), "D35: static spectral viewer keeps explicit fallback");
-    ok(staticSpectralViewerSrc.includes("Perturbation") && staticSpectralViewerSrc.includes("Return"), "D36: static spectral viewer exposes perturbation and return evidence panels");
-    ok(!staticSpectralViewerSrc.includes("Static reading notes"), "D37: static spectral viewer removes the old prose side panel");
-    ok(!staticSpectralViewerSrc.includes("Live Telemetry Rail"), "D38: static spectral viewer does not inherit the live telemetry rail");
+    ok(staticSpectralViewerSrc.includes('data-viewer-kind="static-spectral-heatmap"'), "D32: static spectral viewer exposes a real heatmap mount");
+    ok(staticSpectralViewerSrc.includes("frame.band_energy"), "D33: static spectral viewer reads shared spectral matrix data directly");
+    ok(staticSpectralViewerSrc.includes("Array.from({ length: bandCount }"), "D34: static spectral viewer lays out a band/frame matrix");
+    ok(!staticSpectralViewerSrc.includes("<text"), "D35: static spectral viewer renders no SVG text labels");
+    ok(!staticSpectralViewerSrc.includes("Static Spectral Viewer"), "D36: static spectral viewer renders zero title words");
+    ok(!staticSpectralViewerSrc.includes("Baseline") && !staticSpectralViewerSrc.includes("Perturbation") && !staticSpectralViewerSrc.includes("Return"), "D37: static spectral viewer renders no triptych words");
+    ok(!staticSpectralViewerSrc.includes("No bounded spectral frames are currently visible"), "D38: static spectral viewer keeps fallback wordless");
 }
 if (staticEnergyViewerSrc) {
     ok(staticEnergyViewerSrc.includes("Static Energy Viewer"), "D39: static energy viewer declares a dedicated energy face");

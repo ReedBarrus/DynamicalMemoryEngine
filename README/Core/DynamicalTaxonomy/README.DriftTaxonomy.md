@@ -349,6 +349,43 @@ The object continues to appear related to its prior identity or class, but its a
 **G4 is drift that changes what kind of object this now is.**
 
 ---
+## 6.6 G5 Symbolic-gravity drift
+
+DME now recognizes a bounded drift family in which names, labels, packet prose, summaries, or semantic posture shift a seam away from its originally declared structural role before or during implementation.
+
+### Core rule
+
+A seam exhibits symbolic-gravity drift when symbolic material changes the active bounded question, surface class, authority posture, or representation class without explicit reclassification.
+
+### Typical pathways
+
+- structural exposure ask -> semantic overlay result
+- raw geometry ask -> support/accounting result
+- structural packet title -> mixed-surface implementation
+- exposure-first surface -> review-shaped surface
+- local descriptor -> authority-bearing label cascade
+
+### Drift mappings
+
+#### G1-S — Symbolically induced question drift
+
+The seam begins answering a stronger or different question because the wording or labels implied a broader closure target.
+
+#### G2-S — Symbolically induced surface/boundary drift
+
+The seam changes from raw structural exposure into semantic, support, review, or mixed-surface posture without explicit reclassing.
+
+#### G3-S — Symbolically induced support drift
+
+Support/accounting material becomes the primary visible form of a structural seam, weakening direct exposure.
+
+#### G4-S — Symbolically induced class drift
+
+Labels or prose pull the seam into stronger memory, identity, or readiness posture than the current support directly justifies.
+
+### One-line summary
+
+**Symbolic-gravity drift is seam drift caused not by new evidence, but by the closure pressure exerted by names, labels, and packet language.**
 
 ## 7. Drift staircase
 

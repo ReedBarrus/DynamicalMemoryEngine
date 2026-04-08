@@ -531,6 +531,29 @@ Typically generated from:
 
 ---
 
+## 6.9 L8 Structural exposure and claim ceiling
+
+A direct structural exposure surface should usually remain below strong closure classes.
+
+### Rule
+
+When the active seam is raw structural exposure, the lawful claim ceiling should usually remain inside:
+
+- L0 — descriptive claim
+- sometimes narrow L1 support reference only when separately declared
+
+and should not silently elevate into:
+
+- L2 memory claim
+- L3 identity claim
+- L5 review claim
+- L6 readiness claim
+- L7 minting-eligibility posture
+
+### One-line summary
+
+**Exposure-first surfaces describe what is directly present; they do not silently close upward into stronger continuity or authority claims.**
+
 ## 7. Claim staircase
 
 The eight classes form a practical staircase:

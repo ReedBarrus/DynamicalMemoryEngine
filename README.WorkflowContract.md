@@ -1,4 +1,4 @@
-# Dynamical Memory Engine - Workflow Contract
+﻿# Dynamical Memory Engine - Workflow Contract
 
 ## Purpose
 
@@ -496,6 +496,21 @@ Risk if ignored:
 - “Contract and boundary check” is required even for small patches.
 - “What is still not claimed” helps prevent declared-vs-mechanized drift.
 - Open questions must stay within the existing escalation lane rules.
+
+## Structural exposure packet posture
+
+When Reed or ChatGPT is requesting a structural surface, structural viewer, geometric renderer, transform-space plot, or equivalent exposure-first surface, the request must remain explicit about the surface class.
+
+For exposure-first work, the packet should declare:
+
+- active mode = structure
+- surface class = raw structural exposure
+- required representation = arrays / bins / coordinates / field values / traces
+- explicit non-goals = no semantic labels, no support/accounting substitution, no review posture, no mixed-surface closure
+
+For such tasks, Engineer and helpers should prefer ugly but direct exposure over helpful semantic compression.
+
+A structurally incorrect but semantically rich result should not be accepted as successful completion of a structural exposure task.
 
 ---
 
